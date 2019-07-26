@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>产品成本报告</title>
+		<meta name="keywords" content="产品成本报告">
+		<meta name="description" content="产品成本报告">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+
+	</head>
+
+	<body class="gray-bg pd15">
+		<div class="panel panel-default ibox float-e-margins border-bottom margin-bottom">
+			<div class="panel-heading">
+				<div class="row">
+					<div class="col-sm-4 mgt2">查询条件</div>
+					<div class="col-sm-8 text-right">
+						<a class="collapse-link">
+							<i class="fa fa-chevron-down"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="panel-body d-serach ibox-content">
+				<form id="form">
+					<div class="row ">
+						<label class="col-sm control-label">产品代码</label>
+						<div class="col-sm-2">
+							<input type="text" class="ui-textbox" name="product_code" />
+						</div>
+						<label class="col-sm control-label">产品名称</label>
+						<div class="col-sm-2">
+							<input type="text" class="ui-textbox" name="product_name" />
+						</div>
+						<label class="col-sm control-label">产品类型</label>
+						<div class="col-sm-2">
+							<input type="text" class="ui-textbox" name="product_type" />
+						</div>
+					</div>
+
+				</form>
+			</div>
+		</div>
+		<div class="panel-body">
+			<div class="row text-right">
+				<button class="btn btn-primary " type="button"><i class="fa fa-check"></i>&nbsp;查询</button>
+				<button class="btn btn-info " type="button" onclick="add('添加','product_cost_list_edit.html')"><i class="fa fa-paste"></i>&nbsp;添加</button>
+				<button class="btn btn-success " type="button"><i class="fa fa-download"></i>&nbsp;&nbsp;<span class="bold">导出</span></button>
+			</div>
+		</div>
+		<div class="content-style0">
+			<table id="exampleTableEvents"></table>
+		</div>
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/bootstrap.min.js"></script>
+		<script src="../../js/content.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+		<script src="../../js/plugins/layer/layer.min.js"></script>
+		<script src="../../js/ligerui.all.js"></script>
+		<script src="../../js/js.js"></script>
+		<script>
+			$("#form").ligerForm({
+				inputWidth: '',
+				validate: true
+			});
+			var pageSize; //总页数
+			var pageIndex; //当前第几页
+			var table = $("#exampleTableEvents");
+			table.bootstrapTable({
+				// url: USER_INFO.SITE_URL+'/tp5/public/index.php/Admin/Admin/noteListDemo', //服务端需要返回rows与total字段
+				pagination: true, //分页、
+				pageSize: 5, //每页多少条
+				data: [{
+					product_code: '104173U90LBB28BK05',
+					product_name: '劳力士',
+					product_type: '组装品',
+					money: '￥2132.99',
+					remark: '此成本可接受',
+					date: '2017-3-14 16:53'
+				}, {
+					product_code: '104173U90LBB28BK05',
+					product_name: '百达翡丽',
+					product_type: '组装品',
+					money: '￥3232.99',
+					remark: '此成本可接受',
+					date: '2017-3-14 16:53'
+				}, {
+					product_code: '104173U90LBB28BK05',
+					product_name: '宝玑',
+					product_type: '组装品',
+					money: '￥1989.99',
+					remark: '此成本可接受',
+					date: '2017-3-14 16:53'
+				}, {
+					product_code: '104173U90LBB28BK05',
+					product_name: '伯爵',
+					product_type: '组装品',
+					money: '￥8848.99',
+					remark: '此成本可接受',
+					date: '2017-3-14 16:53'
+				}, {
+					product_code: '104173U90LBB28BK05',
+					product_name: '卡地亚',
+					product_type: '组装品',
+					money: '￥6666.99',
+					remark: '此成本可接受',
+					date: '2017-3-14 16:53'
+				}, {
+					product_code: '104173U90LBB28BK05',
+					product_name: '劳力士',
+					product_type: '组装品',
+					money: '￥2323.99',
+					remark: '此成本可接受',
+					date: '2017-3-14 16:53'
+				}, {
+					product_code: '104173U90LBB28BK05',
+					product_name: '劳力士',
+					product_type: '组装品',
+					money: '￥2132.99',
+					remark: '此成本可接受',
+					date: '2017-3-14 16:53'
+				}, {
+					product_code: '104173U90LBB28BK05',
+					product_name: '劳力士',
+					product_type: '组装品',
+					money: '￥2132.99',
+					remark: '此成本可接受',
+					date: '2017-3-14 16:53'
+				}, {
+					product_code: '104173U90LBB28BK05',
+					product_name: '劳力士',
+					product_type: '组装品',
+					money: '￥2132.99',
+					remark: '此成本可接受',
+					date: '2017-3-14 16:53'
+				}],
+				// method:'post',
+				// sidePagination: "server", //服务端处理分页
+				columns: [{
+						align: 'center',
+						checkbox: true
+					},
+					{
+						title: '产品名称',
+						field: 'product_code'
+					},
+					{
+						title: '产品名称',
+						field: 'product_name'
+					},
+					{
+						title: '产品类型',
+						field: 'product_type'
+					},
+					{
+						title: '成本价格',
+						field: 'money'
+					},
+					{
+						title: '备注',
+						field: 'remark'
+					},
+					{
+						title: '日期',
+						field: 'date'
+					},
+					{
+						title: '操作',
+						width: '200',
+						formatter: function(value, row, index) {
+							var str = '';
+							str += '<a class="btn btn-white btn-xs" onclick="edit(\'编辑\',\'product_cost_list_edit.html\',' + row.id + ')">编辑 </a> ';
+							str += '<a class="btn btn-white btn-xs" onclick="del(' + row.id + ')">删除 </a>';
+							return str;
+						}
+					}
+				]
+				/*,
+				            queryParams: function(params) {
+				                var form = liger.get("form");
+				                var data = form.getData();
+				                var temp = {
+				                    pageSize: params.limit,                         //页面大小
+				                    pageIndex: (params.offset / params.limit) + 1,   //页码
+				                    sort: params.sort,      //排序列名
+				                    sortOrder: params.order //排位命令（desc，asc）
+				                };
+				                mergeObj(temp,data); //合并对象
+				                pageSize = temp.pageSize;
+				                pageIndex = temp.pageIndex;
+				                return temp;
+				            }*/
+			});
+			initSelect();
+
+			function initSelect() {
+				$('input[name="country"]').ligerComboBox({
+					url: '../../data/city.txt',
+					valueField: 'value',
+					textField: 'text'
+				});
+				$('input[name="country3"]').ligerComboBox({
+					url: '../../data/city.txt',
+					valueField: 'value',
+					textField: 'text'
+				});
+				$('input[name="country4"]').ligerComboBox({
+					url: '../../data/city.txt',
+					valueField: 'value',
+					textField: 'text'
+				});
+			}
+
+			function serach() {
+				table.bootstrapTable('refresh');
+			}
+
+			function outData() {
+				//询问框
+				layer.confirm('是否要导出报告？', {
+					btn: ['确定', '取消'], //按钮
+					shade: false //不显示遮罩
+				}, function(index) {
+					layer.close(index);
+				}, function() {});
+			}
+
+			function add(title, url, id, w, h) {
+				var index = layer.open({
+					type: 2,
+					close: true,
+					shadeClose: true,
+					title: title,
+					area: ['80%', '80%'],
+					content: url
+				});
+			}
+
+			function edit(title, url, id, w, h) {
+				var index = layer.open({
+					type: 2,
+					close: true,
+					shadeClose: true,
+					title: title,
+					area: ['80%', '80%'],
+					content: url + '?id=' + id
+				});
+			}
+
+			function del(id) {
+				//询问框
+				layer.confirm('是否需要删除？', {
+					btn: ['确定', '取消'], //按钮
+					shade: false //不显示遮罩
+				}, function(index) {
+					$.ajax({
+						type: 'post',
+						url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/dels',
+						data: {
+							id: id
+						},
+						success: function(res) {
+							table.bootstrapTable('refresh');
+							layer.close(index);
+						}
+					})
+				}, function() {});
+			}
+		</script>
+
+	</body>
+
+</html>

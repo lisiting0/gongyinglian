@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>扫描商品</title>
+		<meta name="keywords" content="扫描商品">
+		<meta name="description" content="扫描商品">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link href="../../css/plugins/select2/select2.min.css" rel="stylesheet" type="text/css" />
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+		<link href="../../css/plugins/iCheck/custom.css" rel="stylesheet">
+		<link href="../../css/plugins/blueimp/css/blueimp-gallery.min.css" rel="stylesheet">
+	</head>
+
+	<body class="pd15">
+
+		<form class="form-horizontal m-t" id="signupForm">
+			<div class="col-sm-12">
+				<div class="panel-body">
+					<div class="form-group">
+						<label class="col-sm-2 control-label">退厂单号</label>
+						<div class="col-sm-3">
+							<input name="return_number" value="J2018000503" class="ui-textbox disabled-text" type="text" ltype="text">
+						</div>
+						<label class="col-sm-2 control-label">送货单位</label>
+						<div class="col-sm-3">
+							<select id="supplierSelect" class="js-example-basic-single form-control" ltype="select" ligeruiid="supplierSelect">
+								<option value="">请选择</option>
+								<option value="HN-GZJT-001">广州集团</option>
+								<option value="HN-GZBJ-0011">广州宝玑集团</option>
+								<option value="HB-BJZH-003">北京钟华集团</option>
+								<option value="HB-BJZH-004">北京摇摇乐集团</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">退货类型</label>
+						<div class="col-sm-3">
+							<select id="return_type" class="form-control" ltype="select" ligeruiid="return_type">
+								<option value=" ">请选择</option>
+								<option value="采购进货" selected="">采购进货</option>
+							</select>
+						</div>
+						<label class="col-sm-2 control-label">操作员</label>
+						<div class="col-sm-3">
+							<input name="salesman" value="季童薇" class="ui-textbox disabled-text" type="text" ltype="text">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">条形码</label>
+						<div class="col-sm-3">
+							<input name="barcode" value="" class="ui-textbox" type="text" ltype="text">
+						</div>
+						<button class="btn btn-primary" type="submit" onclick="scanFinished()">扫描完成</button>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label"></label>
+						<div class="col-sm-9">
+							<label class="col-sm-3 control-label text-left">总数<span>0</span></label>
+							<label class="col-sm-3 control-label text-left">已扫描<span>5</span></label>
+							<label class="col-sm-3 control-label text-left">差异<a style="color: red;" onclick="difference('商品差异数-5','scan_difference_list.html','J2018000503')">-5</a></label>		
+						</div>				
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 control-label">清单</label>
+						<div class="col-sm-8">
+							<table id="warehouseInfoTable"></table>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</form>
+
+		<!--显示图片层-->
+		<div id="blueimp-gallery" class="blueimp-gallery">
+			<div class="slides"></div>
+			<h3 class="title"></h3>
+			<a class="close">×</a>
+		</div>
+
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/bootstrap.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-editable.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-table-editable.js"></script>
+		<script src="../../js/plugins/select2/select2.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/js.js"></script>
+		<script src="../../js/ligerui.all.js"></script>
+		<script src="../../js/plugins/layer/layer.min.js"></script>
+		<script src="../../js/plugins/iCheck/icheck.min.js"></script>
+		<script src="../../js/plugins/layer/laydate/laydate.js"></script>
+		<script src="../../js/plugins/validate/jquery.validate.min.js"></script>
+		<script src="../../js/plugins/validate/messages_zh.min.js"></script>
+		<script src="../../js/plugins/validate/jquery.metadata.js"></script>
+		<script src="../../js/plugins/blueimp/jquery.blueimp-gallery.min.js"></script>
+
+		<script>
+			var table = $("#warehouseInfoTable");
+			$(function() {
+				if($.getUrlParam('id')) {
+					//setData();
+					//审核状态
+					if($.getUrlParam('state') == 'AUDIT') {
+						$('.ui-textbox').attr('disabled', 'disabled').css("background-color", "#f5f5f5");
+						$('.layer-date').attr('disabled', 'disabled').css("background-color", "#f5f5f5");
+						$('select[ltype=select]').attr('disabled', 'disabled').css("background-color", "#f5f5f5");
+						$('.disabled-textarea').attr('disabled', 'disabled').css("background-color", "#f5f5f5");
+						$('#toolbar').addClass('display-none');
+						$('.audit-panel').removeClass('display-none');
+					}
+
+					var supplier_trigger = $("#supplierSelect").select2().val("HN-GZJT-001").trigger("change"); //获取selectid
+					supplier_trigger.change();
+					$("#supplierSelect").prop("disabled", true); //设置下拉框不可用
+					$("#return_type").prop("disabled", true); //设置下拉框不可用
+
+					initTable();
+					$(".btn-default").addClass("btn-outline");
+				} else {
+					//$('input').val();
+				}
+				new formValidate({
+					formEle: '#signupForm'
+				});
+
+				$('#supplierSelect').select2({}).on('select2:select', function(event) {});
+			});
+
+			function valid() {
+				var form = liger.get("signupForm");
+				alert(form.valid());
+			}
+
+			function getData() {
+				var form = liger.get("signupForm");
+				var data = form.getData();
+				alert(JSON.stringify(data));
+			}
+
+			function setData() {
+				$.ajax({
+					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/getUser',
+					data: {
+						id: $.getUrlParam('id')
+					},
+					success: function(res) {
+						res = $.parseJSON(res);
+						var form = new liger.get("signupForm");
+						form.setData(res);
+					}
+				})
+			}
+
+			function initTable() {
+				table.bootstrapTable({
+					icons: {
+						refresh: "glyphicon-repeat",
+						columns: "glyphicon-list"
+					},
+					toolbar: "#toolbar",
+					columns: [{
+						field: "code",
+						title: "商品代码/物料型号"
+					}, {
+						field: "name",
+						title: "商品名称/物料名称"
+					}, {
+						field: "unit",
+						title: "单位"
+					}, {
+						field: "size",
+						title: "尺码"
+					}, {
+						field: "color",
+						title: "颜色"
+					}, {
+						title: '商品条形码',
+						field: 'barcode'
+					}, {
+						title: '扫描数量',
+						field: 'number_of_scans'
+					}],
+					data: [{
+						code: '160M60LYXCL',
+						name: 'CASIO MTP-1329D-5A',
+						supplier: '北京劳力士集团',
+						unit: '件',
+						gp: '考核',
+						image: 'watch1',
+						size: '通码',
+						color: '通色',
+						barcode: 'FKIKELO-KD',
+						number_of_scans: 1
+					}, {
+						code: '002B38068M QQF-01',
+						name: '表带',
+						supplier: '广州环海报关服务有限公司',
+						unit: '件',
+						gp: '考核',
+						image: 'watch1',
+						size: '通码',
+						color: '通色',
+						barcode: 'FDOWELO-KD',
+						number_of_scans: 4
+					}]
+				});
+			}
+
+			function addInfo(title, url, id, w, h) {
+				//判断是否有选择某个商品
+				if(!$("#supplierSelect").select2().val()) {
+					alert('请选择送货单位!');
+					return;
+				}
+				if($("#return_type").val() == " ") {
+					alert('请选择退货类型!');
+					return;
+				}
+				if($("#move_into_warehouse").val() == " ") {
+					alert('请选择仓库!');
+					return;
+				}
+				var form = liger.get("signupForm");
+				if(!form.valid()) {
+					return;
+				}
+
+				layer.open({
+					type: 2,
+					maxmin: true,
+					close: true,
+					title: title,
+					area: ['90%', '90%'],
+					content: url + "?id=" + id + '&return=' + true + '&warehouse=' + $("#move_into_warehouse").val()
+				});
+			}
+
+			function delInfo() {
+				var getSelectRows = $.map(table.bootstrapTable('getSelections'), function(row) {
+					return row.id;
+				});
+				if(getSelectRows.length >= 1) {
+					layer.confirm('您真的确定要删除吗?', {
+						icon: 3,
+						btn: ['确定', '取消'] //按钮
+					}, function(index) {
+						for(var i = 0; i < getSelectRows.length; i++) {
+							table.bootstrapTable('remove', {
+								field: 'id',
+								values: [parseInt(getSelectRows[i])]
+							});
+						}
+						layer.close(index);
+					}, function(index) {
+						layer.close(index);
+					});
+				} else {
+					layer.alert("请选择一行删除!");
+					return;
+				}
+			}
+			
+			function difference(title, url, id, state, w, h) {
+				var index = layer.open({
+					type: 2,
+					close: true,
+					maxmin: true,
+					title: title,
+					area: ['80%', '80%'],
+					content: url + '?id=' + id + '&title=' + title
+				});
+			}
+			
+			function submitForm() {
+				var form = liger.get("signupForm");
+				if(!form.valid()) {
+					return;
+				}
+				var data = {};
+				$("input,select,textarea").each(function() {
+					var name = $(this).attr("name");
+					if(name && name.indexOf('ligerui') == -1) {
+						data[name] = this.value;
+					}
+				});
+				data.id = $.getUrlParam('id');
+
+				$.ajax({
+						type: 'post',
+						url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/setUser',
+						data: data,
+						success: function(res) {
+							if(Number(res)) {
+								parent.table.bootstrapTable('refresh');
+								var index = parent.layer.getFrameIndex(window.name);
+								parent.layer.close(index);
+							}
+						}
+					})
+					/*
+					            parent.table.bootstrapTable('refresh');
+					            var index = parent.layer.getFrameIndex(window.name);
+					            parent.layer.close(index);*/
+			}
+		</script>
+	</body>
+
+</html>

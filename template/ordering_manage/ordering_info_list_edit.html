@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>订货单位管理</title>
+		<meta name="keywords" content="订货单位管理">
+		<meta name="description" content="订货单位管理">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-editable/bootstrap-editable.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-editable/bootstrap-editable-select2.css" rel="stylesheet" type="text/css" />
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+		<link href="../../css/plugins/iCheck/custom.css" rel="stylesheet">
+
+	</head>
+
+	<body class="pd15">
+		<div class="row">
+			<form class="form-horizontal m-t" id="signupForm">
+				<div class="col-sm-12">
+					<div class="tabs-container">
+						<ul class="nav nav-tabs">
+							<li class="active">
+								<a data-toggle="tab" href="#tab-1" aria-expanded="true"> 基本信息</a>
+							</li>
+							<li class="">
+								<a data-toggle="tab" href="#tab-2" aria-expanded="false">联系方式</a>
+							</li>
+							<li class="">
+								<a data-toggle="tab" href="#tab-3" aria-expanded="false">银行账号</a>
+							</li>
+							<li class="">
+								<a data-toggle="tab" href="#tab-4" aria-expanded="false">经营品牌</a>
+							</li>
+							<li class="">
+								<a data-toggle="tab" href="#tab-5" aria-expanded="false">人员列表</a>
+							</li>
+						</ul>
+						<div class="tab-content">
+							<div id="tab-1" class="tab-pane active">
+								<div class="panel-body">
+									<div class="form-group">
+										<label class="col-sm-2 control-label">代码</label>
+										<div class="col-sm-3">
+											<input name="code" class="ui-textbox disabled-text" type="text" ltype="text" value="001">
+										</div>
+										<label class="col-sm-2 control-label">订货商</label>
+										<div class="col-sm-3">
+											<input name="order_unit" class="ui-textbox" type="text" validate="{required:true,minlength:1,maxlength:100}" value="鼎骏">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">停止使用</label>
+										<div class="col-sm-3">
+											<div class="checkbox i-checks">
+												<label style="padding-left:0 ;"><input name="stopUsing" type="checkbox"> <i></i></label>
+											</div>
+										</div>
+										<label class="col-sm-2 control-label">建档日期</label>
+										<div class="col-sm-3">
+											<input name="filing_date" class="ui-textbox disabled-text" type="text" value="2015-4-1">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">最近修改日期</label>
+										<div class="col-sm-3">
+											<input name="recently_modifiedDate" class="ui-textbox disabled-text" type="text" value="2017-8-1">
+										</div>
+										<label class="col-sm-2 control-label">最近修改人</label>
+										<div class="col-sm-3">
+											<input name="modified_person" value="系统管理员" class="ui-textbox disabled-text" type="text" ltype="text">
+										</div>
+									</div>
+								</div>
+							</div>
+							<div id="tab-2" class="tab-pane">
+								<div class="panel-body">
+									<div class="form-group" data-toggle="distpicker">
+										<label class="col-sm-2 control-label">省</label>
+										<div class="col-sm-2" style="width: 8%;padding-right: 0;">
+											<select class="form-control" ltype="select" ligeruiid="province"></select>
+										</div>
+										<div class="col-sm-2" style="width: 8%;padding-right: 0;padding-left: 5px;">
+											<select class="form-control" ltype="select" ligeruiid="city"></select>
+										</div>
+										<div class="col-sm-2" style="width: 8%;padding-right: 0;padding-left: 5px;">
+											<select class="form-control" ltype="select" ligeruiid="county"></select>
+										</div>
+										<label class="col-sm-2 control-label" style="margin-left: 13px;">地址</label>
+										<div class="col-sm-3">
+											<input name="address " class="ui-textbox" ltype="text" validate="{required:true,minlength:1,maxlength:100}" value="广州 ">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">联系人</label>
+										<div class="col-sm-3">
+											<input name="contacts" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:100}" value="李小明">
+										</div>
+										<label class="col-sm-2 control-label">负责人</label>
+										<div class="col-sm-3">
+											<input name="principal" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:100}" value="黄晓明">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">邮编</label>
+										<div class="col-sm-3">
+											<input name="zip_code" class="ui-textbox" type="text" ltype="text" value="5173">
+										</div>
+										<label class="col-sm-2 control-label">电话</label>
+										<div class="col-sm-3">
+											<input name="phone" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:100}" value="13565656565">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">手机</label>
+										<div class="col-sm-3">
+											<input name="telephone" value="13113369041" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:100}" value="13465845865">
+										</div>
+										<label class="col-sm-2 control-label">传真</label>
+										<div class="col-sm-3">
+											<input name="fax" class="ui-textbox" type="text" value="111">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">传呼</label>
+										<div class="col-sm-3">
+											<input name="paging" class="ui-textbox" type="text">
+										</div>
+										<label class="col-sm-2 control-label">电子邮箱</label>
+										<div class="col-sm-3">
+											<input name="email" class="ui-textbox" type="text" value="4865488">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">网址</label>
+										<div class="col-sm-3">
+											<input name="url" class="ui-textbox" type="text" value="www.baidu.com">
+										</div>
+									</div>
+								</div>
+							</div>
+							<div id="tab-3" class="tab-pane">
+								<div class="panel-body">
+									<div class="form-group">
+										<label class="col-sm-2 control-label">开户行</label>
+										<div class="col-sm-3">
+											<input name="accountBank" value="北京市海定区xx街建设银行" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:100}">
+										</div>
+										<label class="col-sm-2 control-label">账号</label>
+										<div class="col-sm-3">
+											<input name="accountNnumber" value="6160654654564654" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:100}">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">税号</label>
+										<div class="col-sm-3">
+											<input name="taxID" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:100}" value="1111">
+										</div>
+										<label class="col-sm-2 control-label">法人</label>
+										<div class="col-sm-3">
+											<input name="legalPerson" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:100}" value="miss">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">会计科目</label>
+										<div class="col-sm-3">
+											<input name="accounting" class="ui-textbox" type="text">
+										</div>
+									</div>
+								</div>
+							</div>
+							<div id="tab-4" class="tab-pane">
+								<div class="panel-body">
+									<div class="row form-group">
+										<div class="col-sm-12">
+											<div id="brandToolbar" style="margin-top: 10px;">
+												<div class="btn-group">
+													<button type="button" class="btn btn-outline btn-default" onclick="addBrand('添加','../../template/supplier_manage/brands_list_add.html');">
+						                                <i class="glyphicon glyphicon-plus" aria-hidden="true"></i> 添加
+						                            </button>
+													<button type="button" class="btn btn-outline btn-default" onclick="delBrand();">
+						                                <i class="glyphicon glyphicon-trash" aria-hidden="true"></i> 删除
+						                            </button>
+												</div>
+											</div>
+											<table id="brandsTable"></table>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div id="tab-5" class="tab-pane">
+								<div class="panel-body">
+									<div class="row form-group">
+										<div class="col-sm-12">
+											<!--<div class="btn-group hidden-xs" id="toolbar" role="group">
+												<button type="button" class="btn btn-success" onclick="assignPermissions('添加','rights_assignment.html')">分配品牌权限</button>
+											</div>-->
+											<div id="userToolbar" style="margin-top: 10px;">
+												<div class="btn-group">
+													<button type="button" class="btn btn-outline btn-default" onclick="addUsers('添加','users_list_add.html');">
+						                                <i class="glyphicon glyphicon-plus" aria-hidden="true"></i> 添加
+						                            </button>
+													<button type="button" class="btn btn-outline btn-default" onclick="delUsers();">
+						                                <i class="glyphicon glyphicon-trash" aria-hidden="true"></i> 删除
+						                            </button>
+												</div>
+											</div>
+											<table id="usersTable"></table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-12 text-right" style="margin-top: 10px;">
+					<button class="btn btn-primary" type="submit" onclick="submitForm();">提交</button>
+					<button class="btn btn-primary" type="submit" onclick="cancelLayer();">取消</button>
+				</div>
+			</form>
+		</div>
+
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/bootstrap.min.js"></script>
+		<script src="../../js/plugins/layer/layer.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-editable.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-table-editable.js"></script>
+
+		<script src="../../js/js.js"></script>
+		<script src="../../js/ligerui.all.js"></script>
+		<script src="../../js/plugins/iCheck/icheck.min.js"></script>
+		<script src="../../js/plugins/validate/jquery.validate.min.js"></script>
+		<script src="../../js/plugins/validate/messages_zh.min.js"></script>
+		<script src="../../js/plugins/validate/jquery.metadata.js"></script>
+
+		<script src="../../js/distpicker/distpicker.data.js"></script>
+		<script src="../../js/distpicker/distpicker.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-editable-select2.full.min.js" type="text/javascript" charset="utf-8"></script>
+
+		<script>
+			$(document).ready(function() {
+				if($.getUrlParam('id')) {
+					//setData();
+				} else {
+
+				}
+				initTable();
+				new formValidate({
+					formEle: '#signupForm'
+				});
+
+				$(".i-checks").iCheck({
+					checkboxClass: "icheckbox_square-green",
+					radioClass: "iradio_square-green",
+				});
+
+				$(".btn-default").addClass("btn-outline");
+
+				//选择供应商change事件
+				$('#order_unit_select').select2().on('select2:select', function(event) {});
+			});
+
+			var table = $("#brandsTable");
+			var usersTable = $("#usersTable");
+
+			function initTable() {
+				table.bootstrapTable({
+					// url: USER_INFO.SITE_URL+'/tp5/public/index.php/Admin/Admin/noteListDemo', //服务端需要返回rows与total字段
+					// pagination: true,
+					// pageSize: 5, //每页多少条
+					// method:'post',
+					// sidePagination: "server", //服务端处理分页
+					search: true,
+					showRefresh: true,
+					showColumns: true,
+					icons: {
+						refresh: "glyphicon-repeat",
+						columns: "glyphicon-list"
+					},
+					toolbar: '#brandToolbar',
+					columns: [{
+							align: 'center',
+							checkbox: true
+						},
+						{
+							title: '品牌名称',
+							field: 'brand'
+						},
+						{
+							title: '默认品牌',
+							field: 'default_brand',
+							formatter: function(value) {
+								var checkboxHtml = '<input name="default_brand" type="checkbox" value="' + value + '">';
+								if(value) {
+									checkboxHtml = '<input name="default_brand" type="checkbox" value="' + value + '" checked>';
+								}
+								return checkboxHtml;
+							}
+						}
+					],
+					data: [{
+						brand: 'ODMDJ线上赠品配件',
+						default_brand: false
+					}]
+				});
+
+				usersTable.bootstrapTable({
+					// url: USER_INFO.SITE_URL+'/tp5/public/index.php/Admin/Admin/noteListDemo', //服务端需要返回rows与total字段
+					// pagination: true,
+					// pageSize: 5, //每页多少条
+					// method:'post',
+					// sidePagination: "server", //服务端处理分页
+					toolbar: '#toolbar',
+					clickToSelect: true,
+					singleSelect: true,
+					search: true,
+					showRefresh: true,
+					showColumns: true,
+					icons: {
+						refresh: "glyphicon-repeat",
+						columns: "glyphicon-list"
+					},
+					toolbar: '#userToolbar',
+					columns: [{
+							align: 'center',
+							checkbox: true
+						},
+						{
+							title: '用户名称',
+							field: 'user'
+						},
+						{
+							title: '手机号码',
+							field: 'telephone'
+						},
+						{
+							title: '联系电话',
+							field: 'contact_number'
+						},
+						{
+							title: '电子邮箱',
+							field: 'email'
+						},
+						{
+							title: '地址',
+							field: 'address'
+						},
+						{
+							title: '部门',
+							field: 'department'
+						},
+						{
+							title: '描述',
+							field: 'description'
+						}
+					],
+					data: [{
+						user: '张三',
+						telephone: 13516556545,
+						contact_number: '',
+						email: '564891@qq.com',
+						address: '',
+						department: '采购部',
+						description: ''
+					}, {
+						user: '李四',
+						telephone: 13236556545,
+						contact_number: '',
+						email: '56482391@qq.com',
+						address: '',
+						department: '财务部',
+						description: ''
+					}]
+				});
+			}
+
+			function valid() {
+				var form = liger.get("signupForm");
+				alert(form.valid());
+			}
+
+			function getData() {
+				var form = liger.get("signupForm");
+				var data = form.getData();
+				alert(JSON.stringify(data));
+			}
+
+			function setData() {
+				$.ajax({
+					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/getUser',
+					data: {
+						id: $.getUrlParam('id')
+					},
+					success: function(res) {
+						res = $.parseJSON(res);
+						var form = new liger.get("signupForm");
+						form.setData(res);
+					}
+				})
+			}
+
+			function submitForm() {
+				var form = liger.get("signupForm");
+				if(!form.valid()) {
+					return;
+				}
+				var data = {};
+				$("input,select,textarea").each(function() {
+					var name = $(this).attr("name");
+					if(name && name.indexOf('ligerui') == -1) {
+						data[name] = this.value;
+					}
+				});
+				data.id = $.getUrlParam('id');
+
+				//				$.ajax({
+				//					type: 'post',
+				//					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/setUser',
+				//					data: data,
+				//					success: function(res) {
+				//						if(Number(res)) {
+				//							parent.table.bootstrapTable('refresh');
+				//							var index = parent.layer.getFrameIndex(window.name);
+				//							parent.layer.close(index);
+				//						}
+				//					}
+				//				})
+			}
+
+			//添加品牌
+			function addBrand(title, url, id, w, h) {
+				layer.open({
+					type: 2,
+					maxmin: true,
+					close: true,
+					title: title,
+					area: ['80%', '80%'],
+					maxmin: true,
+					content: url
+				});
+			}
+
+			//删除品牌
+			function delBrand() {
+				var selects = $('#brandsTable').bootstrapTable('getSelections');
+				if(selects.length >= 1) {
+					parent.layer.confirm('确定要删除该数据吗？', {
+						btn: ['确定', '取消'],
+						yes: function(index) {
+							brand = $.map(selects, function(row) {
+								return row.brand;
+							});
+							$("#brandsTable").bootstrapTable('remove', {
+								field: 'brand',
+								values: brand
+							});
+							parent.layer.close(index);
+						}
+					});
+				} else {
+					parent.layer.alert('请选择要删除的行！');
+				}
+			}
+
+			//添加人员
+			function addUsers(title, url, id, w, h) {
+				layer.open({
+					type: 2,
+					maxmin: true,
+					close: true,
+					title: title,
+					area: ['80%', '80%'],
+					maxmin: true,
+					content: url
+				});
+			}
+
+			//删除人员
+			function delUsers() {
+				var selects = $('#usersTable').bootstrapTable('getSelections');
+				if(selects.length >= 1) {
+					parent.layer.confirm('确定要删除该数据吗？', {
+						btn: ['确定', '取消'],
+						yes: function(index) {
+							user = $.map(selects, function(row) {
+								return row.user;
+							});
+							$("#usersTable").bootstrapTable('remove', {
+								field: 'user',
+								values: user
+							});
+							parent.layer.close(index);
+						}
+					});
+				} else {
+					parent.layer.alert('请选择要删除的行！');
+				}
+			}
+
+			//分配品牌权限
+			function assignPermissions(title, url, id, w, h) {
+				var selects = $('#usersTable').bootstrapTable('getSelections');
+				if(selects.length == 1) {
+					layer.open({
+						type: 2,
+						maxmin: true,
+						close: true,
+						title: title,
+						area: ['30%', '45%'],
+						maxmin: true,
+						content: url
+					});
+				} else {
+					parent.layer.alert('请选择要一条数据再操作！');
+				}
+
+			}
+		</script>
+	</body>
+
+</html>

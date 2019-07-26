@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>商品定价管理</title>
+		<meta name="keywords" content="商品定价管理">
+		<meta name="description" content="商品定价管理">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-editable/bootstrap-editable.css" rel="stylesheet">
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+		<link href="../../css/plugins/iCheck/custom.css" rel="stylesheet">
+		
+		<style type="text/css">
+			.tooltip-inner {
+				background-color: #f92727;
+			}
+		</style>
+	</head>
+
+	<body class="pd15">
+
+		<form class="form-horizontal m-t" id="signupForm">
+			<div class="form-group">
+				<label class="col-sm-2 control-label">定价单编号</label>
+				<div class="col-sm-3">
+					<input name="price_list_number" value="2018000102" class="ui-textbox disabled-text" type="text" ltype="text">
+				</div>
+			</div>
+			<div class="form-group hidden-panel">
+				<label class="col-sm-2 control-label">导入定价单</label>
+				<div class="col-sm-8">
+					<input type="file" name="" id="" value="" style="display: inline-block;vertical-align: sub;" />
+					<button class="btn btn-success" type="button" onclick="importPriceList();"><i class="fa fa-upload"></i> 导入</button>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">商品定价单信息</label>
+				<div class="col-sm-8">
+					<table id="productsTable"></table>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">操作员</label>
+				<div class="col-sm-3">
+					<input name="founder" value="季童薇" class="ui-textbox disabled-text" type="text" ltype="text">
+				</div>
+				<label class="col-sm-2 control-label">操作时间</label>
+				<div class="col-sm-3">
+					<input name="creation_time" value="2018/01/02" class="ui-textbox disabled-text" type="text" ltype="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">备注</label>
+				<div class="col-sm-10" style="padding: 1px 15px;">
+					<textarea name="remark" placeholder="请输入备注" class="layui-textarea" style="min-width:79.5%;min-height: 100px;height: auto;line-height: 20px;padding: 6px 10px;resize: vertical;border: 1px solid #e5e6e7;"></textarea>
+				</div>
+			</div>
+			<div class="form-group text-right hidden-panel">
+				<div class="col-sm-10">
+					<button class="btn btn-primary" type="button" onclick="submitForm();">保存</button>
+					<button class="btn btn-primary" type="submit" onclick="cancelLayer();">取消</button>
+				</div>
+			</div>
+			<div class="audit-panel display-none">
+				<div class="form-group">
+					<label class="col-sm-2 control-label">审核</label>
+					<div class="col-sm-10">
+						<div class="radio i-checks">
+							<label><input type="radio" checked="" value="是" name="specialOffer"></label>审核通过
+							<label><input type="radio" value="否" name="specialOffer"></label>退回修改
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">审核意见</label>
+					<div class="col-sm-10" style="padding: 1px 15px;">
+						<textarea name="audit_opinion" placeholder="请输入审核意见" class="layui-textarea" style="min-width:79.5%;min-height: 100px;height: auto;line-height: 20px;padding: 6px 10px;resize: vertical;border: 1px solid #e5e6e7;"></textarea>
+					</div>
+				</div>
+				<div class="form-group text-right">
+					<div class="col-sm-10">
+						<button class="btn btn-primary" type="submit" onclick="audit();">审核</button>
+						<button class="btn btn-primary" type="submit" onclick="cancelLayer();">取消</button>
+					</div>
+				</div>
+			</div>
+		</form>
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/bootstrap.min.js"></script>
+		<script src="../../js/content.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-editable.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-table-editable.js"></script>
+		<script src="../../js/js.js"></script>
+		<script src="../../js/ligerui.all.js"></script>
+		<script src="../../js/plugins/iCheck/icheck.min.js"></script>
+		<script src="../../js/plugins/validate/jquery.validate.min.js"></script>
+		<script src="../../js/plugins/validate/messages_zh.min.js"></script>
+		<script src="../../js/plugins/validate/jquery.metadata.js"></script>
+		<script>
+			var pageSize; //总页数
+			var pageIndex; //当前第几页
+			var table = $("#productsTable");
+			$(function() {
+				if($.getUrlParam('id')) {
+					setData();
+				} else {
+
+				}
+				var state = $.getUrlParam('state');
+				if(state && state == 'AUDIT') {
+					$('.hidden-panel').addClass('display-none');
+					$('textarea[name=remark').attr("disabled", "disabled").css("background-color", "#f5f5f5");
+					$('.audit-panel').removeClass('display-none');
+				}
+
+				new formValidate({
+					formEle: '#signupForm'
+				});
+
+				$(".i-checks").iCheck({
+					checkboxClass: "icheckbox_square-green",
+					radioClass: "iradio_square-green",
+				});
+
+				initTable();
+			});
+
+			function valid() {
+				var form = liger.get("signupForm");
+				alert(form.valid());
+			}
+
+			function getData() {
+				var form = liger.get("signupForm");
+				var data = form.getData();
+				alert(JSON.stringify(data));
+			}
+
+			function setData() {
+				$.ajax({
+					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/getUser',
+					data: {
+						id: $.getUrlParam('id')
+					},
+					success: function(res) {
+						res = $.parseJSON(res);
+						var form = new liger.get("signupForm");
+						form.setData(res);
+					}
+				})
+			}
+
+			function initTable() {
+				table.bootstrapTable({
+					// url: USER_INFO.SITE_URL+'/tp5/public/index.php/Admin/Admin/noteListDemo', //服务端需要返回rows与total字段
+					// pagination: true, //分页
+					// pageSize: 5, //每页多少条
+					// method:'post',
+					// sidePagination: "server", //服务端处理分页
+					columns: [{
+							field: 'id',
+							title: '编号',
+							visible: false
+						},
+						{
+							title: '商品代码',
+							field: 'product_code'
+						},
+						{
+							title: '商品名称',
+							field: 'product_name'
+						},
+						{
+							title: '单位',
+							field: 'unit'
+						},
+						{
+							title: '助记符',
+							field: 'mnemonic'
+						},
+						{
+							title: '采购参考价',
+							field: 'purchase_reference_price',
+							editable: {
+								type: 'text',
+								title: '采购参考价',
+								validate: function(v) {
+									if(!v) return '采购参考价不能为空';
+
+								}
+							}
+						},
+						{
+							title: '吊牌价',
+							field: 'price_tag',
+							editable: {
+								type: 'text',
+								title: '吊牌价',
+								validate: function(v) {
+									if(!v) return '吊牌价不能为空';
+
+								}
+							}
+						},
+						{
+							title: '网指价',
+							field: 'network_price',
+							editable: {
+								type: 'text',
+								title: '网指价',
+								validate: function(v) {
+									if(!v) return '网指价不能为空';
+
+								}
+							}
+						},
+						{
+							title: '京东供货价',
+							field: 'Jingdong_supply_price',
+							editable: {
+								type: 'text',
+								title: '京东供货价',
+								validate: function(v) {
+									if(!v) return '京东供货价不能为空';
+
+								}
+							}
+						},
+						{
+							title: '最低价',
+							field: 'lowest_price',
+							editable: {
+								type: 'text',
+								title: '最低价',
+								validate: function(v) {
+									if(!v) return '最低价不能为空';
+
+								}
+							}
+						},
+						{
+							title: '分销价',
+							field: 'distribution_price',
+							editable: {
+								type: 'text',
+								title: '分销价',
+								validate: function(v) {
+									if(!v) return '分销价不能为空';
+
+								}
+							}
+						},
+						{
+							title: '备用1',
+							field: 'spare1'
+						},
+						{
+							title: '备用2',
+							field: 'spare2'
+						}
+					],
+					data: [{
+							id: 1,
+							product_code: '104173U525498415616',
+							product_name: 'DICKIES 173U90LBB28BK05',
+							unit: '件',
+							mnemonic: 'D17-8546',
+							purchase_reference_price: '45',
+							spare1: '0',
+							spare2: '0',
+							price_tag: '228',
+							network_price: '534',
+							Jingdong_supply_price: '0',
+							lowest_price: '99',
+							distribution_price: '69.3'
+						},
+						{
+							id: 2,
+							product_code: '124643U90LBB28BK05',
+							product_name: 'DICKIES 173U90LBB28BK05',
+							unit: '件',
+							mnemonic: 'D17-C031',
+							purchase_reference_price: '45',
+							spare1: '0',
+							spare2: '0',
+							price_tag: '242',
+							network_price: '135',
+							Jingdong_supply_price: '0',
+							lowest_price: '99',
+							distribution_price: '69.3'
+						},
+						{
+							id: 3,
+							product_code: '106433U90LBB28BK05',
+							product_name: 'DICKIES 173U90LBB28BK05',
+							unit: '件',
+							mnemonic: 'D32-C031',
+							purchase_reference_price: '45',
+							spare1: '0',
+							spare2: '0',
+							price_tag: '843',
+							network_price: '245',
+							Jingdong_supply_price: '0',
+							lowest_price: '99',
+							distribution_price: '69.3'
+						},
+						{
+							id: 4,
+							product_code: '104173U90LBB28BK05',
+							product_name: 'DICKIES 173U90LBB28BK05',
+							unit: '件',
+							mnemonic: 'D18-C031',
+							purchase_reference_price: '22',
+							spare1: '0',
+							spare2: '0',
+							price_tag: '555',
+							network_price: '223',
+							Jingdong_supply_price: '0',
+							lowest_price: '99',
+							distribution_price: '69.3'
+						}
+					],
+					onLoadSuccess: function(data) {
+						var data = table.bootstrapTable('getData', true);
+						//合并单元格
+						mergeCells(data, "companyTypeName", 1, table);
+
+					},
+					onEditableSave: function(field, row, oldValue, $el) {
+						$("input[data-toggle]").tooltip('hide');
+						$el.attr("data-toggle", "tooltip");
+						$el.attr("data-placement", "top");
+						$el.attr("title", "修改前的值是" + oldValue);
+						$el.css("color", "red");
+						$el.tooltip('show');
+					}
+					/*
+					            queryParams: function(params) {
+					                var form = liger.get("form");
+					                var data = form.getData();
+					                var temp = {
+					                    pageSize: params.limit,                         //页面大小
+					                    pageIndex: (params.offset / params.limit) + 1,   //页码
+					                    sort: params.sort,      //排序列名
+					                    sortOrder: params.order //排位命令（desc，asc）
+					                };
+					                mergeObj(temp,data); //合并对象
+					                pageSize = temp.pageSize;
+					                pageIndex = temp.pageIndex;
+					                return temp;
+					            }*/
+				});
+
+			}
+
+			function submitForm() {
+				var form = liger.get("signupForm");
+				if(!form.valid()) {
+					return;
+				}
+				var data = {};
+				$("input,select,textarea").each(function() {
+					var name = $(this).attr("name");
+					if(name && name.indexOf('ligerui') == -1) {
+						data[name] = this.value;
+					}
+				});
+				data.id = $.getUrlParam('id');
+
+				$.ajax({
+					type: 'post',
+					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/setUser',
+					data: data,
+					success: function(res) {
+						if(Number(res)) {
+							parent.table.bootstrapTable('refresh');
+							var index = parent.layer.getFrameIndex(window.name);
+							parent.layer.close(index);
+						}
+					}
+				})
+				/*
+				            parent.table.bootstrapTable('refresh');
+				            var index = parent.layer.getFrameIndex(window.name);
+				            parent.layer.close(index);*/
+			}
+		</script>
+	</body>
+
+</html>

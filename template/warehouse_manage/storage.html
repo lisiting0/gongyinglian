@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>验收入库</title>
+		<meta name="keywords" content="验收入库">
+		<meta name="description" content="验收入库">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-editable/bootstrap-editable.css" rel="stylesheet">
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+
+	</head>
+
+	<body class="pd15">
+
+		<form class="form-horizontal m-t" id="signupForm">
+			<div class="form-group">
+				<label class="col-sm-2 control-label">到货单号</label>
+				<div class="col-sm-3">
+					<input name="arrival_order_number" class="ui-textbox disabled-text" type="text" value="20170405">
+				</div>
+				<label class="col-sm-2 control-label">供应商</label>
+				<div class="col-sm-3">
+					<input name="batch" class="ui-textbox disabled-text" type="text" value="广州集团">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">批次</label>
+				<div class="col-sm-3">
+					<input name="batch" class="ui-textbox border-none" type="text" value="1">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">收货清单</label>
+				<div class="col-sm-8">
+					<table id="receiptListTable"></table>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">操作员</label>
+				<div class="col-sm-3">
+					<input name="batch" class="ui-textbox disabled-text" type="text" ltype="text" value="季童薇">
+				</div>
+				<label class="col-sm-2 control-label">日期</label>
+				<div class="col-sm-3">
+					<input name="date" id="date" class="laydate-icon form-control layer-date" type="text" autocomplete="off" ltype="text" validate="{required:true}" value="2017-3-9 17:28">
+				</div>
+			</div>
+			<div class="form-group text-right">
+				<div class="col-sm-8 col-sm-offset-2">
+					<button class="btn btn-primary" type="submit" onclick="submitForm();">提交</button>
+					<button class="btn btn-primary" type="submit" onclick="cancelLayer();">取消</button>
+				</div>
+			</div>
+		</form>
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/bootstrap.min.js"></script>
+		<script src="../../js/js.js"></script>
+		<script src="../../js/ligerui.all.js"></script>
+		<script src="../../js/plugins/layer/laydate/laydate.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-editable.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-table-editable.js"></script>
+		<script src="../../js/plugins/validate/jquery.validate.min.js"></script>
+		<script src="../../js/plugins/validate/messages_zh.min.js"></script>
+		<script src="../../js/plugins/validate/jquery.metadata.js"></script>
+		<script>
+			var table = $("#receiptListTable");
+			$(function() {
+				var loadData = [{
+					id: 1,
+					order_number: 'J2018A5001728',
+					code: '160M60LYXCL',
+					name: 'CASIO MTP-1329D-5A',
+					supplier: '北京劳力士集团',
+					unit: '件',
+					gp: '考核',
+					image: 'watch1',
+					size: '通码',
+					color: '通色',
+					cost_price: 8,
+					total_quality_inspection: 100,
+					AAmount: 98,
+					good_warehouse: '顺德仓',
+					good_location: '普通库位',
+					CAmount: 2,
+					bad_goods_location: '不良品仓',
+					remark: ''
+				}, {
+					id: 2,
+					order_number: 'J2018A5011728',
+					code: '002B38068M QQF-01',
+					name: '表带',
+					supplier: '广州环海报关服务有限公司',
+					unit: '件',
+					gp: '考核',
+					image: 'watch1',
+					size: '通码',
+					color: '通色',
+					cost_price: 8,
+					total_quality_inspection: 100,
+					AAmount: 98,
+					good_warehouse: '顺德仓',
+					good_location: '普通库位',
+					CAmount: 2,
+					bad_goods_location: '不良品仓',
+					remark: ''
+				}, {
+					id: 3,
+					order_number: 'J2018A5011728',
+					code: '002B38068M QQF-01',
+					name: '表带',
+					supplier: '广州环海报关服务有限公司',
+					unit: '件',
+					gp: '考核',
+					image: 'watch1',
+					size: '通码',
+					color: '通色',
+					cost_price: 8,
+					total_quality_inspection: 100,
+					AAmount: 98,
+					good_warehouse: '顺德仓',
+					good_location: '普通库位',
+					CAmount: 2,
+					bad_goods_location: '不良品仓',
+					remark: ''
+				}, {
+					id: 4,
+					order_number: 'J2018A5001728',
+					code: '160M60LYXCL',
+					name: 'CASIO MTP-1339D-5A',
+					supplier: '北京劳力士集团',
+					unit: '件',
+					gp: '考核',
+					image: 'watch1',
+					size: '通码',
+					color: '通色',
+					cost_price: 8,
+					total_quality_inspection: 100,
+					AAmount: 98,
+					good_warehouse: '顺德仓',
+					good_location: '普通库位',
+					CAmount: 2,
+					bad_goods_location: '不良品仓',
+					remark: ''
+				}];
+
+				initReceiptListTable();
+				$(".btn-default").addClass("btn-outline");
+
+				if($.getUrlParam('id')) {
+					//setData();
+					table.bootstrapTable('append', loadData);
+					//合并单元格
+					mergeCells(loadData, "order_number", null, "#receiptListTable");
+				} else {
+
+				}
+
+				new formValidate({
+					formEle: '#signupForm'
+				});
+				laydate({
+					elem: "#date",
+					format: "YYYY/MM/DD hh:mm",
+					min: laydate.now(),
+					max: "2099-06-16 23:59",
+					istime: true,
+					istoday: false,
+					choose: function(datas) {
+						end.min = datas;
+						end.start = datas
+					}
+				});
+			});
+
+			function initReceiptListTable() {
+				table.bootstrapTable({
+					search: true,
+					showRefresh: true,
+					showColumns: true,
+					icons: {
+						refresh: "glyphicon-repeat",
+						columns: "glyphicon-list"
+					},
+					columns: [{
+						field: "order_number",
+						title: "订单编号"
+					}, {
+						field: "code",
+						title: "商品代码/物料型号"
+					}, {
+						field: "name",
+						title: "商品名称/物料名称"
+					}, {
+						field: "unit",
+						title: "单位",
+						visible: false
+					}, {
+						field: "size",
+						title: "尺码",
+						visible: false
+					}, {
+						field: "color",
+						title: "颜色",
+						visible: false
+					}, {
+						field: "image",
+						title: "图片",
+						visible: false,
+						formatter: function(v) {
+							return '<a href="../../img/' + v + '.jpg" title="图片" data-gallery="" class="gallery-img"><img src="../../img/' + v + '.jpg"></a>';
+						}
+					}, {
+						title: '加权成本单价',
+						field: 'cost_price'
+					}, {
+						title: '质检总数量',
+						field: 'total_quality_inspection'
+					}, {
+						title: '良品数量',
+						field: 'AAmount'
+					}, {
+						title: '仓库',
+						field: 'good_warehouse'
+					}, {
+						title: '库位',
+						field: 'good_location'
+					}, {
+						title: '不良品数量',
+						field: 'CAmount'
+					}, {
+						title: '库位',
+						field: 'bad_goods_location'
+					}, {
+						title: '备注',
+						field: 'remark'
+					}],
+					onLoadSuccess: function(data) {
+						if($.getUrlParam('id')) {
+							table.bootstrapTable('append', data);
+							//var data = $('#receiptListTable').bootstrapTable('getData', true);
+							//合并单元格
+							mergeCells(data, "order_number", null, "#receiptListTable");
+						}
+
+					}
+				});
+			}
+
+			function valid() {
+				var form = liger.get("signupForm");
+				alert(form.valid());
+			}
+
+			function getData() {
+				var form = liger.get("signupForm");
+				var data = form.getData();
+				alert(JSON.stringify(data));
+			}
+
+			function setData() {
+				$.ajax({
+					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/getUser',
+					data: {
+						id: $.getUrlParam('id')
+					},
+					success: function(res) {
+						res = $.parseJSON(res);
+						var form = new liger.get("signupForm");
+						form.setData(res);
+					}
+				})
+			}
+
+			function submitForm() {
+
+				var form = liger.get("signupForm");
+				if(!form.valid()) {
+					return;
+				}
+				var data = {};
+				$("input,select,textarea").each(function() {
+					var name = $(this).attr("name");
+					if(name && name.indexOf('ligerui') == -1) {
+						data[name] = this.value;
+					}
+				});
+				data.id = $.getUrlParam('id');
+
+				$.ajax({
+						type: 'post',
+						url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/setUser',
+						data: data,
+						success: function(res) {
+							if(Number(res)) {
+								parent.table.bootstrapTable('refresh');
+								var index = parent.layer.getFrameIndex(window.name);
+								parent.layer.close(index);
+							}
+						}
+					})
+					/*
+					            parent.table.bootstrapTable('refresh');
+					            var index = parent.layer.getFrameIndex(window.name);
+					            parent.layer.close(index);*/
+			}
+		</script>
+	</body>
+
+</html>

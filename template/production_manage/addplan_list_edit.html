@@ -1,0 +1,1900 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>新增订单计划</title>
+		<meta name="keywords" content="新增订单计划">
+		<meta name="description" content="新增订单计划">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/plugins/datapicker/bootstrap-datetimepicker.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-editable/bootstrap-editable.css" rel="stylesheet">
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/plugins/steps/jquery.steps.css" rel="stylesheet">
+		<link href="../../js/zTree_v3-master/css/zTreeStyle/zTreeStyle.css" rel="stylesheet">
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+		<link href="../../css/plugins/iCheck/custom.css" rel="stylesheet">
+	</head>
+	<style type="text/css">
+		.wizard>.steps>ul>li {
+			width: 20%;
+		}
+		
+		.wizard>.content>.body ul>li {
+			list-style: none;
+		}
+		
+		.form-horizontal .form-group{
+			margin-left: 0;
+		}
+		
+		.panel-border {
+			background-color: #fff;
+			border: 1px solid #ddd;
+			-webkit-border-radius: 4px;
+			-moz-border-radius: 4px;
+			border-radius: 4px;6
+		}
+		
+		.brand-panel:after {
+			content: "品牌/商品信息";
+			width: 100%;
+			background-color: #f5f5f5;
+			border: 1px solid #ddd;
+			position: absolute;
+			top: 0;
+			left: 0;
+			padding: 8px;
+			font-size: 14px;
+			color: #9da0a4;
+			-webkit-border-radius: 4px 0 4px 0;
+			-moz-border-radius: 4px 0 4px 0;
+			border-radius: 4px 0 4px 0;
+		}
+		
+		.product-panel {
+			padding: 45px 10px 5px;
+		}
+		
+		.product-panel:after {
+			content: "已选择的商品信息";
+			width: 100%;
+			background-color: #f5f5f5;
+			border: 1px solid #ddd;
+			position: absolute;
+			top: 0;
+			left: 0;
+			padding: 8px;
+			font-size: 14px;
+			color: #9da0a4;
+			-webkit-border-radius: 4px 0 4px 0;
+			-moz-border-radius: 4px 0 4px 0;
+			border-radius: 4px 0 4px 0;
+		}
+	</style>
+
+	<body class="gray-bg">
+		<div class="wrapper wrapper-content animated">
+			<div class="ibox">
+				<div class="ibox-content">
+					<form id="signupForm" action="#" class="wizard-big form-horizontal">
+						<h1>采购信息</h1>
+						<fieldset>
+							<div class="row">
+								<div class="form-group supplierList">
+									<label class="col-sm control-label" style="width: 7%;">供应商</label>
+									<div class="col-sm-4">
+										<select class="form-control" name="supplier" id="supplierSelect">
+											<option value=" " selected="selected">请选择</option>
+											<option value="深圳市鼎灏时尚佩饰有限公司">深圳市凯斯特表业有限公司</option>
+											<option value="广州环海报关服务有限公司">广州环海报关服务有限公司</option>
+											<option value="广州交易会进出口有限公司2">广州交易会进出口有限公司2</option>
+											<option value="广州市安智宜进出口有限公司">广州市安智宜进出口有限公司</option>
+											<option value="散件供应商（海外专用）">散件供应商（海外专用）</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group selectedSupplierShow display-none">
+									<div class="col-sm-3 panel-border brand-panel" style="width: 33%;">
+										<div style="margin-top: 50px;margin-bottom: 10px;">
+											<input type="input" class="form-control" id="key" autocomplete="off" placeholder="请输入要查询的物料信息..." style="display:inline-block;width: 79%;">
+											<button type="button" class="btn btn-sm btn-primary" onclick="searchNode()" style="display: inline-block;">搜索</button>
+										</div>
+										<div>
+											<ul id="tree" class="ztree" style="clear: both;"></ul>
+										</div>
+									</div>
+									<div style="width: 5%;display: inline-block;margin-top: 5%;">
+										<button type="button" class="btn btn-sm btn-primary" onclick="moveRight()" style="display: block; margin: 65%;"><i class="fa fa-arrow-right"></i></button>
+										<button type="button" class="btn btn-sm btn-primary" onclick="moveLeft()" style="margin-left: 65%;"><i class="fa fa-arrow-left"></i></button>
+									</div>
+									<div class="col-sm-8 panel-border product-panel" style="width: 57%;display: inline-block;float: right;">
+										<div>
+											<table id="SKUList"></table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</fieldset>
+
+						<h1>根据SKU显示的物料详细</h1>
+						<fieldset>
+							<div class="tabs-container">
+								<div class="tabs-left">
+									<ul class="nav nav-tabs">
+										<li class="active">
+											<a data-toggle="tab" href="#tab-1"> CASIO MTP-1329D-5A</a>
+										</li>
+										<li class="">
+											<a data-toggle="tab" href="#tab-2"> CASIO WHIG-1329D-5A</a>
+										</li>
+										<li class="">
+											<a data-toggle="tab" href="#tab-3"> CASIO MTPLD-1329D-5A</a>
+										</li>
+									</ul>
+									<div class="tab-content ">
+										<div id="tab-1" class="tab-pane active">
+											<div class="panel-body">
+												<div class="row">
+													<div class="form-group">
+														<div class="col-sm-12">
+															<table id="materialsInfoTable1"></table>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div id="tab-2" class="tab-pane">
+											<div class="panel-body">
+												<div class="row">
+													<div class="form-group">
+														<div class="col-sm-12">
+															<table id="materialsInfoTable2"></table>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div id="tab-3" class="tab-pane">
+											<div class="panel-body">
+												<div class="row">
+													<div class="form-group">
+														<div class="col-sm-12">
+															<table id="materialsInfoTable3"></table>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</fieldset>
+
+						<h1>根据供应商显示的物料详细</h1>
+						<fieldset>
+							<div class="tabs-container">
+								<div class="tabs-left">
+									<ul class="nav nav-tabs">
+										<li class="active">
+											<a data-toggle="tab" href="#supplier-tab-1"> 北京劳力士集团</a>
+										</li>
+										<li class="">
+											<a data-toggle="tab" href="#supplier-tab-2"> 广州环海报关服务有限公司</a>
+										</li>
+										<li class="">
+											<a data-toggle="tab" href="#supplier-tab-3"> 广州市安智宜进出口有限公司</a>
+										</li>
+									</ul>
+									<div class="tab-content ">
+										<div id="supplier-tab-1" class="tab-pane active">
+											<div class="panel-body">
+												<div class="row">
+													<div class="form-group">
+														<div class="col-sm-12">
+															<table id="materialsInfoForSupplier1"></table>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div id="supplier-tab-2" class="tab-pane">
+											<div class="panel-body">
+												<div class="row">
+													<div class="form-group">
+														<div class="col-sm-12">
+															<table id="materialsInfoForSupplier2"></table>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div id="supplier-tab-3" class="tab-pane">
+											<div class="panel-body">
+												<div class="row">
+													<div class="form-group">
+														<div class="col-sm-12">
+															<table id="materialsInfoForSupplier3"></table>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</fieldset>
+
+						<h1>订单信息</h1>
+						<fieldset>
+							<div class="tabs-container">
+								<div class="tabs-left">
+									<ul class="nav nav-tabs">
+										<li class="active">
+											<a data-toggle="tab" href="#order-tab-1"> 北京劳力士集团</a>
+										</li>
+										<li class="">
+											<a data-toggle="tab" href="#order-tab-2"> 广州环海报关服务有限公司</a>
+										</li>
+										<li class="">
+											<a data-toggle="tab" href="#order-tab-3"> 广州市安智宜进出口有限公司</a>
+										</li>
+									</ul>
+									<div class="tab-content ">
+										<div id="order-tab-1" class="tab-pane active">
+											<div class="panel-body">
+												<div class="form-group">
+													<label class="col-sm-2 control-label">供货单位</label>
+													<div class="col-sm-3">
+														<input name="delivery_unit" type="text" class="form-control required" value="北京劳力士集团">
+													</div>
+													<label class="col-sm-2 control-label">订货单位</label>
+													<div class="col-sm-3">
+														<input name="order_unit" type="text" class="form-control required" value="鼎骏">
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-2 control-label">地址</label>
+													<div class="col-sm-3">
+														<input name="delivery_unit_address" type="text" class="form-control required" value="北京市海定区xx街xx路xx号">
+													</div>
+													<label class="col-sm-2 control-label">地址</label>
+													<div class="col-sm-3">
+														<input name="order_unit_address" type="text" class="form-control required" value="广州市海珠区xx街xx路xx号">
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-2 control-label">联系人</label>
+													<div class="col-sm-3">
+														<input name="delivery_unit_contacts" type="text" class="form-control required" value="李小明">
+													</div>
+													<label class="col-sm-2 control-label">联系人</label>
+													<div class="col-sm-3">
+														<input name="order_unit_contacts" type="text" class="form-control required" value="张三">
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-2 control-label">联系方式</label>
+													<div class="col-sm-3">
+														<input name="delivery_unit_phone" type="text" class="form-control required" value="13113369041">
+													</div>
+													<label class="col-sm-2 control-label">联系方式</label>
+													<div class="col-sm-3">
+														<input name="order_unit_phone" type="text" class="form-control required" value="13583369041">
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-2 control-label">传真</label>
+													<div class="col-sm-3">
+														<input name="delivery_unit_fax" type="text" class="form-control" value="">
+													</div>
+													<label class="col-sm-2 control-label">传真</label>
+													<div class="col-sm-3">
+														<input name="order_unit_fax" type="text" class="form-control" value="">
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-2 control-label">开户行</label>
+													<div class="col-sm-3">
+														<input name="account_bank" type="text" class="form-control required" value="广州市海珠区xx街建设银行">
+													</div>
+													<label class="col-sm-2 control-label">收货地址</label>
+													<div class="col-sm-3">
+														<input name="shipping_address" type="text" class="form-control required" value="广州市海珠区区xx街xx号">
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-2 control-label">账号</label>
+													<div class="col-sm-3">
+														<input name="account_number" type="text" class="form-control required" value="6160654654564654">
+													</div>
+													<label class="col-sm-2 control-label">下单日期</label>
+													<div class="col-sm-3">
+														<input name="order_date" id="order_date" class="laydate-icon layer-date form-control required" type="text" autocomplete="off" value="2018-01-01">
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-2 control-label">纳税人登记号</label>
+													<div class="col-sm-3">
+														<input name="prepared_by" type="text" class="form-control required" value="2656498465464894">
+													</div>
+													<label class="col-sm-2 control-label">交货日期</label>
+													<div class="col-sm-3">
+														<input name="delivery_date" id="delivery_date" class="laydate-icon layer-date form-control required" autocomplete="off" type="text" value="2018-01-20">
+													</div>
+												</div>
+												<div class="form-group" style="font-weight:bold;color: blue;">
+													<label class="col-sm-2 control-label">结算方式</label>
+													<div class="col-sm-3">
+														<input name="productInspector" type="text" class="form-control required" value="A类开票">
+													</div>
+													<label class="col-sm-2 control-label">订单号</label>
+													<div class="col-sm-3">
+														<input name="order_num" id="order_num" type="text" class="form-control required" value="PO-YFDK0012">
+													</div>
+												</div>
+												<div class="row">
+													<label class="col-sm-2 control-label">定金</label>
+													<div class="col-sm-3">
+														<input name="deposit" type="text" class="form-control" value="">
+													</div>
+												</div>
+											</div>
+										</div>
+										<div id="order-tab-2" class="tab-pane">
+											<div class="panel-body">
+												<div class="form-group">
+													<label class="col-sm-2 control-label">供货单位</label>
+													<div class="col-sm-3">
+														<input name="delivery_unit" type="text" class="form-control required" value="广州环海报关服务有限公司">
+													</div>
+													<label class="col-sm-2 control-label">订货单位</label>
+													<div class="col-sm-3">
+														<input name="order_unit" type="text" class="form-control required" value="鼎骏">
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-2 control-label">地址</label>
+													<div class="col-sm-3">
+														<input name="delivery_unit_address" type="text" class="form-control required" value="广州市天河区xx街xx路xx号">
+													</div>
+													<label class="col-sm-2 control-label">地址</label>
+													<div class="col-sm-3">
+														<input name="order_unit_address" type="text" class="form-control required" value="广州市海珠区xx街xx路xx号">
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-2 control-label">联系人</label>
+													<div class="col-sm-3">
+														<input name="delivery_unit_contacts" type="text" class="form-control required" value="李小明">
+													</div>
+													<label class="col-sm-2 control-label">联系人</label>
+													<div class="col-sm-3">
+														<input name="order_unit_contacts" type="text" class="form-control required" value="张三">
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-2 control-label">联系方式</label>
+													<div class="col-sm-3">
+														<input name="delivery_unit_phone" type="text" class="form-control required" value="13113369041">
+													</div>
+													<label class="col-sm-2 control-label">联系方式</label>
+													<div class="col-sm-3">
+														<input name="order_unit_phone" type="text" class="form-control required" value="13583369041">
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-2 control-label">传真</label>
+													<div class="col-sm-3">
+														<input name="delivery_unit_fax" type="text" class="form-control" value="">
+													</div>
+													<label class="col-sm-2 control-label">传真</label>
+													<div class="col-sm-3">
+														<input name="order_unit_fax" type="text" class="form-control" value="">
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-2 control-label">开户行</label>
+													<div class="col-sm-3">
+														<input name="account_bank" type="text" class="form-control required" value="广州市海珠区xx街建设银行">
+													</div>
+													<label class="col-sm-2 control-label">收货地址</label>
+													<div class="col-sm-3">
+														<input name="shipping_address" type="text" class="form-control required" value="广州市海珠区区xx街xx号">
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-2 control-label">账号</label>
+													<div class="col-sm-3">
+														<input name="account_number" type="text" class="form-control required" value="6160654654564654">
+													</div>
+													<label class="col-sm-2 control-label">下单日期</label>
+													<div class="col-sm-3">
+														<input name="order_date" id="order_date" class="laydate-icon layer-date form-control required" type="text" autocomplete="off" value="2018-01-01">
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-2 control-label">纳税人登记号</label>
+													<div class="col-sm-3">
+														<input name="prepared_by" type="text" class="form-control required" value="2656498465464894">
+													</div>
+													<label class="col-sm-2 control-label">交货日期</label>
+													<div class="col-sm-3">
+														<input name="delivery_date" id="delivery_date" class="laydate-icon layer-date form-control required" type="text" autocomplete="off" value="2018-01-20">
+													</div>
+												</div>
+												<div class="form-group" style="font-weight:bold;color: blue;">
+													<label class="col-sm-2 control-label">结算方式</label>
+													<div class="col-sm-3">
+														<input name="productInspector" type="text" class="form-control required" value="A类开票">
+													</div>
+													<label class="col-sm-2 control-label">订单号</label>
+													<div class="col-sm-3">
+														<input name="order_num" id="order_num" type="text" class="form-control required" value="PO-YFDK0012">
+													</div>
+												</div>
+												<div class="row">
+													<label class="col-sm-2 control-label">定金</label>
+													<div class="col-sm-3">
+														<input name="deposit" type="text" class="form-control" value="">
+													</div>
+												</div>
+											</div>
+										</div>
+										<div id="order-tab-3" class="tab-pane">
+											<div class="panel-body">
+												<div class="form-group">
+													<label class="col-sm-2 control-label">供货单位</label>
+													<div class="col-sm-3">
+														<input name="delivery_unit" type="text" class="form-control required" value="广州市安智宜进出口有限公司">
+													</div>
+													<label class="col-sm-2 control-label">订货单位</label>
+													<div class="col-sm-3">
+														<input name="order_unit" type="text" class="form-control required" value="鼎骏">
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-2 control-label">地址</label>
+													<div class="col-sm-3">
+														<input name="delivery_unit_address" type="text" class="form-control required" value="广州市黄埔区xx街xx路xx号">
+													</div>
+													<label class="col-sm-2 control-label">地址</label>
+													<div class="col-sm-3">
+														<input name="order_unit_address" type="text" class="form-control required" value="广州市海珠区xx街xx路xx号">
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-2 control-label">联系人</label>
+													<div class="col-sm-3">
+														<input name="delivery_unit_contacts" type="text" class="form-control required" value="赵六">
+													</div>
+													<label class="col-sm-2 control-label">联系人</label>
+													<div class="col-sm-3">
+														<input name="order_unit_contacts" type="text" class="form-control required" value="张三">
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-2 control-label">联系方式</label>
+													<div class="col-sm-3">
+														<input name="delivery_unit_phone" type="text" class="form-control required" value="13113369041">
+													</div>
+													<label class="col-sm-2 control-label">联系方式</label>
+													<div class="col-sm-3">
+														<input name="order_unit_phone" type="text" class="form-control required" value="13583369041">
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-2 control-label">传真</label>
+													<div class="col-sm-3">
+														<input name="delivery_unit_fax" type="text" class="form-control" value="">
+													</div>
+													<label class="col-sm-2 control-label">传真</label>
+													<div class="col-sm-3">
+														<input name="order_unit_fax" type="text" class="form-control" value="">
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-2 control-label">开户行</label>
+													<div class="col-sm-3">
+														<input name="account_bank" type="text" class="form-control required" value="广州市海珠区xx街建设银行">
+													</div>
+													<label class="col-sm-2 control-label">收货地址</label>
+													<div class="col-sm-3">
+														<input name="shipping_address" type="text" class="form-control required" value="广州市海珠区区xx街xx号">
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-2 control-label">账号</label>
+													<div class="col-sm-3">
+														<input name="account_number" type="text" class="form-control required" value="6160654654564654">
+													</div>
+													<label class="col-sm-2 control-label">下单日期</label>
+													<div class="col-sm-3">
+														<input name="order_date" id="order_date" class="laydate-icon layer-date form-control required" type="text" autocomplete="off" value="2018-01-01">
+													</div>
+												</div>
+												<div class="form-group">
+													<label class="col-sm-2 control-label">纳税人登记号</label>
+													<div class="col-sm-3">
+														<input name="prepared_by" type="text" class="form-control required" value="2656498465464894">
+													</div>
+													<label class="col-sm-2 control-label">交货日期</label>
+													<div class="col-sm-3">
+														<input name="delivery_date" id="delivery_date" class="laydate-icon layer-date form-control required" type="text" autocomplete="off" value="2018-01-20">
+													</div>
+												</div>
+												<div class="form-group" style="font-weight:bold;color: blue;">
+													<label class="col-sm-2 control-label">结算方式</label>
+													<div class="col-sm-3">
+														<input name="productInspector" type="text" class="form-control required" value="A类开票">
+													</div>
+													<label class="col-sm-2 control-label">订单号</label>
+													<div class="col-sm-3">
+														<input name="order_num" id="order_num" type="text" class="form-control required" value="PO-YFDK0012">
+													</div>
+												</div>
+												<div class="row">
+													<label class="col-sm-2 control-label">定金</label>
+													<div class="col-sm-3">
+														<input name="deposit" type="text" class="form-control" value="">
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</fieldset>
+
+						<h1>订单预览</h1>
+						<fieldset>
+							<div class="tabs-container">
+								<div class="tabs-left">
+									<ul class="nav nav-tabs">
+										<li class="active">
+											<a data-toggle="tab" href="#preview-tab-1"> 北京劳力士集团订单预览</a>
+										</li>
+										<li class="">
+											<a data-toggle="tab" href="#preview-tab-2"> 广州环海报关服务有限公司订单预览</a>
+										</li>
+										<li class="">
+											<a data-toggle="tab" href="#preview-tab-3"> 广州市安智宜进出口有限公司订单预览</a>
+										</li>
+									</ul>
+									<div class="tab-content ">
+										<div id="preview-tab-1" class="tab-pane active">
+											<div class="panel-body">
+												<div class="bootstrap-table clear" style="margin: 0 auto;">
+													<div class="fixed-table-container">
+														<div class="fixed-table-header">
+															<table class="table table-hover">
+																<thead>
+																	<tr>
+																		<th colspan="7">
+																			<div class="th-inner" style="padding: 15px;line-height: 15px;text-align: center;font-size: 18px;">订货单</div>
+																		</th>
+																	</tr>
+																</thead>
+																<tbody>
+																	<tr>
+																		<td class="text-right">供货单位</td>
+																		<td colspan="2">XXXX有限公司</td>
+																		<td class="text-right">订货单位</td>
+																		<td colspan="3">XXXX有限公司</td>
+																	</tr>
+																	<tr>
+																		<td class="text-right">地址</td>
+																		<td colspan="2">北京市朝阳区XXX路XXX号</td>
+																		<td class="text-right">地址</td>
+																		<td colspan="3">广州市海珠区XXX路XXX号</td>
+																	</tr>
+																	<tr>
+																		<td class="text-right">联系人</td>
+																		<td colspan="2">李晓</td>
+																		<td class="text-right">联系人</td>
+																		<td colspan="3">王达</td>
+																	</tr>
+																	<tr>
+																		<td class="text-right">联系方式</td>
+																		<td colspan="2">13800045678</td>
+																		<td class="text-right">联系方式</td>
+																		<td colspan="3">13811045678</td>
+																	</tr>
+																	<tr>
+																		<td class="text-right">传真</td>
+																		<td colspan="2">010-2568458</td>
+																		<td class="text-right">传真</td>
+																		<td colspan="3">020-8836568</td>
+																	</tr>
+																	<tr>
+																		<td class="text-right">开户行</td>
+																		<td colspan="2">建设银行</td>
+																		<td class="text-right">收货地址</td>
+																		<td colspan="3">广州市海珠区XXX路XXX号</td>
+																	</tr>
+																	<tr>
+																		<td class="text-right">账号</td>
+																		<td colspan="2">622658564851358648</td>
+																		<td class="text-right">下单日期</td>
+																		<td colspan="3">2017-10-13</td>
+																	</tr>
+																	<tr>
+																		<td class="text-right">纳税人登记号</td>
+																		<td colspan="2">ACD0284568</td>
+																		<td class="text-right">交货日期</td>
+																		<td colspan="3">2017-12-12</td>
+																	</tr>
+																	<tr>
+																		<td class="text-right">结算方式</td>
+																		<td colspan="2">A类开票</td>
+																		<td class="text-right">订单号</td>
+																		<td colspan="3">PO-YFDK0012</td>
+																	</tr>
+																	<tr>
+																		<td colspan="7" style="padding: 0;">
+																			<table class="table table-hover table-bordered" style="width: 99.8%; margin: 1px;border-radius: 3px solid;">
+																				<thead>
+																					<tr>
+																						<td>序号</td>
+																						<td>型号</td>
+																						<td>图片</td>
+																						<td>成表单价含税（人民币）</td>
+																						<td>订单数量（只）</td>
+																						<td>总金额含税（人民币）</td>
+																						<td>备注</td>
+																					</tr>
+																				</thead>
+																				<tbody>
+																					<tr>
+																						<td>1</td>
+																						<td>160M60LYXCL-02L1-12</td>
+																						<td>
+																							<a href="../../img/p_big3.jpg" title="图片" data-gallery="" class="gallery-img" class="gallery-img"><img src="../../img/p3.jpg"></a>
+																						</td>
+																						<td>50</td>
+																						<td>150</td>
+																						<td>￥7500.00</td>
+																						<td>含吊牌及机芯xxxxxxxx</td>
+																					</tr>
+																					<tr>
+																						<td>2</td>
+																						<td>160M60LYXCL-02L1-13</td>
+																						<td>
+																							<a href="../../img/p_big3.jpg" title="图片" data-gallery="" class="gallery-img"><img src="../../img/p3.jpg"></a>
+																						</td>
+																						<td>125</td>
+																						<td>160</td>
+																						<td>￥20000.00</td>
+																						<td>含吊牌及机芯xxxxxxxx</td>
+																					</tr>
+																					<tr>
+																						<td>3</td>
+																						<td>160M60LYXCL-02L1-14</td>
+																						<td>
+																							<a href="../../img/p_big3.jpg" title="图片" data-gallery="" class="gallery-img"><img src="../../img/p3.jpg"></a>
+																						</td>
+																						<td>86</td>
+																						<td>253</td>
+																						<td>￥21758.00</td>
+																						<td>含吊牌及机芯xxxxxxxx</td>
+																					</tr>
+																					<tr>
+																						<td colspan="4" style="text-align: right;"><span style="margin-right: 20px;">合计</span></td>
+																						<td>563</td>
+																						<td colspan="2">￥49258.00</td>
+																					</tr>
+																				</tbody>
+																			</table>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td class="text-right">制单</td>
+																		<td colspan="2">杨过</td>
+																		<td class="text-right">审核</td>
+																		<td colspan="3">乔峰</td>
+																	</tr>
+																	<tr>
+																		<td class="text-right">订货方</td>
+																		<td colspan="2">XX有限公司</td>
+																		<td class="text-right">供货方</td>
+																		<td colspan="3">XX有限公司</td>
+																	</tr>
+																	<tr>
+																		<td class="text-right">订货人签名</td>
+																		<td colspan="2">扫地僧</td>
+																		<td class="text-right">供货方签名</td>
+																		<td colspan="3"></td>
+																	</tr>
+																	<tr>
+																		<td class="text-right">日期</td>
+																		<td colspan="2">2017-10-13</td>
+																		<td class="text-right">日期</td>
+																		<td colspan="3">2017-10-13</td>
+																	</tr>
+																</tbody>
+															</table>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div id="preview-tab-2" class="tab-pane">
+											<div class="panel-body">
+												<div class="bootstrap-table clear" style="margin: 0 auto;">
+													<div class="fixed-table-container">
+														<div class="fixed-table-header">
+															<table class="table table-hover">
+																<thead>
+																	<tr>
+																		<th colspan="7">
+																			<div class="th-inner" style="padding: 15px;line-height: 15px;text-align: center;font-size: 18px;">订货单</div>
+																		</th>
+																	</tr>
+																</thead>
+																<tbody>
+																	<tr>
+																		<td class="text-right">供货单位</td>
+																		<td colspan="2">XXXX有限公司</td>
+																		<td class="text-right">订货单位</td>
+																		<td colspan="3">XXXX有限公司</td>
+																	</tr>
+																	<tr>
+																		<td class="text-right">地址</td>
+																		<td colspan="2">北京市朝阳区XXX路XXX号</td>
+																		<td class="text-right">地址</td>
+																		<td colspan="3">广州市海珠区XXX路XXX号</td>
+																	</tr>
+																	<tr>
+																		<td class="text-right">联系人</td>
+																		<td colspan="2">李晓</td>
+																		<td class="text-right">联系人</td>
+																		<td colspan="3">王达</td>
+																	</tr>
+																	<tr>
+																		<td class="text-right">联系方式</td>
+																		<td colspan="2">13800045678</td>
+																		<td class="text-right">联系方式</td>
+																		<td colspan="3">13811045678</td>
+																	</tr>
+																	<tr>
+																		<td class="text-right">传真</td>
+																		<td colspan="2">010-2568458</td>
+																		<td class="text-right">传真</td>
+																		<td colspan="3">020-8836568</td>
+																	</tr>
+																	<tr>
+																		<td class="text-right">开户行</td>
+																		<td colspan="2">建设银行</td>
+																		<td class="text-right">收货地址</td>
+																		<td colspan="3">广州市海珠区XXX路XXX号</td>
+																	</tr>
+																	<tr>
+																		<td class="text-right">账号</td>
+																		<td colspan="2">622658564851358648</td>
+																		<td class="text-right">下单日期</td>
+																		<td colspan="3">2017-10-13</td>
+																	</tr>
+																	<tr>
+																		<td class="text-right">纳税人登记号</td>
+																		<td colspan="2">ACD0284568</td>
+																		<td class="text-right">交货日期</td>
+																		<td colspan="3">2017-12-12</td>
+																	</tr>
+																	<tr>
+																		<td class="text-right">结算方式</td>
+																		<td colspan="2">A类开票</td>
+																		<td class="text-right">订单号</td>
+																		<td colspan="3">PO-YFDK0012</td>
+																	</tr>
+																	<tr>
+																		<td colspan="7" style="padding: 0;">
+																			<table class="table table-hover table-bordered" style="width: 99.8%; margin: 1px;border-radius: 3px solid;">
+																				<thead>
+																					<tr>
+																						<td>序号</td>
+																						<td>型号</td>
+																						<td>图片</td>
+																						<td>成表单价含税（人民币）</td>
+																						<td>订单数量（只）</td>
+																						<td>总金额含税（人民币）</td>
+																						<td>备注</td>
+																					</tr>
+																				</thead>
+																				<tbody>
+																					<tr>
+																						<td>1</td>
+																						<td>160M60LYXCL-02L1-12</td>
+																						<td>
+																							<a href="../../img/p_big3.jpg" title="图片" data-gallery="" class="gallery-img" class="gallery-img"><img src="../../img/p3.jpg"></a>
+																						</td>
+																						<td>50</td>
+																						<td>150</td>
+																						<td>￥7500.00</td>
+																						<td>含吊牌及机芯xxxxxxxx</td>
+																					</tr>
+																					<tr>
+																						<td>2</td>
+																						<td>160M60LYXCL-02L1-13</td>
+																						<td>
+																							<a href="../../img/p_big3.jpg" title="图片" data-gallery="" class="gallery-img"><img src="../../img/p3.jpg"></a>
+																						</td>
+																						<td>125</td>
+																						<td>160</td>
+																						<td>￥20000.00</td>
+																						<td>含吊牌及机芯xxxxxxxx</td>
+																					</tr>
+																					<tr>
+																						<td>3</td>
+																						<td>160M60LYXCL-02L1-14</td>
+																						<td>
+																							<a href="../../img/p_big3.jpg" title="图片" data-gallery="" class="gallery-img"><img src="../../img/p3.jpg"></a>
+																						</td>
+																						<td>86</td>
+																						<td>253</td>
+																						<td>￥21758.00</td>
+																						<td>含吊牌及机芯xxxxxxxx</td>
+																					</tr>
+																					<tr>
+																						<td colspan="4" style="text-align: right;"><span style="margin-right: 20px;">合计</span></td>
+																						<td>563</td>
+																						<td colspan="2">￥49258.00</td>
+																					</tr>
+																				</tbody>
+																			</table>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td class="text-right">制单</td>
+																		<td colspan="2">杨过</td>
+																		<td class="text-right">审核</td>
+																		<td colspan="3">乔峰</td>
+																	</tr>
+																	<tr>
+																		<td class="text-right">订货方</td>
+																		<td colspan="2">XX有限公司</td>
+																		<td class="text-right">供货方</td>
+																		<td colspan="3">XX有限公司</td>
+																	</tr>
+																	<tr>
+																		<td class="text-right">订货人签名</td>
+																		<td colspan="2">扫地僧</td>
+																		<td class="text-right">供货方签名</td>
+																		<td colspan="3"></td>
+																	</tr>
+																	<tr>
+																		<td class="text-right">日期</td>
+																		<td colspan="2">2017-10-13</td>
+																		<td class="text-right">日期</td>
+																		<td colspan="3">2017-10-13</td>
+																	</tr>
+																</tbody>
+															</table>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div id="preview-tab-3" class="tab-pane">
+											<div class="panel-body">
+												<div class="bootstrap-table clear" style="margin: 0 auto;">
+													<div class="fixed-table-container">
+														<div class="fixed-table-header">
+															<table class="table table-hover">
+																<thead>
+																	<tr>
+																		<th colspan="7">
+																			<div class="th-inner" style="padding: 15px;line-height: 15px;text-align: center;font-size: 18px;">订货单</div>
+																		</th>
+																	</tr>
+																</thead>
+																<tbody>
+																	<tr>
+																		<td class="text-right">供货单位</td>
+																		<td colspan="2">XXXX有限公司</td>
+																		<td class="text-right">订货单位</td>
+																		<td colspan="3">XXXX有限公司</td>
+																	</tr>
+																	<tr>
+																		<td class="text-right">地址</td>
+																		<td colspan="2">北京市朝阳区XXX路XXX号</td>
+																		<td class="text-right">地址</td>
+																		<td colspan="3">广州市海珠区XXX路XXX号</td>
+																	</tr>
+																	<tr>
+																		<td class="text-right">联系人</td>
+																		<td colspan="2">李晓</td>
+																		<td class="text-right">联系人</td>
+																		<td colspan="3">王达</td>
+																	</tr>
+																	<tr>
+																		<td class="text-right">联系方式</td>
+																		<td colspan="2">13800045678</td>
+																		<td class="text-right">联系方式</td>
+																		<td colspan="3">13811045678</td>
+																	</tr>
+																	<tr>
+																		<td class="text-right">传真</td>
+																		<td colspan="2">010-2568458</td>
+																		<td class="text-right">传真</td>
+																		<td colspan="3">020-8836568</td>
+																	</tr>
+																	<tr>
+																		<td class="text-right">开户行</td>
+																		<td colspan="2">建设银行</td>
+																		<td class="text-right">收货地址</td>
+																		<td colspan="3">广州市海珠区XXX路XXX号</td>
+																	</tr>
+																	<tr>
+																		<td class="text-right">账号</td>
+																		<td colspan="2">622658564851358648</td>
+																		<td class="text-right">下单日期</td>
+																		<td colspan="3">2017-10-13</td>
+																	</tr>
+																	<tr>
+																		<td class="text-right">纳税人登记号</td>
+																		<td colspan="2">ACD0284568</td>
+																		<td class="text-right">交货日期</td>
+																		<td colspan="3">2017-12-12</td>
+																	</tr>
+																	<tr>
+																		<td class="text-right">结算方式</td>
+																		<td colspan="2">A类开票</td>
+																		<td class="text-right">订单号</td>
+																		<td colspan="3">PO-YFDK0012</td>
+																	</tr>
+																	<tr>
+																		<td colspan="7" style="padding: 0;">
+																			<table class="table table-hover table-bordered" style="width: 99.8%; margin: 1px;border-radius: 3px solid;">
+																				<thead>
+																					<tr>
+																						<td>序号</td>
+																						<td>型号</td>
+																						<td>图片</td>
+																						<td>成表单价含税（人民币）</td>
+																						<td>订单数量（只）</td>
+																						<td>总金额含税（人民币）</td>
+																						<td>备注</td>
+																					</tr>
+																				</thead>
+																				<tbody>
+																					<tr>
+																						<td>1</td>
+																						<td>160M60LYXCL-02L1-12</td>
+																						<td>
+																							<a href="../../img/p_big3.jpg" title="图片" data-gallery="" class="gallery-img" class="gallery-img"><img src="../../img/p3.jpg"></a>
+																						</td>
+																						<td>50</td>
+																						<td>150</td>
+																						<td>￥7500.00</td>
+																						<td>含吊牌及机芯xxxxxxxx</td>
+																					</tr>
+																					<tr>
+																						<td>2</td>
+																						<td>160M60LYXCL-02L1-13</td>
+																						<td>
+																							<a href="../../img/p_big3.jpg" title="图片" data-gallery="" class="gallery-img"><img src="../../img/p3.jpg"></a>
+																						</td>
+																						<td>125</td>
+																						<td>160</td>
+																						<td>￥20000.00</td>
+																						<td>含吊牌及机芯xxxxxxxx</td>
+																					</tr>
+																					<tr>
+																						<td>3</td>
+																						<td>160M60LYXCL-02L1-14</td>
+																						<td>
+																							<a href="../../img/p_big3.jpg" title="图片" data-gallery="" class="gallery-img"><img src="../../img/p3.jpg"></a>
+																						</td>
+																						<td>86</td>
+																						<td>253</td>
+																						<td>￥21758.00</td>
+																						<td>含吊牌及机芯xxxxxxxx</td>
+																					</tr>
+																					<tr>
+																						<td colspan="4" style="text-align: right;"><span style="margin-right: 20px;">合计</span></td>
+																						<td>563</td>
+																						<td colspan="2">￥49258.00</td>
+																					</tr>
+																				</tbody>
+																			</table>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td class="text-right">制单</td>
+																		<td colspan="2">杨过</td>
+																		<td class="text-right">审核</td>
+																		<td colspan="3">乔峰</td>
+																	</tr>
+																	<tr>
+																		<td class="text-right">订货方</td>
+																		<td colspan="2">XX有限公司</td>
+																		<td class="text-right">供货方</td>
+																		<td colspan="3">XX有限公司</td>
+																	</tr>
+																	<tr>
+																		<td class="text-right">订货人签名</td>
+																		<td colspan="2">扫地僧</td>
+																		<td class="text-right">供货方签名</td>
+																		<td colspan="3"></td>
+																	</tr>
+																	<tr>
+																		<td class="text-right">日期</td>
+																		<td colspan="2">2017-10-13</td>
+																		<td class="text-right">日期</td>
+																		<td colspan="3">2017-10-13</td>
+																	</tr>
+																</tbody>
+															</table>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+						</fieldset>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/bootstrap.min.js"></script>
+		<script src="../../js/plugins/datapicker/bootstrap-datepicker.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-editable.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-table-editable.js"></script>
+		<script src="../../js/js.js"></script>
+		<script src="../../js/ligerui.all.js"></script>
+		<script src="../../js/plugins/iCheck/icheck.min.js"></script>
+		<script src="../../js/plugins/staps/jquery.steps.min.js"></script>
+		<script src="../../js/zTree_v3-master/js/jquery.ztree.core.js"></script>
+		<script src="../../js/zTree_v3-master/js/jquery.ztree.excheck.js"></script>
+		<script src="../../js/plugins/validate/jquery.validate.min.js"></script>
+		<script src="../../js/plugins/validate/messages_zh.min.js"></script>
+		<script src="../../js/plugins/layer/laydate/laydate.js"></script>
+
+		<script>
+			$("#signupForm").steps({
+				bodyTag: "fieldset",
+				labels: {
+					finish: "完成", // 修改按钮得文本
+					next: "下一步", // 下一步按钮的文本
+					previous: "上一步", // 上一步按钮的文本
+					loading: "Loading ..."
+				},
+				onStepChanging: function(event, currentIndex, newIndex) {
+					if(currentIndex > newIndex) {
+						return true
+					}
+					//采购信息
+					if(newIndex == 1) {
+						var checked = $('input[name="btSelectAll"]').prop('checked');
+						if(checked) {
+							$("#materialsInfoTable1").bootstrapTable('removeAll');
+							$("#materialsInfoTable2").bootstrapTable('removeAll');
+							$("#materialsInfoTable3").bootstrapTable('removeAll');
+
+							$("#materialsInfoTable1").bootstrapTable('append', [{
+								id: 1,
+								material_number: '160M60LYXCL',
+								material_name: '表芯',
+								supplier: '北京劳力士集团',
+								purchaseType: '鼎骏自购',
+								specification: '',
+								weight: 50,
+								unit: '件',
+								size: '通码',
+								color: '通色',
+								image: 'watch1',
+								demand_quantity: 250,
+								stock_quantity: 150,
+								purchase_quantity: '<input name="purchaseQuantity" type="text" value="100" class="form-control input-width-100 required">'
+							}, {
+								id: 2,
+								material_number: '002B38068M QQF-01',
+								material_name: '表带',
+								supplier: '广州环海报关服务有限公司',
+								purchaseType: '鼎骏自购',
+								specification: '',
+								weight: 50,
+								unit: '件',
+								size: '通码',
+								color: '通色',
+								image: 'watch1',
+								demand_quantity: 250,
+								stock_quantity: 150,
+								purchase_quantity: '<input  name="purchaseQuantity" type="text" value="100" class="form-control input-width-100 required">'
+							}]);
+							$("#materialsInfoTable2").bootstrapTable('append', [{
+								id: 1,
+								material_number: '002B2068M QQF-01',
+								material_name: '表壳',
+								supplier: '广州市安智宜进出口有限公司',
+								purchaseType: '鼎骏自购',
+								specification: '',
+								weight: 50,
+								unit: '件',
+								size: '通码',
+								color: '通色',
+								image: 'watch1',
+								demand_quantity: 250,
+								stock_quantity: 200,
+								purchase_quantity: '<input  name="purchaseQuantity" type="text" value="100" class="form-control input-width-100 required">'
+							}, {
+								id: 2,
+								material_number: '002B38065 QQF',
+								material_name: '表盘',
+								supplier: '北京劳力士集团',
+								purchaseType: '鼎骏自购',
+								specification: '',
+								weight: 50,
+								unit: '件',
+								size: '通码',
+								color: '通色',
+								image: 'watch1',
+								demand_quantity: 250,
+								stock_quantity: 150,
+								purchase_quantity: '<input  name="purchaseQuantity" type="text" value="100" class="form-control input-width-100 required">'
+							}]);
+							$("#materialsInfoTable3").bootstrapTable('append', [{
+								id: 1,
+								material_number: '002B38068M',
+								material_name: '表针',
+								supplier: '广州环海报关服务有限公司',
+								purchaseType: '工厂外购',
+								specification: '',
+								weight: 50,
+								unit: '件',
+								size: '通码',
+								color: '通色',
+								image: 'watch1',
+								demand_quantity: 250,
+								stock_quantity: 100,
+								purchase_quantity: 0
+							}]);
+
+						} else {
+							alert('请选择物料信息');
+							return false;
+						}
+					}
+					if(newIndex == 2) {
+						$("#materialsInfoForSupplier1").bootstrapTable('removeAll');
+						$("#materialsInfoForSupplier2").bootstrapTable('removeAll');
+						$("#materialsInfoForSupplier3").bootstrapTable('removeAll');
+						$("#materialsInfoForSupplier1").bootstrapTable('append', [{
+							id: 1,
+							material_number: '160M60LYXCL',
+							material_name: '表芯',
+							product_code: '0 MTP1329D5A',
+							product_name: 'CASIO MTP-1329D-5A',
+							purchaseType: '鼎骏自购',
+							specification: '',
+							weight: 50,
+							unit: '件',
+							size: '通码',
+							color: '通色',
+							image: 'watch1',
+							demand_quantity: 250,
+							stock_quantity: 150,
+							purchase_quantity: '<input name="purchaseQuantity" type="text" value="100" class="form-control input-width-100 required">'
+						}, {
+							id: 2,
+							material_number: '002B38065 QQF',
+							material_name: '表盘',
+							product_code: '001EFR300D7AVUDF',
+							product_name: 'CASIO WHIG-1329D-5A',
+							purchaseType: '鼎骏自购',
+							specification: '',
+							weight: 50,
+							unit: '件',
+							size: '通码',
+							color: '通色',
+							image: 'watch1',
+							demand_quantity: 250,
+							stock_quantity: 150,
+							purchase_quantity: '<input name="purchaseQuantity" type="text" value="100" class="form-control input-width-100 required">'
+						}]);
+						$("#materialsInfoForSupplier2").bootstrapTable('append', [{
+							id: 1,
+							material_number: '002B38068M QQF-01',
+							material_name: '表带',
+							product_code: '001EFR300D7AVUDF',
+							product_name: 'CASIO WHIG-1329D-5A',
+							purchaseType: '鼎骏自购',
+							specification: '',
+							weight: 50,
+							unit: '件',
+							size: '通码',
+							color: '通色',
+							image: 'watch1',
+							stock_quantity: 150,
+							purchase_quantity: '<input name="purchaseQuantity" type="text" value="100" class="form-control input-width-100 required">'
+						}, {
+							id: 2,
+							material_number: '002B38068M',
+							material_name: '表针',
+							product_code: '001EFR300D7AVUDF',
+							product_name: 'CASIO WHIG-1329D-5A',
+							purchaseType: '鼎骏自购',
+							specification: '',
+							weight: 50,
+							unit: '件',
+							size: '通码',
+							color: '通色',
+							image: 'watch1',
+							demand_quantity: 250,
+							stock_quantity: 150,
+							purchase_quantity: '<input name="purchaseQuantity" type="text" value="100" class="form-control input-width-100 required">'
+						}]);
+						$("#materialsInfoForSupplier3").bootstrapTable('append', [{
+							id: 1,
+							material_number: '002B2068M QQF-01',
+							material_name: '表壳',
+							product_code: '001EFRD7AVUDF',
+							product_name: 'CASIO MTPLD-1329D-5A',
+							purchaseType: '鼎骏自购',
+							specification: '',
+							weight: 50,
+							unit: '件',
+							size: '通码',
+							color: '通色',
+							image: 'watch1',
+							demand_quantity: 250,
+							stock_quantity: 150,
+							purchase_quantity: '<input name="purchaseQuantity" type="text" value="100" class="form-control input-width-100 required">'
+						}]);
+					}
+					var form = $(this);
+					if(currentIndex < newIndex) {
+						$(".body:eq(" + newIndex + ") label.error", form).remove();
+						$(".body:eq(" + newIndex + ") .error", form).removeClass("error")
+					}
+					form.validate().settings.ignore = ":disabled,:hidden";
+					return form.valid();
+				},
+				onStepChanged: function(event, currentIndex, priorIndex) {
+					if(currentIndex === 3 && Number($("#age").val()) >= 18) {
+						$(this).steps("next")
+					}
+					//第五步退回第四步(只要写上最后一步退回其他都可正常退回)
+					if(currentIndex === 4 && priorIndex === 5) {
+						$(this).steps("previous")
+					}
+				},
+				onFinishing: function(event, currentIndex) {
+					var form = $(this);
+					form.validate().settings.ignore = ":disabled";
+					return form.valid()
+				},
+				onFinished: function(event, currentIndex) {
+					var form = $(this);
+					form.submit()
+					parent.layer.closeAll();
+				},
+				onCanceled: function(event) { // 取消按钮得监听
+					parent.layer.closeAll();
+				},
+			}).validate({
+				errorPlacement: function(error, element) {
+					element.after(error);
+				}
+			})
+
+			$(document).ready(function() {
+				laydate({
+					elem: "#delivery_date",
+					format: "YYYY/MM/DD",
+					min: laydate.now(),
+					max: "2099-06-16",
+					istime: true,
+					istoday: false,
+					choose: function(datas) {}
+				});
+				laydate({
+					elem: "#order_date",
+					format: "YYYY/MM/DD hh:mm",
+					min: laydate.now(),
+					max: "2099-06-16",
+					istime: true,
+					istoday: false,
+					choose: function(datas) {}
+				});
+
+				//初始化品牌列表
+				$.fn.zTree.init($("#tree"), setting, zNodes);
+
+				//初始化SKU列表
+				initSKUTable();
+
+				//根据SKU显示物料详情
+				initMaterialInfoTable();
+
+				//根据供应商显示物料详情
+				initMaterialInfoForSupplier();
+
+				$("#supplierSelect").change(function() {
+					var valueSelected = $(this).children('option:selected').val();
+					if(valueSelected != ' ') {
+						$('.selectedSupplierShow').removeClass('display-none');
+					} else {
+						$('.selectedSupplierShow').addClass('display-none');
+					}
+				});
+
+				$('.panel-body .form-group').addClass('clear');
+
+			});
+
+			//初始化品牌列表
+			var setting = {
+				view: {
+					showIcon: showIconForTree,
+					fontCss: getFontCss
+				},
+				check: {
+					enable: true
+				},
+				data: {
+					simpleData: {
+						enable: true
+					}
+				}
+			};
+			var zNodes = [{
+				id: 1,
+				name: "ODMDJ线上赠品配件",
+				open: true,
+				children: [{
+					id: 1,
+					name: "CASIO MTP-1329D-5A"
+				}, {
+					id: 2,
+					name: "CASIO WHIG-1329D-5A"
+				}]
+			}, {
+				id: 2,
+				name: "ODMDJ线下赠品配件",
+				open: true,
+				children: [{
+					id: 3,
+					name: "CASIO MTPLD-1329D-5A"
+				}, {
+					id: 4,
+					name: "CASIO CLMTP-1329D-5A"
+				}]
+			}, {
+				id: 3,
+				name: "DJ赠品配件",
+				open: true,
+				children: [{
+					id: 3,
+					name: "CASIO MTEP-589D-5A"
+				}, {
+					id: 4,
+					name: "CASIO MOTP-1679D-5A"
+				}]
+			}];
+
+			var nodeList = [];
+			//搜索节点
+			function searchNode(e) {
+				var zTree = $.fn.zTree.getZTreeObj("tree");
+				var value = $.trim(key.value);
+				if(value == '') {
+					updateNodes(false);
+					return;
+				}
+				updateNodes(false);
+				nodeList = zTree.getNodesByParamFuzzy("name", value, null);
+				updateNodes(true); //更新节点  
+			}
+			//高亮显示被搜索到的节点  
+			function updateNodes(highlight) {
+				var zTree = $.fn.zTree.getZTreeObj("tree");
+				for(var i = 0, l = nodeList.length; i < l; i++) {
+					nodeList[i].highlight = highlight; //高亮显示搜索到的节点(highlight是自己设置的一个属性)  
+					zTree.updateNode(nodeList[i]); //更新节点数据，主要用于该节点显示属性的更新  
+					zTree.expandNode(nodeList[i].getParentNode(), true, false, false); //将搜索到的节点的父节点展开  
+				}
+			}
+			//设置高亮颜色  
+			function getFontCss(treeId, treeNode) {
+				return(!!treeNode.highlight) ? {
+					color: "#A60000",
+					"font-weight": "bold"
+				} : {
+					color: "#333",
+					"font-weight": "normal"
+				};
+			}
+			//不显示icon
+			function showIconForTree(treeId, treeNode) {
+				return !treeNode.isParent;
+			};
+
+			function moveRight() {
+				//				var treeObj = $.fn.zTree.getZTreeObj("tree"),
+				//					nodes = treeObj.getCheckedNodes(true),
+				//					v = "";
+				//				for(var i = 0; i < nodes.length; i++) {
+				//					v += nodes[i].name + ",";
+				//					alert(nodes[i].id); //获取选中节点的值
+				//				}
+				$("#SKUList").bootstrapTable('removeAll');
+				$("#SKUList").bootstrapTable('append', [{
+					id: 1,
+					product_code: '0 MTP1329D5A',
+					product_name: 'CASIO MTP-1329D-5A',
+					purchase_type: '鼎骏自购',
+					image: 'watch1',
+					stock_quantity: 100,
+					purchaseQuantity: '<input name="purchaseQuantity" type="text" value="250" class="form-control input-width-100 required">'
+				}, {
+					id: 2,
+					product_code: '001EFR300D7AVUDF',
+					product_name: 'CASIO WHIG-1329D-5A',
+					purchase_type: '鼎骏自购',
+					image: 'watch1',
+					stock_quantity: 100,
+					purchaseQuantity: '<input name="purchaseQuantity" type="text" value="250" class="form-control input-width-100 required">'
+				}, {
+					id: 3,
+					product_code: '001EFRD7AVUDF',
+					product_name: 'CASIO MTPLD-1329D-5A',
+					purchase_type: '工厂外购',
+					image: 'watch1',
+					stock_quantity: 100,
+					purchaseQuantity: 0
+				}]);
+				$('#SKUList').find('input').prop('checked', true);
+			}
+
+			function moveLeft() {
+				//				var treeObj = $.fn.zTree.getZTreeObj("tree"),
+				//					nodes = treeObj.getCheckedNodes(true),
+				//					v = "";
+				//				for(var i = 0; i < nodes.length; i++) {
+				//					v += nodes[i].name + ",";
+				//					alert(nodes[i].id); //获取选中节点的值
+				//				}
+
+				if($("#SKUList tbody").find('tr').length > 1) {
+					$("#SKUList").bootstrapTable('removeAll');
+					$('#SKUList').find('input').prop('checked', false);
+				}
+			}
+
+			//初始化产品信息
+			function initSKUTable() {
+				$("#SKUList").bootstrapTable({
+					columns: [{tree
+						
+						align: 'center',
+						checkbox: true
+					}, {
+						field: 'id',
+						title: '编号',
+						visible: false
+					}, {
+						field: 'product_code',
+						title: '商品代码',
+					}, {
+						field: 'product_name',
+						title: '商品名称'
+					}, {
+						field: 'purchase_type',
+						title: '采购类型'
+					}, {
+						field: 'image',
+						title: '图片',
+						formatter: function(v) {
+							return '<a href="../../img/' + v + '.jpg" title="图片" data-gallery="" class="gallery-img"><img src="../../img/' + v + '.jpg"></a>';
+						}
+					}, {
+						field: 'stock_quantity',
+						title: '库存数量'
+					}, {
+						field: 'purchaseQuantity',
+						title: '采购数量'
+					}],
+				});
+			}
+
+			//根据SKU展开物料详细
+			function initMaterialInfoTable() {
+				$("#materialsInfoTable1").bootstrapTable({
+					columns: [{
+						field: 'id',
+						title: '编号',
+						visible: false
+					}, {
+						field: 'material_number',
+						title: '物料编号',
+					}, {
+						field: 'material_name',
+						title: '物料名称'
+					}, {
+						field: 'supplier',
+						title: '供应商'
+					}, {
+						field: 'purchaseType',
+						title: '采购类型'
+					}, {
+						field: 'specification',
+						title: '规格'
+					}, {
+						field: 'weight',
+						title: '重量（g）'
+					}, {
+						field: 'unit',
+						title: '单位'
+					}, {
+						field: 'size',
+						title: '尺码'
+					}, {
+						field: 'color',
+						title: '颜色'
+					}, {
+						field: 'image',
+						title: '图片',
+						formatter: function(value, row, index) {
+							var str = '';
+							str += '<a href="../../img/' + value + '.jpg" title="ͼƬ" data-gallery="" class="gallery-img"><img src="../../img/' + value + '.jpg"></a>';
+							return str;
+						}
+					}, {
+						field: 'demand_quantity',
+						title: '需求数量'
+					}, {
+						field: 'stock_quantity',
+						title: '库存数量'
+					}, {
+						field: 'purchase_quantity',
+						title: '购买数量'
+					}],
+				});
+				$("#materialsInfoTable2").bootstrapTable({
+					columns: [{
+						field: 'id',
+						title: '编号',
+						visible: false
+					}, {
+						field: 'material_number',
+						title: '物料编号',
+					}, {
+						field: 'material_name',
+						title: '物料名称'
+					}, {
+						field: 'supplier',
+						title: '供应商'
+					}, {
+						field: 'purchaseType',
+						title: '采购类型'
+					}, {
+						field: 'specification',
+						title: '规格'
+					}, {
+						field: 'weight',
+						title: '重量（g）'
+					}, {
+						field: 'unit',
+						title: '单位'
+					}, {
+						field: 'size',
+						title: '尺码'
+					}, {
+						field: 'color',
+						title: '颜色'
+					}, {
+						field: 'image',
+						title: '图片',
+						formatter: function(value, row, index) {
+							var str = '';
+							str += '<a href="../../img/' + value + '.jpg" title="ͼƬ" data-gallery="" class="gallery-img"><img src="../../img/' + value + '.jpg"></a>';
+							return str;
+						}
+					}, {
+						field: 'demand_quantity',
+						title: '需求数量'
+					}, {
+						field: 'stock_quantity',
+						title: '库存数量'
+					}, {
+						field: 'purchase_quantity',
+						title: '购买数量'
+					}],
+				});
+				$("#materialsInfoTable3").bootstrapTable({
+					columns: [{
+						field: 'id',
+						title: '编号',
+						visible: false
+					}, {
+						field: 'material_number',
+						title: '物料编号',
+					}, {
+						field: 'material_name',
+						title: '物料名称'
+					}, {
+						field: 'supplier',
+						title: '供应商'
+					}, {
+						field: 'purchaseType',
+						title: '采购类型'
+					}, {
+						field: 'specification',
+						title: '规格'
+					}, {
+						field: 'weight',
+						title: '重量（g）'
+					}, {
+						field: 'unit',
+						title: '单位'
+					}, {
+						field: 'size',
+						title: '尺码'
+					}, {
+						field: 'color',
+						title: '颜色'
+					}, {
+						field: 'image',
+						title: '图片',
+						formatter: function(value, row, index) {
+							var str = '';
+							str += '<a href="../../img/' + value + '.jpg" title="ͼƬ" data-gallery="" class="gallery-img"><img src="../../img/' + value + '.jpg"></a>';
+							return str;
+						}
+					}, {
+						field: 'demand_quantity',
+						title: '需求数量'
+					}, {
+						field: 'stock_quantity',
+						title: '库存数量'
+					}, {
+						field: 'purchase_quantity',
+						title: '购买数量'
+					}],
+				});
+			}
+
+			//根据供应商展开物料详细
+			function initMaterialInfoForSupplier() {
+				$("#materialsInfoForSupplier1").bootstrapTable({
+					columns: [{
+						field: 'id',
+						title: '编号',
+						visible: false
+					}, {
+						field: 'material_number',
+						title: '物料编号',
+					}, {
+						field: 'material_name',
+						title: '物料名称'
+					}, {
+						field: 'product_code',
+						title: '商品代码'
+					}, {
+						field: 'product_name',
+						title: '商品名称'
+					}, {
+						field: 'purchaseType',
+						title: '采购类型'
+					}, {
+						field: 'specification',
+						title: '规格'
+					}, {
+						field: 'weight',
+						title: '重量（g）'
+					}, {
+						field: 'unit',
+						title: '单位'
+					}, {
+						field: 'size',
+						title: '尺码'
+					}, {
+						field: 'color',
+						title: '颜色'
+					}, {
+						field: 'image',
+						title: '图片',
+						formatter: function(value, row, index) {
+							var str = '';
+							str += '<a href="../../img/' + value + '.jpg" title="ͼƬ" data-gallery="" class="gallery-img"><img src="../../img/' + value + '.jpg"></a>';
+							return str;
+						}
+					}, {
+						field: 'demand_quantity',
+						title: '需求数量'
+					}, {
+						field: 'stock_quantity',
+						title: '库存数量'
+					}, {
+						field: 'purchase_quantity',
+						title: '购买数量'
+					}],
+
+				});
+				$("#materialsInfoForSupplier2").bootstrapTable({
+					columns: [{
+						field: 'id',
+						title: '编号',
+						visible: false
+					}, {
+						field: 'material_number',
+						title: '物料编号',
+					}, {
+						field: 'material_name',
+						title: '物料名称'
+					}, {
+						field: 'product_code',
+						title: '商品代码'
+					}, {
+						field: 'product_name',
+						title: '商品名称'
+					}, {
+						field: 'purchaseType',
+						title: '采购类型'
+					}, {
+						field: 'specification',
+						title: '规格'
+					}, {
+						field: 'weight',
+						title: '重量（g）'
+					}, {
+						field: 'unit',
+						title: '单位'
+					}, {
+						field: 'size',
+						title: '尺码'
+					}, {
+						field: 'color',
+						title: '颜色'
+					}, {
+						field: 'image',
+						title: '图片',
+						formatter: function(value, row, index) {
+							var str = '';
+							str += '<a href="../../img/' + value + '.jpg" title="ͼƬ" data-gallery="" class="gallery-img"><img src="../../img/' + value + '.jpg"></a>';
+							return str;
+						}
+					}, {
+						field: 'demand_quantity',
+						title: '需求数量'
+					}, {
+						field: 'stock_quantity',
+						title: '库存数量'
+					}, {
+						field: 'purchase_quantity',
+						title: '购买数量'
+					}],
+
+				});
+				$("#materialsInfoForSupplier3").bootstrapTable({
+					columns: [{
+						field: 'id',
+						title: '编号',
+						visible: false
+					}, {
+						field: 'material_number',
+						title: '物料编号',
+					}, {
+						field: 'material_name',
+						title: '物料名称'
+					}, {
+						field: 'product_code',
+						title: '商品代码'
+					}, {
+						field: 'product_name',
+						title: '商品名称'
+					}, {
+						field: 'purchaseType',
+						title: '采购类型'
+					}, {
+						field: 'specification',
+						title: '规格'
+					}, {
+						field: 'weight',
+						title: '重量（g）'
+					}, {
+						field: 'unit',
+						title: '单位'
+					}, {
+						field: 'size',
+						title: '尺码'
+					}, {
+						field: 'color',
+						title: '颜色'
+					}, {
+						field: 'image',
+						title: '图片',
+						formatter: function(value, row, index) {
+							var str = '';
+							str += '<a href="../../img/' + value + '.jpg" title="ͼƬ" data-gallery="" class="gallery-img"><img src="../../img/' + value + '.jpg"></a>';
+							return str;
+						}
+					}, {
+						field: 'demand_quantity',
+						title: '需求数量'
+					}, {
+						field: 'stock_quantity',
+						title: '库存数量'
+					}, {
+						field: 'purchase_quantity',
+						title: '购买数量'
+					}],
+
+				});
+			}
+
+			function valid() {
+				var form = liger.get("signupForm");
+				alert(form.valid());
+			}
+
+			function getData() {
+				var form = liger.get("signupForm");
+				var data = form.getData();
+				alert(JSON.stringify(data));
+			}
+
+			function setData() {
+				$.ajax({
+					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/getUser',
+					data: {
+						id: $.getUrlParam('id')
+					},
+					success: function(res) {
+						res = $.parseJSON(res);
+						var form = new liger.get("signupForm");
+						form.setData(res);
+					}
+				})
+			}
+
+			function submitForm() {
+				var form = liger.get("signupForm");
+				if(!form.valid()) {
+					return;
+				}
+				var data = {};
+				$("input,select,textarea").each(function() {
+					var name = $(this).attr("name");
+					if(name && name.indexOf('ligerui') == -1) {
+						data[name] = this.value;
+					}
+				});
+				data.id = $.getUrlParam('id');
+
+				//				$.ajax({
+				//					type: 'post',
+				//					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/setUser',
+				//					data: data,
+				//					success: function(res) {
+				//						if(Number(res)) {
+				//							parent.table.bootstrapTable('refresh');
+				//							var index = parent.layer.getFrameIndex(window.name);
+				//							parent.layer.close(index);
+				//						}
+				//					}
+				//				})
+				/*
+				            parent.table.bootstrapTable('refresh');
+				            var index = parent.layer.getFrameIndex(window.name);
+				            parent.layer.close(index);*/
+			}
+		</script>
+	</body>
+
+</html>

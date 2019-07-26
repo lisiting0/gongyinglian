@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>付款管理</title>
+		<meta name="keywords" content="付款管理">
+		<meta name="description" content="付款管理">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-editable/bootstrap-editable.css" rel="stylesheet">
+		<link href="../../css/plugins/select2/select2.min.css" rel="stylesheet" type="text/css" />
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+		<link href="../../css/plugins/iCheck/custom.css" rel="stylesheet">
+		<link href="../../css/plugins/blueimp/css/blueimp-gallery.min.css" rel="stylesheet">
+
+	</head>
+
+	<body class="pd15">
+
+		<form class="form-horizontal m-t" id="signupForm">
+			<div class="form-group">
+				<label class="col-sm-2 control-label">到货单号</label>
+				<div class="col-sm-3">
+					<input name="arrival_order_number" class="ui-textbox disabled-text" type="text" value="20170405">
+				</div>
+				<label class="col-sm-2 control-label">送货单位</label>
+				<div class="col-sm-3">
+					<a onclick="detail('详情','../../template/supplier_manage/supplier_info_list_edit.html','')" style="line-height: 30px;">广州集团</a>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">付款类型</label>
+				<div class="col-sm-3">
+					<select id="payment_type" class="js-example-basic-single form-control" ltype="select" ligeruiid="payment_type">
+						<option value=" ">请选择</option>
+						<option value="定金付款" selected="selected">定金付款</option>
+						<option value="货款">货款</option>
+						<option value="尾款">尾款</option>
+					</select>
+				</div>
+				<label class="col-sm-2 control-label">总金额</label>
+				<div class="col-sm-3">
+					<input name="total_amount" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}" value="10000">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">已付金额</label>
+				<div class="col-sm-3">
+					<input name="amount_paid" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}" value="7000">
+				</div>
+				<label class="col-sm-2 control-label">本次付款金额</label>
+				<div class="col-sm-3">
+					<input name="this_payment_amount" class="ui-textbox edit-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}" value="1000">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">未付金额</label>
+				<div class="col-sm-3">
+					<input name="unpaid_amount" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}" value="2000">
+				</div>
+				<label class="col-sm-2 control-label">定金</label>
+				<div class="col-sm-3">
+					<input name="deposit" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}" value="1000">
+				</div>
+			</div>
+			<div class="form-group pay-panel display-none">
+				<label class="col-sm-2 control-label">申请金额</label>
+				<div class="col-sm-3">
+					<input name="application_amount" class="ui-textbox application_amount" type="text" ltype="text" validate="{required:true,number:true}">
+				</div>
+			</div>
+			<div class="form-group additional_charges">
+				<label class="col-sm-2 control-label">额外费用</label>
+				<div class="col-sm-8">
+					<div class="bootstrap-table">
+						<div class="fixed-table-container">
+							<div class="fixed-table-header">
+								<table class="table table-hover">
+									<tbody>
+										<tr>
+											<td class="text-right"><label class="lable-fl">人工费</label><input name="labor_costs" class="ui-textbox input-width-100" type="text"></td>
+											<td class="text-right"><label class="lable-fl">运输费</label><input name="shipping_fee" class="ui-textbox input-width-100" type="text"></td>
+											<td class="text-right"><label class="lable-fl">附加费</label><input name="additional_fee" class="ui-textbox input-width-100" type="text"></td>
+											<td class="text-right"><label class="lable-fl">其他费</label><input name="other_fee" class="ui-textbox input-width-100" type="text"></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">收货清单</label>
+				<div class="col-sm-8">
+					<table id="receiptListTable"></table>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">最迟付款时间</label>
+				<div class="col-sm-3">
+					<input name="pay_date" id="pay_date" class="laydate-icon form-control layer-date" autocomplete="off" type="text" ltype="text" validate="{required:true,maxlength:17}" value="2018-01-08">
+				</div>
+			</div>
+			<div class="form-group text-right hidden-panel">
+				<div class="col-sm-8 col-sm-offset-2">
+					<button class="btn btn-primary" type="submit" onclick="submitForm();">确认</button>
+					<button class="btn btn-primary" type="submit" onclick="cancelLayer();">取消</button>
+				</div>
+			</div>
+			<div class="audit-panel display-none">
+				<div class="form-group">
+					<label class="col-sm-2 control-label">审核</label>
+					<div class="col-sm-10">
+						<div class="radio i-checks">
+							<label><input type="radio" checked="" value="是" name="audit"></label>审核通过
+							<label><input type="radio" value="否" name="audit"></label>退回修改
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">审核意见</label>
+					<div class="col-sm-10" style="padding: 1px 15px;">
+						<textarea name="audit_opinion" placeholder="请输入审核意见" class="layui-textarea" style="min-width:79.5%;min-height: 100px;height: auto;line-height: 20px;padding: 6px 10px;resize: vertical;border: 1px solid #e5e6e7;"></textarea>
+					</div>
+				</div>
+				<div class="form-group text-right">
+					<div class="col-sm-10">
+						<button type="button" class="btn btn-primary" onclick="audit()">审核</button>
+						<button class="btn btn-primary" type="submit" onclick="cancelLayer();">取消</button>
+					</div>
+				</div>
+			</div>
+		</form>
+		<!--显示图片层-->
+		<div id="blueimp-gallery" class="blueimp-gallery">
+			<div class="slides"></div>
+			<h3 class="title"></h3>
+			<a class="close">×</a>
+		</div>
+		
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/bootstrap.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+		<script src="../../js/js.js"></script>
+		<script src="../../js/ligerui.all.js"></script>
+		<script src="../../js/plugins/iCheck/icheck.min.js"></script>
+		<script src="../../js/plugins/validate/jquery.validate.min.js"></script>
+		<script src="../../js/plugins/validate/messages_zh.min.js"></script>
+		<script src="../../js/plugins/validate/jquery.metadata.js"></script>
+		<script src="../../js/plugins/layer/laydate/laydate.js"></script>
+		<script src="../../js/plugins/layer/layer.min.js"></script>
+		<script src="../../js/plugins/blueimp/jquery.blueimp-gallery.min.js"></script>
+		<script>
+			var table = $("#receiptListTable");
+			$(function() {
+
+				$(".i-checks").iCheck({
+					checkboxClass: "icheckbox_square-green",
+					radioClass: "iradio_square-green",
+				});
+
+				new formValidate({
+					formEle: '#signupForm'
+				});
+
+				laydate({
+					elem: "#pay_date",
+					format: "YYYY/MM/DD",
+					min: laydate.now(),
+					max: "2099-06-16",
+					istime: true,
+					istoday: false,
+					choose: function(datas) {}
+				});
+
+				if($.getUrlParam('id')) {
+					//setData();
+					$(".ui-textbox").attr("disabled", true).css("background-color", "#eee");
+					$(".layer-date").attr("disabled", true).css("background-color", "#eee");
+					$(".edit-textbox").attr("disabled", false).css("background-color", "#fff");
+					//setData();
+					if($.getUrlParam('action') == "PAY") {
+						$("#payment_type").prop("disabled", true); //设置下拉框不可用
+						$(".edit-textbox").attr("disabled", true).css("background-color", "#eee");
+						$('.pay-panel').removeClass('display-none');
+						$('.application_amount').removeClass('border-none').removeAttr('disabled').css("background-color", "#fff");
+					}
+					initReceiptListTable();
+					$(".btn-default").addClass("btn-outline");
+					//合并单元格					
+					mergeCell();
+					sum();
+				} else {
+
+				}
+			});
+
+			function initReceiptListTable() {
+				table.bootstrapTable({
+					search: true,
+					showRefresh: true,
+					showColumns: true,
+					icons: {
+						refresh: "glyphicon-repeat",
+						columns: "glyphicon-list"
+					},
+					columns: [{
+						field: "order_number",
+						title: "订单编号"
+					}, {
+						field: "code",
+						title: "商品代码/物料型号"
+					}, {
+						field: "name",
+						title: "商品名称/物料名称"
+					}, {
+						field: "unit",
+						title: "单位",
+						visible: false
+					}, {
+						field: "size",
+						title: "尺码",
+						visible: false
+					}, {
+						field: "color",
+						title: "颜色",
+						visible: false
+					}, {
+						field: "image",
+						title: "图片",
+						visible: false,
+						formatter: function(v) {
+							return '<a href="../../img/' + v + '.jpg" title="图片" data-gallery="" class="gallery-img"><img src="../../img/' + v + '.jpg"></a>';
+						}
+					}, {
+						title: '单价',
+						field: 'purchase_price'
+					}, {
+						title: '采购数量',
+						field: 'purchase_quantity',
+						class: 'purchase_quantity'
+					}, {
+						title: '分摊前金额',
+						field: 'apportioned_amount_before',
+						class: 'amount',
+						formatter: function(value, row, index) {
+							if(row.purchase_price == undefined || row.purchase_quantity == undefined) {
+								value = 0;
+							} else {
+								value = row.purchase_price * row.purchase_quantity;
+							}
+							return value;
+						}
+					}, {
+						title: '分摊后金额',
+						field: 'apportioned_amount_after',
+						class: 'apportioned_amount_after',
+						formatter: function(value, row, index) {
+							if(value == undefined || row.apportioned_amount_before == undefined) {
+								value = 0;
+							} else {
+								value = value + row.apportioned_amount_before;
+							}
+							return value;
+						}
+					}],
+					data: [{
+						id: 1,
+						order_number: 'J2018A5001728',
+						code: '160M60LYXCL',
+						name: 'CASIO MTP-1329D-5A',
+						supplier: '北京劳力士集团',
+						unit: '件',
+						gp: '考核',
+						image: 'watch1',
+						size: '通码',
+						color: '通色',
+						purchase_price: 8,
+						purchase_quantity: 500,
+						total_quality_inspection: 100,
+						AAmount: 98,
+						warehouse: '',
+						CAmount: 2,
+						remark: ''
+					}, {
+						id: 2,
+						order_number: 'J2018A5011728',
+						code: '002B38068M QQF-01',
+						name: '表带',
+						supplier: '广州环海报关服务有限公司',
+						unit: '件',
+						gp: '考核',
+						image: 'watch1',
+						size: '通码',
+						color: '通色',
+						purchase_price: 5,
+						purchase_quantity: 400,
+						total_quality_inspection: 100,
+						AAmount: 98,
+						warehouse: '',
+						CAmount: 2,
+						remark: ''
+					}, {
+						id: 3,
+						order_number: 'J2018A5011728',
+						code: '002B38068M QQF-01',
+						name: '表带',
+						supplier: '广州环海报关服务有限公司',
+						unit: '件',
+						gp: '考核',
+						image: 'watch1',
+						size: '通码',
+						color: '通色',
+						purchase_price: 6,
+						purchase_quantity: 300,
+						total_quality_inspection: 100,
+						AAmount: 98,
+						warehouse: '',
+						CAmount: 2,
+						remark: ''
+					}, {
+						id: 4,
+						order_number: 'J2018A5001728',
+						code: '160M60LYXCL',
+						name: 'CASIO MTP-1339D-5A',
+						supplier: '北京劳力士集团',
+						unit: '件',
+						gp: '考核',
+						image: 'watch1',
+						size: '通码',
+						color: '通色',
+						purchase_price: 9,
+						purchase_quantity: 200,
+						total_quality_inspection: 100,
+						AAmount: 98,
+						warehouse: '',
+						CAmount: 2,
+						remark: ''
+					}],
+					onSearch: function() {
+						mergeCell();
+						sum();
+					},
+					onColumnSwitch: function(field, checked) {
+						mergeCell();
+						sum();
+					},
+					onLoadSuccess: function(data) {
+						mergeCell();
+						sum();
+					}
+				});
+			}
+
+			function mergeCell() {
+				var data = table.bootstrapTable('getData', true);
+				//合并单元格
+				mergeCells(data, "order_number", null, "#receiptListTable");
+			}
+
+			function sum() {
+				var sumQuantity = 0;
+				var sumAmount = 0;
+				var sumAmountAfter = 0;
+				//数量合计
+				$("#receiptListTable td[class='purchase_quantity']").each(function() {
+					sumQuantity += +$(this).text();
+				});
+				//分摊前金额合计
+				$("#receiptListTable td[class='amount']").each(function() {
+					sumAmount += +$(this).text();
+				});
+				//分摊后金额合计
+				$("#receiptListTable td[class='apportioned_amount_after']").each(function() {
+					sumAmountAfter += +$(this).text();
+				});
+				//先删除最后一行
+				if($("#receiptListTable tr").hasClass('footer')) {
+					$("#receiptListTable tr:last").remove();
+				}
+				var columns = $('table thead tr').find('th').size();
+				var nextColumns = $('table thead tr').find('th.apportioned_amount_after').nextAll().size();
+				var colspan = parseInt(columns - 3 - nextColumns);
+				var tr = '<tr class="footer"><td class="text-right" colspan="' + colspan + '">合计</td><td>' + sumQuantity + '</td><td class="total_price">' + sumAmount + '元</td><td class="apportioned_amount_after_total" colspan="' + (nextColumns + 1) + '">' + sumAmountAfter + '元</td></tr>';
+				$('#receiptListTable').append(tr);
+			}
+
+			function detail(title, url, id, w, h) {
+				var index = layer.open({
+					type: 2,
+					close: true,
+					maxmin: true,
+					title: title,
+					area: ['90%', '90%'],
+					content: url + '?id=' + id
+				});
+			}
+
+			function valid() {
+				var form = liger.get("signupForm");
+				alert(form.valid());
+			}
+
+			function getData() {
+				var form = liger.get("signupForm");
+				var data = form.getData();
+				alert(JSON.stringify(data));
+			}
+
+			function setData() {
+				$.ajax({
+					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/getUser',
+					data: {
+						id: $.getUrlParam('id')
+					},
+					success: function(res) {
+						res = $.parseJSON(res);
+						var form = new liger.get("signupForm");
+						form.setData(res);
+					}
+				})
+			}
+
+			function submitForm() {
+
+				var form = liger.get("signupForm");
+				if(!form.valid()) {
+					return;
+				}
+				var data = {};
+				$("input,select,textarea").each(function() {
+					var name = $(this).attr("name");
+					if(name && name.indexOf('ligerui') == -1) {
+						data[name] = this.value;
+					}
+				});
+				data.id = $.getUrlParam('id');
+
+				$.ajax({
+						type: 'post',
+						url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/setUser',
+						data: data,
+						success: function(res) {
+							if(Number(res)) {
+								parent.table.bootstrapTable('refresh');
+								var index = parent.layer.getFrameIndex(window.name);
+								parent.layer.close(index);
+							}
+						}
+					})
+					/*
+					            parent.table.bootstrapTable('refresh');
+					            var index = parent.layer.getFrameIndex(window.name);
+					            parent.layer.close(index);*/
+			}
+		</script>
+	</body>
+
+</html>

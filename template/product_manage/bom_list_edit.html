@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Bom添加/编辑</title>
+		<meta name="keywords" content="Bom添加/编辑">
+		<meta name="description" content="Bom添加/编辑">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-editable/bootstrap-editable.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="../../css/plugins/select2/select2.min.css" />
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+		<link href="../../css/plugins/blueimp/css/blueimp-gallery.min.css" rel="stylesheet">
+	</head>
+
+	<body class="pd15">
+
+		<form class="form-horizontal m-t" id="signupForm">
+			<div class="form-group">
+				<label class="col-sm-2 control-label">产品名称</label>
+				<div class="col-sm-3">
+					<select id="product_name_select" class="js-example-basic-single form-control" ltype="select" ligeruiid="product_name_select">
+						<option value="">请选择</option>
+						<option value="0 MTP1329D5A">CASIO MTP-1329D-5A</option>
+						<option value="1 MTP1329D5A">CASIO MTP-1889D-5B</option>
+						<option value="2 MTP1329D5A">CASIO MTP-1329D-5C</option>
+						<option value="3 MTP1329D5A">CASIO MTP-1889D-5D</option>
+						<option value="4 MTP1329D5A">CASIO MTP-1329D-5E</option>
+						<option value="5 MTP1329D5A">CASIO MTP-1889D-5F</option>
+					</select>
+				</div>
+				<label class="col-sm-2 control-label">供应商</label>
+				<div class="col-sm-3">
+					<select id="supplierSelect" class="js-example-basic-single form-control" ltype="select" ligeruiid="supplier">
+						<option value="">请选择</option>
+						<option value="HN-GZJT-001">广州集团</option>
+						<option value="HN-GZBJ-0011">广州宝玑集团</option>
+						<option value="HB-BJZH-003">北京钟华集团</option>
+						<option value="HB-BJZH-004">北京摇摇乐集团</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">结算货币</label>
+				<div class="col-sm-3">
+					<select id="settlementCurrency" class="js-example-basic-single form-control" ltype="select" ligeruiid="settlementCurrency">
+						<option value=" ">请选择</option>
+						<option value="人民币">人民币（RMB）</option>
+						<option value="美元">美元（USD）</option>
+						<option value="德国马克">德国马克（DEM）</option>
+						<option value="日元">日元（JPY）</option>
+						<option value="瑞士法郎">瑞士法郎（CHF）</option>
+						<option value="法国法郎">法国法郎（FRF）</option>
+						<option value="意大利里拉">意大利里拉（ITL）</option>
+						<option value="荷兰盾">荷兰盾（NLG）</option>
+						<option value="比利时法郎">比利时法郎（BEU）</option>
+						<option value="丹麦克朗">丹麦克朗（DKR）</option>
+						<option value="瑞典克朗">瑞典克朗（SKR）</option>
+						<option value="挪威克朗">挪威克朗（NKR）</option>
+						<option value="奥地利先令">奥地利先令（ATS）</option>
+						<option value="港币">港币（HKD）</option>
+						<option value="加拿大元">加拿大元（CAD）</option>
+						<option value="澳大利亚元">澳大利亚元（AUD）</option>
+						<option value="新西兰元">新西兰元（NZD）</option>
+						<option value="新加坡元">新加坡元（SGD）</option>
+						<option value="欧元">欧元（EUR）</option>
+						<option value="英镑">英镑（GBP）</option>
+					</select>
+				</div>
+				<label class="col-sm-2 control-label">货币汇率</label>
+				<div class="col-sm-3">
+					<input name="currency_exchange_rate" class="ui-textbox" type="text" ltype="text" validate="{number:true}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">物料清单</label>
+				<div class="col-sm-8">
+					<div id="toolbar" style="margin-top: 10px;">
+						<div class="btn-group">
+							<button type="button" class="btn btn-outline btn-default" onclick="addMaterials('添加','../../template/common/materials_list_add.html');">
+                                <i class="glyphicon glyphicon-plus" aria-hidden="true"></i> 添加
+                            </button>
+							<button type="button" class="btn btn-outline btn-default" onclick="addMaterialsByWG()">
+                                <i class="glyphicon glyphicon-plus" aria-hidden="true"></i> 工厂外购添加
+                            </button>
+							<button type="button" class="btn btn-outline btn-default" onclick="delMaterials();">
+                                <i class="glyphicon glyphicon-trash" aria-hidden="true"></i> 删除
+                            </button>
+						</div>
+					</div>
+					<table id="materialsInfoTable"></table>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">备注</label>
+				<div class="col-sm-10" style="padding: 1px 15px;">
+					<textarea name="remark" placeholder="请输入内容" class="layui-textarea" style="min-width:79.5%;min-height: 100px;height: auto;line-height: 20px;padding: 6px 10px;resize: vertical;border: 1px solid #e5e6e7;"></textarea>
+				</div>
+			</div>
+			<div class="form-group text-right">
+				<div class="col-sm-10">
+					<button class="btn btn-primary" type="submit" onclick="submitForm();">提交</button>
+					<button class="btn btn-primary" type="submit" onclick="cancelLayer();">取消</button>
+				</div>
+			</div>
+		</form>
+
+		<!--显示图片层-->
+		<div id="blueimp-gallery" class="blueimp-gallery">
+			<div class="slides"></div>
+			<h3 class="title"></h3>
+			<a class="close">×</a>
+		</div>
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/bootstrap.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-editable.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-table-editable.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-editable-select2.full.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/js.js"></script>
+		<script src="../../js/ligerui.all.js"></script>
+		<script src="../../js/plugins/layer/layer.min.js"></script>
+		<script src="../../js/plugins/validate/jquery.validate.min.js"></script>
+		<script src="../../js/plugins/validate/messages_zh.min.js"></script>
+		<script src="../../js/plugins/validate/jquery.metadata.js"></script>
+		<script src="../../js/plugins/blueimp/jquery.blueimp-gallery.min.js"></script>
+
+		<script>
+			var table = $("#materialsInfoTable");
+			$(function() {
+				new formValidate({
+					formEle: '#signupForm'
+				});
+
+				initTable();
+				$(".btn-default").addClass("btn-outline");
+
+				//选择供应商change事件
+				$('#supplierSelect').select2().on('select2:select', function(event) {});
+
+				//选择商品名称change事件
+				$('#product_name_select').select2().on('select2:select', function(event) {});
+				//选择商品名称change事件
+				$('#settlementCurrency').select2().on('select2:select', function(event) {});
+
+				if($.getUrlParam('action') == "EDIT") {
+					//setData();
+					//编辑状态显示添加按钮，默认选择了供应商
+					$('.addBomBtn').removeClass('display-none');
+					var supplier_trigger = $("#supplierSelect").select2().val("HN-GZJT-001").trigger("change"); //获取selectid
+					supplier_trigger.change();
+					$("#supplierSelect").prop("disabled", true); //设置下拉框不可用
+
+					var product_trigger = $("#product_name_select").select2().val("0 MTP1329D5A").trigger("change"); //获取selectid
+					product_trigger.change();
+					$("#product_name_select").prop("disabled", true); //设置下拉框不可用
+
+					var product_trigger = $("#settlementCurrency").select2().val("人民币").trigger("change"); //获取selectid
+					product_trigger.change();
+					$("#settlementCurrency").prop("disabled", true); //设置下拉框不可用
+
+					table.bootstrapTable('append', [{
+						id: 0001,
+						material_number: 'BIAOXIN-GC-001',
+						material_name: '表芯',
+						purchase_type: '鼎骏自购',
+						specification: '',
+						weight: '',
+						unit: '件',
+						size: '通码',
+						color: '通色',
+						introduction: '',
+						image: 'watch1',
+						recent_transaction_price: 7,
+						purchase_price: 8,
+						quantity: 50,
+						reviewer: '谭吉吉', //审核人
+						reviewer_date: '2018-01-17', //审核日期
+						state: '待使用' //状态名称
+					}, {
+						id: 0002,
+						material_number: 'BIAODAI-GC-002',
+						material_name: '表带',
+						purchase_type: '鼎骏自购',
+						specification: '',
+						weight: '',
+						unit: '件',
+						size: '通码',
+						color: '通色',
+						introduction: '',
+						image: 'watch1',
+						recent_transaction_price: 7,
+						purchase_price: 8,
+						quantity: 50,
+						reviewer: '谭吉吉', //审核人
+						reviewer_date: '2018-01-17', //审核日期
+						state: '待使用' //状态名称
+					}, {
+						id: 0003,
+						material_number: 'BIAOKE-DJ-003',
+						material_name: '表壳',
+						purchase_type: '鼎骏自购',
+						specification: '',
+						weight: '',
+						unit: '件',
+						size: '通码',
+						color: '通色',
+						introduction: '',
+						image: 'watch1',
+						recent_transaction_price: 7,
+						purchase_price: 8,
+						quantity: 50,
+						reviewer: '谭吉吉', //审核人
+						reviewer_date: '2018-01-17', //审核日期
+						state: '待使用' //状态名称
+					}, {
+						id: 0004,
+						material_number: 'BIAOHE-WG-004',
+						material_name: '表盒',
+						purchase_type: '鼎骏自购',
+						specification: '',
+						weight: '',
+						unit: '件',
+						size: '通码',
+						color: '通色',
+						introduction: '',
+						image: 'watch1',
+						recent_transaction_price: 7,
+						purchase_price: 8,
+						quantity: 50,
+						reviewer: '谭吉吉', //审核人
+						reviewer_date: '2018-01-17', //审核日期
+						state: '待使用' //状态名称
+					}]);
+					sum();
+				} else {
+					table.bootstrapTable('removeAll');
+					//添加状态不显示添加按钮，没选择供应商，内容为空
+					$('input').val('');
+				}
+			});
+
+			function valid() {
+				var form = liger.get("signupForm");
+				alert(form.valid());
+			}
+
+			function getData() {
+				var form = liger.get("signupForm");
+				var data = form.getData();
+				alert(JSON.stringify(data));
+			}
+
+			function setData() {
+				$.ajax({
+					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/getUser',
+					data: {
+						id: $.getUrlParam('id')
+					},
+					success: function(res) {
+						res = $.parseJSON(res);
+						var form = new liger.get("signupForm");
+						form.setData(res);
+					}
+				})
+			}
+
+			function initTable() {
+				table.bootstrapTable({
+					search: true,
+					showRefresh: true,
+//					showColumns: true,
+					icons: {
+						refresh: "glyphicon-repeat",
+						columns: "glyphicon-list"
+					},
+					toolbar: '#toolbar',
+					columns: [{
+						align: 'center',
+						checkbox: true
+					}, {
+						field: "id",
+						title: "唯一编号",
+						visible: false
+					}, {
+						field: "material_number",
+						title: "物料型号"
+					}, {
+						field: "material_name",
+						title: "物料名称"
+					}, {
+						field: "purchase_type",
+						title: "采购类型"
+					}, {
+						field: 'specification',
+						title: '规格',
+						visible: false
+					}, {
+						field: 'unit',
+						title: '单位',
+						visible: false
+					}, {
+						field: 'weight',
+						title: '重量（g）',
+						visible: false
+					}, {
+						title: '尺码',
+						field: 'size',
+						visible: false
+					}, {
+						title: '颜色',
+						field: 'color',
+						visible: false
+					}, {
+						title: '图片',
+						field: 'image',
+						formatter: function(v) {
+							return '<a href="../../img/' + v + '.jpg" title="图片" data-gallery="" class="gallery-img"><img src="../../img/' + v + '.jpg"></a>';
+						}
+					}, {
+						title: '最近交易价格',
+						field: 'recent_transaction_price'
+					}, {
+						title: '采购价格',
+						field: 'purchase_price',
+						formatter: function(value, row, index) {
+							if(row.purchase_type == '工厂外购') {
+								return 0;
+							} else {
+								if(value == undefined) {
+									value = '';
+								}
+								return '<input name="purchase_price" class="ui-textbox input-width" type="text" ltype="text" validate="{required:true,number:true}" value="' + value + '" onchange="priceChange(this)">';
+							}
+
+						}
+					}, {
+						title: '数量',
+						field: 'quantity',
+						formatter: function(value, row, index) {
+							if(row.purchase_type == '工厂外购') {
+								return 0;
+							} else {
+								if(value == undefined) {
+									value = '';
+								}
+								return '<input name="quantity" class="ui-textbox input-width" type="text" ltype="text" validate="{required:true,digits:true}" value="' + value + '" onchange="quantityChange(this)">';
+							}
+						}
+					}, {
+						title: '金额',
+						field: 'amount',
+						class: 'amount',
+						formatter: function(value, row, index) {
+							if(row.purchase_type == '工厂外购' || row.purchase_price == undefined || row.quantity == undefined) {
+								value = 0;
+							} else {
+								value = row.purchase_price * row.quantity;
+							}
+							return value;
+						}
+					}, {
+						title: '备注',
+						field: 'remark',
+						formatter: function(value, row, index) {
+							if(row.purchase_type == '工厂外购') {
+								return '';
+							} else {
+								if(value == undefined) {
+									value = '';
+								}
+								return '<textarea name="remark" placeholder="请输入内容" class="layui-textarea remark">' + value + '</textarea>';
+							}
+						}
+					}],
+					onSearch: function() {
+						sum();
+					},
+					onColumnSwitch: function(field, checked) {
+						sum();
+					},
+					//得到查询的参数
+					queryParams: function(params) {
+						//						//这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+						//						var temp = {
+						//							rows: params.limit, //页面大小
+						//							page: (params.offset / params.limit) + 1, //页码
+						//							sort: params.sort, //排序列名  
+						//							sortOrder: params.order //排位命令（desc，asc） 
+						//						};
+						//						return temp;
+					},
+				});
+			}
+
+			function addMaterials(title, url, id, w, h) {
+				var form = liger.get("signupForm");
+				if(!form.valid()) {
+					return;
+				}
+				var product_name = $('#product_name_select').select2('val');
+				if(product_name == undefined || product_name == "") {
+					alert('请选择产品名称！');
+					return;
+				}
+				var supplier = $('#supplierSelect').select2('val');
+				if(supplier == undefined || supplier == "") {
+					alert('请选择供应商！');
+					return;
+				}
+
+				var index = layer.open({
+					type: 2,
+					maxmin: true,
+					close: true,
+					title: title,
+					area: ['80%', '80%'],
+					content: url,
+					end: function() {
+						sum();
+					}
+				});
+			}
+
+			function delMaterials() {
+				var getSelectRows = $.map(table.bootstrapTable('getSelections'), function(row) {
+					return row.id;
+				});
+				if(getSelectRows.length >= 1) {
+					layer.confirm('您真的确定要删除吗?', {
+						icon: 3,
+						btn: ['确定', '取消'] //按钮
+					}, function(index) {
+						for(var i = 0; i < getSelectRows.length; i++) {
+							table.bootstrapTable('remove', {
+								field: 'id',
+								values: [parseFloat(getSelectRows[i])]
+							});
+							sum();
+						}
+						layer.close(index);
+					}, function(index) {
+						layer.close(index);
+					});
+				} else {
+					layer.alert("请选择一行删除!");
+					return;
+				}
+			}
+			
+			
+			function addMaterialsByWG() {
+				var form = liger.get("signupForm");
+				if(!form.valid()) {
+					return;
+				}
+				var product_name = $('#product_name_select').select2('val');
+				if(product_name == undefined || product_name == "") {
+					alert('请选择产品名称！');
+					return;
+				}
+				var supplier = $('#supplierSelect').select2('val');
+				if(supplier == undefined || supplier == "") {
+					alert('请选择供应商！');
+					return;
+				}
+				var index = 0;
+				if(table.find("tbody tr").hasClass("no-records-found")){
+					index = $(this).find("tr").length;
+					table.find("tbody tr").remove();
+	            }
+				 
+				var html = '<tr>'+
+							'<td><input data-index="'+index+'" name="btSelectItem" type="checkbox" checked="checked"></td>'+
+							'<td><input name="bom_code" class="ui-textbox" type="text" ltype="text" validate="{required:true}"></td>'+
+							'<td><input name="bom_code" class="ui-textbox" type="text" ltype="text" validate="{required:true}"></td>'+
+							'<td>工厂外购</td>'+
+							'<td></td>'+
+							'<td></td>'+
+							'<td><input name="bom_code" class="ui-textbox input-width" type="text" ltype="text" validate="{required:true}"></td>'+
+							'<td><input name="bom_code" class="ui-textbox input-width" type="text" ltype="text" validate="{required:true,digits:true}"></td>'+
+							'<td><input name="bom_code" class="ui-textbox input-width" type="text" ltype="text" validate="{required:true,number:true}"></td>'+
+							'<td><textarea name="remark" placeholder="请输入内容" class="layui-textarea remark"></textarea></td>'+
+					'</tr>';
+				table.find("tbody tr.footer").remove();
+			 	table.append(html);
+			 	sum();
+			}
+
+
+			function setValue(obj) {
+				//获得焦点时，如果值为默认值，则设置为空				
+				$(obj).attr("value", $(obj).val());
+			}
+
+			function priceChange(obj) {
+				//获取单价的值
+				var price = $(obj).val();
+				//获取数量的值
+				var quantity = $(obj).closest('td').next().find('input[name=quantity]').val();
+				var amount;
+				if(price != "") {
+					if(quantity != "") {
+						amount = parseFloat(price * quantity);
+						//金额
+						$(obj).closest('td').next().next().text(amount);
+						sum();
+					}
+				}
+			}
+
+			function quantityChange(obj) {
+				//获取单价的值
+				var purchase_price = $(obj).closest('td').prev().find('input[name=purchase_price]').val();
+				//获取数量的值
+				var quantity = $(obj).val();
+				if(purchase_price != "") {
+					if(quantity != "") {
+						var total_price = parseFloat(quantity * purchase_price);
+						//分摊前金额
+						$(obj).closest('td').next().text(total_price);
+						sum();
+					}
+				}
+			}
+
+			function sum() {
+				var sumQuantity = 0;
+				var sumAmount = 0;
+				var sumAmountAfter = 0;
+				$("#materialsInfoTable input[name='quantity']").each(function() {
+					sumQuantity += +$(this).val();
+				});
+				$("#materialsInfoTable td[class='amount']").each(function() {
+					sumAmount += +$(this).text();
+				});
+				//先删除最后一行
+				if($("#materialsInfoTable tr").hasClass('footer')) {
+					$("#materialsInfoTable tr:last").remove();
+				}
+
+				var columns = $('table thead tr').find('th').size();
+				var nextColumns = $('table thead tr').find('th.amount').nextAll().size();
+				var colspan = parseInt(columns - nextColumns - 2);
+				var tr = '<tr class="footer"><td class="text-right" colspan="' + colspan + '">合计</td><td class="total_count">' + sumQuantity + '</td><td class="total_price" colspan="' + (nextColumns + 1) + '">' + sumAmount + '元</td></tr>';
+				$('#materialsInfoTable').append(tr);
+			}
+
+			function submitForm() {
+				var form = liger.get("signupForm");
+				if(!form.valid()) {
+					return;
+				}
+				var data = {};
+				$("input,select,textarea").each(function() {
+					var name = $(this).attr("name");
+					if(name && name.indexOf('ligerui') == -1) {
+						data[name] = this.value;
+					}
+				});
+				data.id = $.getUrlParam('id');
+
+				$.ajax({
+						type: 'post',
+						url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/setUser',
+						data: data,
+						success: function(res) {
+							if(Number(res)) {
+								parent.table.bootstrapTable('refresh');
+								var index = parent.layer.getFrameIndex(window.name);
+								parent.layer.close(index);
+							}
+						}
+					})
+					/*
+					            parent.table.bootstrapTable('refresh');
+					            var index = parent.layer.getFrameIndex(window.name);
+					            parent.layer.close(index);*/
+			}
+		</script>
+	</body>
+
+</html>

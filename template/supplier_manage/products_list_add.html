@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>添加商品信息</title>
+		<meta name="keywords" content="添加商品信息">
+		<meta name="description" content="添加商品信息">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+		<link href="../../css/plugins/blueimp/css/blueimp-gallery.min.css" rel="stylesheet">
+
+	</head>
+
+	<body class="pd15">
+		<div class="row">
+			<div class="col-sm-12 form-group">
+				<table id="productList" style="border-left: 1px solid #e7eaec;"></table>
+			</div>
+			<div class="col-sm-12 text-right">
+				<button class="btn btn-primary" type="button" onclick="add();">添加商品</button>
+				<button class="btn btn-primary" type="button" onclick="cancelLayer();">取消</button>
+			</div>
+		</div>
+
+		<!--显示图片层-->
+		<div id="blueimp-gallery" class="blueimp-gallery">
+			<div class="slides"></div>
+			<h3 class="title"></h3>
+			<a class="close">×</a>
+		</div>
+
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/bootstrap.min.js"></script>
+		<script src="../../js/content.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+		<script src="../../js/js.js"></script>
+		<script src="../../js/plugins/blueimp/jquery.blueimp-gallery.min.js"></script>
+
+		<script>
+			var table = $("#productList");
+			$(document).ready(function() {
+				var pageSize; //总页数
+				var pageIndex; //当前第几页
+				table.bootstrapTable({
+					// url: USER_INFO.SITE_URL+'/tp5/public/index.php/Admin/Admin/noteListDemo', //服务端需要返回rows与total字段
+					// pagination: true,
+					// pageSize: 5, //每页多少条
+					// method:'post',
+					// sidePagination: "server", //服务端处理分页
+					search: true,
+					showRefresh: true,
+					showColumns: true,
+					icons: {
+						refresh: "glyphicon-repeat",
+						columns: "glyphicon-list"
+					},
+					columns: [{
+							align: 'center',
+							checkbox: true
+						}, {
+							field: 'id',
+							title: '编号',
+							visible: false
+						},
+						{
+							field: 'product_code',
+							title: '商品代码',
+						},
+						{
+							field: 'product_name',
+							title: '商品名称'
+						},
+						{
+							field: 'mnemonic',
+							title: '助记符'
+						},
+						{
+							field: 'specification',
+							title: '规格'
+						},
+						{
+							field: 'unit',
+							title: '单位'
+						},
+						{
+							field: 'size',
+							title: '尺码'
+						},
+						{
+							field: 'color',
+							title: '颜色'
+						},
+						{
+							field: 'image',
+							title: '图片',
+							formatter: function(value, row, index) {
+								var str = '';
+								str += '<a href="../../img/' + value + '.jpg" title="ͼƬ" data-gallery="" class="gallery-img"><img src="../../img/' + value + '.jpg"></a>';
+								return str;
+							}
+						}
+					],
+					data: [{
+							id: 1,
+							product_code: '1 MTP1329D5A', //商品代码
+							product_name: 'CASIO MTP-1329D-5A', //商品名称
+							mnemonic: ' ', //助记符
+							specification: '',
+							unit: '只',
+							size: '通码',
+							color: '通色',
+							image: 'watch1'
+						},
+						{
+							id: 2,
+							product_code: '2 MTP1329D5A', //商品代码
+							product_name: 'CASIO MTP-1889D-5B', //商品名称
+							mnemonic: ' ', //助记符
+							specification: '',
+							unit: '只',
+							size: '通码',
+							color: '通色',
+							image: 'watch1'
+						},
+						{
+							id: 3,
+							product_code: '3 MTP1329D5A', //商品代码
+							product_name: 'CASIO MTP-1359D-5A', //商品名称
+							mnemonic: ' ', //助记符
+							specification: '',
+							unit: '只',
+							size: '通码',
+							color: '通色',
+							image: 'watch1'
+						},
+						{
+							id: 4,
+							product_code: '4 MTP1329D5A', //商品代码
+							product_name: 'CASIO MTP-1239D-5A', //商品名称
+							mnemonic: ' ', //助记符
+							specification: '',
+							unit: '只',
+							size: '通码',
+							color: '通色',
+							image: 'watch1'
+						}
+					]
+					/*,
+					            queryParams: function(params) {
+					                var form = liger.get("form");
+					                var data = form.getData();
+					                var temp = {
+					                    pageSize: params.limit,                         //页面大小
+					                    pageIndex: (params.offset / params.limit) + 1,   //页码
+					                    sort: params.sort,      //排序列名
+					                    sortOrder: params.order //排位命令（desc，asc）
+					                };
+					                mergeObj(temp,data); //合并对象
+					                pageSize = temp.pageSize;
+					                pageIndex = temp.pageIndex;
+					                return temp;
+					            }*/
+				});
+				$(".btn-default").addClass("btn-outline");
+			})
+
+			function add() {
+				var getSelectRows = table.bootstrapTable('getSelections');
+				if(getSelectRows.length >= 1) {
+					parent.$("#productInfoTable").bootstrapTable('append', getSelectRows);
+					var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+					parent.layer.close(index); //再执行关闭   
+				} else {
+					parent.layer.alert('请选择商品信息！');
+				}
+			}
+		</script>
+
+	</body>
+
+</html>

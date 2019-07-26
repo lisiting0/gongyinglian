@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>账期计算</title>
+		<meta name="keywords" content="账期计算">
+		<meta name="description" content="账期计算">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+
+	</head>
+
+	<body class="pd15">
+
+		<form class="form-horizontal m-t" id="signupForm">
+			<div class="form-group">
+				<label class="col-sm-3 control-label">供应商</label>
+				<div class="col-sm-6">
+					<input name="supplier" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}" value="Seewoo">
+					<span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 请填写完整的供应商名称</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">订单编号</label>
+				<div class="col-sm-6">
+					<input name="order_num" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}" value="10010">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">定金</label>
+				<div class="col-sm-6">
+					<input name="earnest_money" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}" value="10000">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">交付方式</label>
+				<div class="col-sm-6">
+					<input name="type2" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}" value="转账">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">分期</label>
+				<div class="col-sm-6">
+					<select class="form-control" name="" id="staging">
+						<option>1期</option>
+						<option>2期</option>
+						<option>3期</option>
+						<option>4期</option>
+						<option value="0">自定义</option>
+					</select>
+				</div>
+			</div>
+			<div id="repayment" class="hidden">
+				<div class="form-group">
+					<label class="col-sm-3 control-label">期数</label>
+					<div class="col-sm-6">
+						<input name="number" class="ui-textbox" type="text" ltype="text" validate="{required:true,number:true,minlength:1,maxlength:10}" value="6">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label">付款金额 / 期</label>
+					<div class="col-sm-6">
+						<input name="number" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}" value="1000">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label">付款日期 / 期</label>
+					<div class="col-sm-6">
+						<input name="start" class="laydate-icon form-control layer-date" id="start">
+						<input name="end" class="laydate-icon form-control layer-date" id="end">
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">交付总批次</label>
+				<div class="col-sm-6">
+					<input name="batch" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}" value="3">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">付款方式</label>
+				<div class="col-sm-6">
+					<input name="type3" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}" value="转账">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">付款总批次</label>
+				<div class="col-sm-6">
+					<input name="batch2" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}" value="3">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">订单状态</label>
+				<div class="col-sm-6">
+					<input name="state" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}" value="进行中">
+				</div>
+			</div>
+			<div class="form-group text-right">
+				<div class="col-sm-8 col-sm-offset-3">
+					<button class="btn btn-primary" type="submit" onclick="submitForm();">提交</button>
+				</div>
+			</div>
+		</form>
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/bootstrap.min.js"></script>
+		<script src="../../js/js.js"></script>
+		<!-- <script src="../../js/content.min.js"></script> -->
+		<script src="../../js/ligerui.all.js"></script>
+		<script src="../../js/plugins/validate/jquery.validate.min.js"></script>
+		<script src="../../js/plugins/validate/messages_zh.min.js"></script>
+		<script src="../../js/plugins/validate/jquery.metadata.js"></script>
+		<!-- <script src="../../js/demo/form-validate-demo.min.js"></script> -->
+		<script src="../../js/plugins/layer/laydate/laydate.js"></script>
+		<script>
+			$(function() {
+				if($.getUrlParam('id')) {
+					//setData();
+				} else {
+
+				}
+				initSelect();
+
+				new formValidate({
+					formEle: '#signupForm'
+				});
+
+				$("select#staging").change(function() {
+					if($(this).val() == 0) {
+						$("#repayment").removeClass('hidden');
+					} else {
+						$("#repayment").addClass('hidden');
+					}
+				});
+				
+				var start = {
+					elem: "#start",
+					format: "YYYY/MM/DD hh:mm:ss",
+					min: laydate.now(),
+					max: "2099-06-16 23:59:59",
+					istime: true,
+					istoday: false,
+					choose: function(datas) {
+						end.min = datas;
+						end.start = datas
+					}
+				};
+				var end = {
+					elem: "#end",
+					format: "YYYY/MM/DD hh:mm:ss",
+					min: laydate.now(),
+					max: "2099-06-16 23:59:59",
+					istime: true,
+					istoday: false,
+					choose: function(datas) {
+						start.max = datas
+					}
+				};
+				laydate(start);
+				laydate(end);
+
+			});
+
+			function initSelect() {
+				$('input[name="country3"]').ligerComboBox({
+					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/getMap',
+					valueField: 'value',
+					textField: 'text'
+				});
+				$('input[name="country4"]').ligerComboBox({
+					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/getMap',
+					valueField: 'value',
+					textField: 'text',
+					　　isMultiSelect: true　　 //是否支持多选
+				});
+
+				$('input[name="country2"]').ligerRadioList({
+					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/getMap',
+					valueField: 'value',
+					textField: 'text'
+				});
+				$('input[name="country"]').ligerCheckBoxList({
+					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/getMap',
+					valueField: 'value',
+					textField: 'text'
+				});
+			}
+
+			function valid() {
+				var form = liger.get("signupForm");
+				alert(form.valid());
+			}
+
+			function getData() {
+				var form = liger.get("signupForm");
+				var data = form.getData();
+				alert(JSON.stringify(data));
+			}
+
+			function setData() {
+				$.ajax({
+					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/getUser',
+					data: {
+						id: $.getUrlParam('id')
+					},
+					success: function(res) {
+						res = $.parseJSON(res);
+						var form = new liger.get("signupForm");
+						form.setData(res);
+					}
+				})
+			}
+
+			function submitForm() {
+
+				var form = liger.get("signupForm");
+				if(!form.valid()) {
+					return;
+				}
+				var data = {};
+				$("input,select,textarea").each(function() {
+					var name = $(this).attr("name");
+					if(name && name.indexOf('ligerui') == -1) {
+						data[name] = this.value;
+					}
+				});
+				data.id = $.getUrlParam('id');
+
+				$.ajax({
+					type: 'post',
+					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/setUser',
+					data: data,
+					success: function(res) {
+						if(Number(res)) {
+							parent.table.bootstrapTable('refresh');
+							var index = parent.layer.getFrameIndex(window.name);
+							parent.layer.close(index);
+						}
+					}
+				})
+				/*
+				            parent.table.bootstrapTable('refresh');
+				            var index = parent.layer.getFrameIndex(window.name);
+				            parent.layer.close(index);*/
+			}
+		</script>
+	</body>
+
+</html>

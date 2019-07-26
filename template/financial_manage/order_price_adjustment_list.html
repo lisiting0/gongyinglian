@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>订单调价</title>
+		<meta name="keywords" content="订单调价">
+		<meta name="description" content="订单调价">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+
+	</head>
+
+	<body class="gray-bg pd15">
+		<div class="panel panel-default ibox float-e-margins border-bottom margin-bottom">
+			<div class="panel-heading">
+				<div class="row">
+					<div class="col-sm-4 mgt2">查询条件</div>
+					<div class="col-sm-8 text-right">
+						<a class="collapse-link">
+							<i class="fa fa-chevron-down"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="panel-body d-serach ibox-content">
+				<form id="form">
+					<div class="row form-group">
+						<label class="col-sm control-label">订单编号</label>
+						<div class="col-sm-2">
+							<input type="text" class="ui-textbox" name="order_number" />
+						</div>
+						<label class="col-sm control-label">供应商</label>
+						<div class="col-sm-2">
+							<input type="text" class="ui-textbox" name="supplier" />
+						</div>
+						<label class="col-sm control-label">订单状态</label>
+						<div class="col-sm-2">
+							<select name="">
+								<option value=" ">所有</option>
+								<option value="待付款">待付款</option>
+								<option value="已付款">已付款</option>
+							</select>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="panel-body">
+			<div class="row text-right">
+				<button class="btn btn-primary " type="button"><i class="fa fa-check"></i>&nbsp;查询</button>
+				<button class="btn btn-success " type="button"><i class="fa fa-download"></i>&nbsp;&nbsp;<span class="bold">导出</span></button>
+			</div>
+		</div>
+		<div class="content-style0">
+			<table id="exampleTableEvents"></table>
+		</div>
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/bootstrap.min.js"></script>
+		<script src="../../js/content.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+		<script src="../../js/plugins/layer/layer.min.js"></script>
+		<script src="../../js/ligerui.all.js"></script>
+		<script src="../../js/js.js"></script>
+		<script>
+			$("#form").ligerForm({
+				inputWidth: '',
+				validate: true
+			});
+			var pageSize; //总页数
+			var pageIndex; //当前第几页
+			var table = $("#exampleTableEvents");
+
+			$(function() {
+				table.bootstrapTable({
+					//url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/noteListDemo', //服务端需要返回rows与total字段
+					data: [{
+						id: 1,
+						order_number: 'J2018A5001728',
+						supplier: 'Seewoo',
+						totalCost: '1050', //订单总费用
+						discount: '1', //折扣
+						billing_channel: '汇款', //结算渠道
+						settlement_currency: '美元', //结算货币
+						currency_exchange_rate: 0.7, //货币汇率
+						amount_paid: 500, //已付金额
+						last_payment_amount: 100,
+						unpaid_amount: 650, //未付金额
+						last_payment_time: '2017-02-10',
+						state: '待付款',
+						WriteoffStatus: '待核销',
+						originator: '季童薇'
+					}, {
+						id: 2,
+						order_number: 'J2018A5001727',
+						supplier: 'Seewoo',
+						totalCost: '1050', //订单总费用
+						discount: '1', //折扣
+						billing_channel: '汇款', //结算渠道
+						settlement_currency: '美元', //结算货币
+						currency_exchange_rate: 0.7, //货币汇率
+						amount_paid: 500, //已付金额
+						last_payment_amount: 100,
+						unpaid_amount: 650, //未付金额
+						last_payment_time: '2017-02-10',
+						state: '待付款',
+						WriteoffStatus: '待核销',
+						originator: '季童薇'
+					}, {
+						id: 3,
+						order_number: 'J2018A5001725',
+						supplier: 'Seewoo',
+						totalCost: '1050', //订单总费用
+						discount: '1', //折扣
+						billing_channel: '汇款', //结算渠道
+						settlement_currency: '美元', //结算货币
+						currency_exchange_rate: 0.7, //货币汇率
+						amount_paid: 500, //已付金额
+						last_payment_amount: 500,
+						unpaid_amount: 650, //未付金额
+						last_payment_time: '2017-02-10',
+						state: '待付款',
+						WriteoffStatus: '待核销',
+						originator: '季童薇'
+					}],
+					pagination: true, //分页
+					pageSize: 5, //每页多少条
+					//method: 'post',
+					//sidePagination: "server", //服务端处理分页
+					columns: [{
+							align: 'center',
+							checkbox: true
+						},
+						{
+							title: '订单编号',
+							field: 'order_number',
+							formatter: function(value, row, index) {
+								var a = '<a onclick="edit(\'详情\',\'../../template/common/order_list_see.html\',' + row.id + ')">' + row.order_number + ' </a> ';
+								return a;
+							}
+						},
+						{
+							title: '供应商',
+							field: 'supplier',
+							formatter: function(value, row, index) {
+								var a = '<a onclick="edit(\'详情\',\'../../template/supplier_manage/supplier_info_list_edit.html\',' + row.id + ')">' + row.supplier + ' </a> ';
+								return a;
+							}
+						},
+						{
+							title: '订单总额',
+							field: 'totalCost'
+						},
+						{
+							title: '折扣',
+							field: 'discount'
+						},
+						{
+							title: '已付金额',
+							field: 'amount_paid'
+						},
+						{
+							title: '最后一次付款金额',
+							field: 'last_payment_amount'
+						},
+						{
+							title: '未付金额',
+							field: 'unpaid_amount'
+						},
+						{
+							title: '最后一次付款时间',
+							field: 'last_payment_time'
+						},
+						{
+							title: '状态',
+							field: 'state'
+						},
+						{
+							title: '操作',
+							width: '200',
+							formatter: function(value, row, index) {
+								var str = '';
+								str += '<a class="btn btn-success btn-xs" onclick="edit(\'订单调价\',\'order_price_adjustment_list_edit.html\',\'' + row.order_number + '\')">订单调价 </a> ';
+								return str;
+							}
+						}
+					],
+					queryParams: function(params) {
+						var form = liger.get("form");
+						var data = form.getData();
+						var temp = {
+							pageSize: params.limit, //页面大小
+							pageIndex: (params.offset / params.limit) + 1, //页码
+							sort: params.sort, //排序列名
+							sortOrder: params.order //排位命令（desc，asc）
+						};
+						mergeObj(temp, data); //合并对象
+						pageSize = temp.pageSize;
+						pageIndex = temp.pageIndex;
+						return temp;
+					}
+				});
+			});
+
+			function serach() {
+				table.bootstrapTable('refresh');
+			}
+
+			function add(title, url, id, w, h) {
+				var index = layer.open({
+					type: 2,
+					close: true,
+					maxmin: true,
+					title: title,
+					area: ['80%', '80%'],
+					content: url
+				});
+			}
+
+			function edit(title, url, id, w, h) {
+				var index = layer.open({
+					type: 2,
+					close: true,
+					maxmin: true,
+					title: title,
+					area: ['80%', '80%'],
+					content: url + '?id=' + id
+				});
+			}
+
+			function del(id) {
+				//询问框
+				layer.confirm('是否需要删除？', {
+					btn: ['确定', '取消'], //按钮
+					shade: false //不显示遮罩
+				}, function(index) {
+					$.ajax({
+						type: 'post',
+						url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/dels',
+						data: {
+							id: id
+						},
+						success: function(res) {
+							table.bootstrapTable('refresh');
+							layer.close(index);
+						}
+					})
+				}, function() {});
+			}
+		</script>
+
+	</body>
+
+</html>

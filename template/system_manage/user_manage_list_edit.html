@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>用户管理</title>
+		<meta name="keywords" content="用户管理">
+		<meta name="description" content="用户管理">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+
+	</head>
+
+	<body class="pdt40">
+
+		<form class="form-horizontal m-t" id="signupForm">
+			<div class="form-group">
+				<label class="col-sm-3 control-label">用户编码：</label>
+				<div class="col-sm-6">
+					<input id="textbox1" name="p_name" value="001" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">用户账号：</label>
+				<div class="col-sm-6">
+					<input id="textbox1" name="p_name" value="admin" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">用户名：</label>
+				<div class="col-sm-6">
+					<input id="textbox1" name="p_name" value="季童薇" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">用户密码：</label>
+				<div class="col-sm-6">
+					<input id="textbox1" name="p_name" value="123456" class="ui-textbox" type="password" ltype="text" validate="{required:true,minlength:1,maxlength:10}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">邮箱：</label>
+				<div class="col-sm-6">
+					<input id="textbox1" name="p_country" value="123@qq.com" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">电话：</label>
+				<div class="col-sm-6">
+					<input id="textbox1" name="p_country" value="13413522646" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">部门：</label>
+				<div class="col-sm-6">
+					<select name="gender" class="form-control">
+						<option value=" ">请选择</option>
+						<option value="财务部 " selected="">财务部</option>
+						<option value="采购部 ">采购部</option>
+						<option value="国品采购部 ">国品采购部</option>
+						<option value="仓储部 ">仓储部</option>
+						<option value="开发组 ">开发组</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">描述：</label>
+				<div class="col-sm-6">
+					<textarea name="desc" placeholder="请输入内容" class="layui-textarea" style="min-width:100%;min-height: 100px;height: auto;line-height: 20px;padding: 6px 10px;resize: vertical;border: 1px solid #e5e6e7;"></textarea>
+				</div>
+			</div>
+			<div class="form-group text-right yc_button">
+				<div class="col-sm-9">
+					<button class="btn btn-primary" type="submit" onclick="submitForm();">提交</button>
+					<button class="btn btn-primary" type="submit" onclick="cancelLayer();">取消</button>
+				</div>
+			</div>
+		</form>
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/bootstrap.min.js"></script>
+		<script src="../../js/js.js"></script>
+		<!-- <script src="../../js/content.min.js"></script> -->
+		<script src="../../js/ligerui.all.js"></script>
+		<script src="../../js/plugins/validate/jquery.validate.min.js"></script>
+		<script src="../../js/plugins/validate/messages_zh.min.js"></script>
+		<script src="../../js/plugins/validate/jquery.metadata.js"></script>
+		<!-- <script src="../../js/demo/form-validate-demo.min.js"></script> -->
+		<script>
+			$(function() {
+				if($.getUrlParam('id')) {
+					//setData();
+				} else {
+					
+				}
+				initSelect();
+
+				new formValidate({
+					formEle: '#signupForm'
+				});
+				
+				if($.getUrlParam('see')=='see') {
+					setFormSee({
+						formEle: '#signupForm'
+					});
+					$(".yc_button").hide();
+					$(".ui-textbox").addClass("border-none").prop("disabled",true);
+					$(".layui-textarea").prop("disabled",true).css({"background-color":"#fff","border":"none"});
+				} else {
+					
+				}
+
+			});
+
+			function initSelect() {
+				$('input[name="country3"]').ligerComboBox({
+					url: '../../data/city.txt',
+					valueField: 'value',
+					textField: 'text'
+				});
+				$('input[name="country4"]').ligerComboBox({
+					url: '../../data/city.txt',
+					valueField: 'value',
+					textField: 'text',
+					　　isMultiSelect: true　　 //是否支持多选
+				});
+
+				$('input[name="country2"]').ligerRadioList({
+					url: '../../data/city.txt',
+					valueField: 'value',
+					textField: 'text'
+				});
+				$('input[name="country"]').ligerCheckBoxList({
+					url: '../../data/city.txt',
+					valueField: 'value',
+					textField: 'text'
+				});
+			}
+
+			function valid() {
+				var form = liger.get("signupForm");
+				alert(form.valid());
+			}
+
+			function getData() {
+				var form = liger.get("signupForm");
+				var data = form.getData();
+				alert(JSON.stringify(data));
+			}
+
+			function setData() {
+				$.ajax({
+					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/getUser',
+					data: {
+						id: $.getUrlParam('id')
+					},
+					success: function(res) {
+						res = $.parseJSON(res);
+						var form = new liger.get("signupForm");
+						form.setData(res);
+					}
+				})
+			}
+
+			function submitForm() {
+
+				var form = liger.get("signupForm");
+				if(!form.valid()) {
+					return;
+				}
+				var data = {};
+				$("input,select,textarea").each(function() {
+					var name = $(this).attr("name");
+					if(name && name.indexOf('ligerui') == -1) {
+						data[name] = this.value;
+					}
+				});
+				data.id = $.getUrlParam('id');
+
+				$.ajax({
+					type: 'post',
+					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/setUser',
+					data: data,
+					success: function(res) {
+						if(Number(res)) {
+							parent.table.bootstrapTable('refresh');
+							var index = parent.layer.getFrameIndex(window.name);
+							parent.layer.close(index);
+						}
+					}
+				})
+				/*
+				            parent.table.bootstrapTable('refresh');
+				            var index = parent.layer.getFrameIndex(window.name);
+				            parent.layer.close(index);*/
+			}
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>是否含定金的订单信息添加</title>
+		<meta name="keywords" content="是否含定金的订单信息添加">
+		<meta name="description" content="是否含定金的订单信息添加">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+		<link href="../../css/plugins/blueimp/css/blueimp-gallery.min.css" rel="stylesheet">
+
+	</head>
+
+	<body class="pd15">
+		<div class="row">
+			<div class="col-sm-12 form-group">
+				<table id="ordersTable" style="border-left: 1px solid #e7eaec;"></table>
+			</div>
+			<div class="col-sm-12 text-right">
+				<button class="btn btn-primary" type="button" onclick="add();">添加商品/物料</button>
+				<button class="btn btn-primary" type="button" onclick="cancelLayer();">取消</button>
+			</div>
+		</div>
+
+		<!--显示图片层-->
+		<div id="blueimp-gallery" class="blueimp-gallery">
+			<div class="slides"></div>
+			<h3 class="title"></h3>
+			<a class="close">×</a>
+		</div>
+
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/bootstrap.min.js"></script>
+		<script src="../../js/content.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+		<script src="../../js/js.js"></script>
+		<script src="../../js/plugins/blueimp/jquery.blueimp-gallery.min.js"></script>
+
+		<script>
+			var table = $("#ordersTable");
+			var pageSize; //总页数
+			var pageIndex; //当前第几页
+			var loadData = [{
+				id: 10015,
+				order_number: 'J2018A5001728',
+				deposit_yon: '是',
+				code: '0 160M60LYXCL',
+				name: '后盖（不锈钢）',
+				purchase_type: '鼎骏自购',
+				specification: '',
+				weight: 20,
+				unit: '件',
+				size: '通码',
+				color: '通色',
+				image: 'watch1',
+				purchase_price: 8,
+				purchase_quantity: 500,
+				delivery_quantity: 250
+			}, {
+				id: 10016,
+				order_number: 'J2018A5001728',
+				deposit_yon: '是',
+				code: '1 02B38068M QQF-01',
+				name: '机芯（国产）',
+				purchase_type: '工厂外购',
+				specification: '',
+				weight: 20,
+				unit: '件',
+				size: '通码',
+				color: '通色',
+				image: 'watch1',
+				purchase_price: 6,
+				purchase_quantity: 400,
+				delivery_quantity: 200
+			}, {
+				id: 10017,
+				order_number: 'J2018A5001728',
+				deposit_yon: '是',
+				code: '2 02B38068M QQF-01',
+				name: '表带（皮制）',
+				purchase_type: '鼎骏自购',
+				specification: '',
+				weight: 20,
+				unit: '件',
+				size: '通码',
+				color: '通色',
+				image: 'watch1',
+				purchase_price: 2,
+				purchase_quantity: 300,
+				delivery_quantity: 150
+			}, {
+				id: 10018,
+				order_number: 'J2018A5001728',
+				deposit_yon: '是',
+				code: '3 02B38068M QQF-01',
+				name: '表把',
+				purchase_type: '工厂外购',
+				specification: '',
+				weight: 20,
+				unit: '件',
+				size: '通码',
+				color: '通色',
+				image: 'watch1',
+				purchase_price: 5,
+				purchase_quantity: 200,
+				delivery_quantity: 50
+			}, {
+				id: 10019,
+				order_number: 'J2018A5001722',
+				deposit_yon: '否',
+				code: '0 MTP1328A5A',
+				name: 'CASIO MTP-1329D-5A',
+				purchase_type: '鼎骏自购',
+				specification: '',
+				weight: 20,
+				unit: '件',
+				size: '通码',
+				color: '通色',
+				image: 'watch1',
+				purchase_price: 7,
+				purchase_quantity: 100,
+				delivery_quantity: 50
+			}, {
+				id: 10020,
+				order_number: 'J2018A5001725',
+				deposit_yon: '否',
+				code: '1 MTP1314D5A',
+				name: 'CASIO 石英表',
+				purchase_type: '鼎骏自购',
+				specification: '',
+				weight: 20,
+				unit: '件',
+				size: '通码',
+				color: '通色',
+				image: 'watch1',
+				purchase_price: 1000,
+				purchase_quantity: 50,
+				delivery_quantity: 20
+			}, {
+				id: 10021,
+				order_number: 'J2018A5001705',
+				deposit_yon: '是',
+				code: 'BP MTP1338D5A',
+				name: 'CASIO XX表',
+				purchase_type: '鼎骏自购',
+				specification: '',
+				weight: 20,
+				unit: '件',
+				size: '通码',
+				color: '通色',
+				image: 'watch1',
+				purchase_price: 800,
+				purchase_quantity: 30,
+				delivery_quantity: 10
+			}];
+
+			$(document).ready(function() {
+				initTable();
+				$(".btn-default").addClass("btn-outline");
+				table.bootstrapTable('append', loadData);
+				//合并单元格
+				mergeCells(loadData, "order_number", null, "#ordersTable");
+			})
+
+			//是否含有定金
+			var deposit_yon = $.getUrlParam('deposit');
+			var receiving = $.getUrlParam('receiving');
+
+			function initTable() {
+				table.bootstrapTable({
+					search: true,
+					showRefresh: true,
+					showColumns: true,
+					icons: {
+						refresh: "glyphicon-repeat",
+						columns: "glyphicon-list"
+					},
+					columns: [{
+						align: 'center',
+						checkbox: true
+					}, {
+						field: "id",
+						title: "唯一编号",
+						visible: false
+					}, {
+						field: "order_number",
+						title: "订单编号"
+					}, {
+						field: "deposit_yon",
+						title: "是否含有定金",
+						visible: !deposit_yon ? false : true
+					}, {
+						field: "code",
+						title: "商品代码/物料型号"
+					}, {
+						field: "name",
+						title: "商品名称/物料名称"
+					}, {
+						field: "purchase_type",
+						title: "采购类型"
+					}, {
+						field: 'specification',
+						title: '规格',
+						visible: false
+					}, {
+						field: 'weight',
+						title: '重量（g）',
+						visible: false
+					}, {
+						field: 'unit',
+						title: '单位'
+					}, {
+						field: 'size',
+						title: '尺码'
+					}, {
+						field: 'color',
+						title: '颜色'
+					}, {
+						field: 'image',
+						title: '图片',
+						formatter: function(value, row, index) {
+							var str = '';
+							str += '<a href="../../img/' + value + '.jpg" title="ͼƬ" data-gallery="" class="gallery-img"><img src="../../img/' + value + '.jpg"></a>';
+							return str;
+						}
+					}, {
+						title: '单价',
+						field: 'purchase_price'
+					}, {
+						field: 'purchase_quantity',
+						title: '采购数量'
+					}, {
+						field: 'delivery_quantity',
+						title: '送货数量',
+						visible: !receiving ? false : true
+					}, ],
+
+					/*,
+					            queryParams: function(params) {
+					                var form = liger.get("form");
+					                var data = form.getData();
+					                var temp = {
+					                    pageSize: params.limit,                         //页面大小
+					                    pageIndex: (params.offset / params.limit) + 1,   //页码
+					                    sort: params.sort,      //排序列名
+					                    sortOrder: params.order //排位命令（desc，asc）
+					                };
+					                mergeObj(temp,data); //合并对象
+					                pageSize = temp.pageSize;
+					                pageIndex = temp.pageIndex;
+					                return temp;
+					            }*/
+				});
+			}
+
+			function add() {
+				var arr = [];
+				var getSelectRows = table.bootstrapTable('getSelections');
+				if(getSelectRows.length >= 1) {
+					for(var i = 0; i < getSelectRows.length; i++) {
+						if(getSelectRows[i].deposit_yon == deposit_yon) {
+							arr.push(getSelectRows[i].deposit_yon);
+						}
+					}
+					if(arr.length == getSelectRows.length) {
+						parent.$("#ordersInfoTable").bootstrapTable('append', getSelectRows);
+						var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+						parent.layer.close(index); //再执行关闭   
+					} else {
+						if(deposit_yon == "是") {
+							parent.layer.alert('请选择都是有定金的订单！');
+						} else {
+							parent.layer.alert('请选择都是没有定金的订单！');
+						}
+					}
+				} else {
+					parent.layer.alert('请选择至少一条数据！');
+				}
+			}
+		</script>
+
+	</body>
+
+</html>

@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Bom审核</title>
+		<meta name="keywords" content="Bom审核">
+		<meta name="description" content="Bom审核">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-editable/bootstrap-editable.css" rel="stylesheet">
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+		<link href="../../css/plugins/iCheck/custom.css" rel="stylesheet">
+
+	</head>
+
+	<body class="pd15">
+
+		<form class="form-horizontal m-t" id="signupForm">
+			<div class="form-group">
+				<label class="col-sm-2 control-label">产品名称</label>
+				<div class="col-sm-3">
+					<input name="product_name" type="text" ltype="text" class="ui-textbox disabled-text" value="CASIO MTP-1329D-5A">
+				</div>
+				<label class="col-sm-2 control-label">供应商</label>
+				<div class="col-sm-3">
+					<input name="supplier" value="珠海尼维达钟表股份有限公司" class="ui-textbox" class="ui-textbox">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">结算货币</label>
+				<div class="col-sm-3">
+					<select id="settlementCurrency" class="js-example-basic-single form-control" ltype="select" ligeruiid="settlementCurrency">
+						<option value=" ">请选择</option>
+						<option value="人民币">人民币（RMB）</option>
+						<option value="美元">美元（USD）</option>
+						<option value="德国马克">德国马克（DEM）</option>
+						<option value="日元">日元（JPY）</option>
+						<option value="瑞士法郎">瑞士法郎（CHF）</option>
+						<option value="法国法郎">法国法郎（FRF）</option>
+						<option value="意大利里拉">意大利里拉（ITL）</option>
+						<option value="荷兰盾">荷兰盾（NLG）</option>
+						<option value="比利时法郎">比利时法郎（BEU）</option>
+						<option value="丹麦克朗">丹麦克朗（DKR）</option>
+						<option value="瑞典克朗">瑞典克朗（SKR）</option>
+						<option value="挪威克朗">挪威克朗（NKR）</option>
+						<option value="奥地利先令">奥地利先令（ATS）</option>
+						<option value="港币">港币（HKD）</option>
+						<option value="加拿大元">加拿大元（CAD）</option>
+						<option value="澳大利亚元">澳大利亚元（AUD）</option>
+						<option value="新西兰元">新西兰元（NZD）</option>
+						<option value="新加坡元">新加坡元（SGD）</option>
+						<option value="欧元">欧元（EUR）</option>
+						<option value="英镑">英镑（GBP）</option>
+					</select>
+				</div>
+				<label class="col-sm-2 control-label">货币汇率</label>
+				<div class="col-sm-3">
+					<input name="currency_exchange_rate" class="ui-textbox" type="text" ltype="text" validate="{number:true}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">物料清单</label>
+				<div class="col-sm-8">
+					<table id="materialsTable"></table>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">备注</label>
+				<div class="col-sm-10" style="padding: 1px 15px;">
+					<textarea name="remark" placeholder="请输入内容" class="layui-textarea" style="min-width:79.5%;min-height: 100px;height: auto;line-height: 20px;padding: 6px 10px;resize: vertical;border: 1px solid #e5e6e7;"></textarea>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">审核</label>
+				<div class="col-sm-10">
+					<div class="radio i-checks">
+						<label><input type="radio" checked="" value="是" name="audit"></label>审核通过
+						<label><input type="radio" value="否" name="audit"></label>退回修改
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">审核意见</label>
+				<div class="col-sm-10" style="padding: 1px 15px;">
+					<textarea name="audit_opinion" placeholder="请输入审核意见" class="layui-textarea" style="min-width:79.5%;min-height: 100px;height: auto;line-height: 20px;padding: 6px 10px;resize: vertical;border: 1px solid #e5e6e7;"></textarea>
+				</div>
+			</div>
+			<div class="form-group text-right">
+				<div class="col-sm-10">
+					<button type="button" class="btn btn-primary" onclick="audit()">审核</button>
+					<button class="btn btn-primary" type="submit" onclick="cancelLayer();">取消</button>
+				</div>
+			</div>
+		</form>
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/bootstrap.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-editable.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-table-editable.js"></script>
+
+		<script src="../../js/js.js"></script>
+		<script src="../../js/ligerui.all.js"></script>
+		<script src="../../js/plugins/iCheck/icheck.min.js"></script>
+		<script src="../../js/plugins/layer/layer.min.js"></script>
+		<script src="../../js/plugins/validate/jquery.validate.min.js"></script>
+		<script src="../../js/plugins/validate/messages_zh.min.js"></script>
+		<script src="../../js/plugins/validate/jquery.metadata.js"></script>
+		<script src="../../js/plugins/tablesMergeCell/tablesMergeCell.js" type="text/javascript" charset="utf-8"></script>
+		<script>
+			var table = $("#materialsTable");
+			$(function() {
+				if($.getUrlParam('id')) {
+					setData();
+				} else {}
+
+				$(".i-checks").iCheck({
+					checkboxClass: "icheckbox_square-green",
+					radioClass: "iradio_square-green",
+				});
+
+				$('.ui-textbox').attr('disabled', 'disabled').css('background-color', '#f5f5f5');
+				$('textarea[name="remark"]').attr('disabled', 'disabled').css('background-color', '#f5f5f5');
+
+				initTable();
+				$(".btn-default").addClass("btn-outline");
+				sum();
+			});
+
+			function setData() {
+				$.ajax({
+					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/getUser',
+					data: {
+						id: $.getUrlParam('id')
+					},
+					success: function(res) {
+						res = $.parseJSON(res);
+						var form = new liger.get("signupForm");
+						form.setData(res);
+					}
+				})
+			}
+
+			function initTable() {
+				table.bootstrapTable({
+					search: true,
+					showRefresh: true,
+					showColumns: true,
+					icons: {
+						refresh: "glyphicon-repeat",
+						columns: "glyphicon-list"
+					},
+					columns: [{
+							field: "version",
+							title: "版本号",
+						},
+						{
+							field: "material_number",
+							title: "物料型号"
+						},
+						{
+							field: "material_name",
+							title: "物料名称"
+						},
+						{
+							field: "purchase_type",
+							title: "采购类型"
+						},
+						{
+							field: 'specification',
+							title: '规格',
+							visible: false
+						},
+						{
+							field: 'unit',
+							title: '单位',
+							visible: false
+						},
+						{
+							field: 'weight',
+							title: '重量（g）',
+							visible: false
+						},
+						{
+							title: '尺码',
+							field: 'size',
+							visible: false
+						},
+						{
+							title: '颜色',
+							field: 'color',
+							visible: false
+						},
+						{
+							title: '图片',
+							field: 'image',
+							formatter: function(v) {
+								return '<a href="../../img/' + v + '.jpg" title="图片" data-gallery="" class="gallery-img"><img src="../../img/' + v + '.jpg"></a>';
+							}
+						},
+						{
+							title: '最近交易价格',
+							field: 'recent_transaction_price'
+						},
+						{
+							title: '采购价格',
+							field: 'purchase_price',
+							formatter: function(value, row, index) {
+								if(row.purchase_type == '工厂外购') {
+									return 0;
+								} else {
+									if(value == undefined) {
+										value = '';
+									}
+									return value;
+								}
+
+							}
+						},
+						{
+							title: '数量',
+							field: 'quantity',
+							class: 'quantity',
+							formatter: function(value, row, index) {
+								if(row.purchase_type == '工厂外购') {
+									return 0;
+								} else {
+									if(value == undefined) {
+										value = '';
+									}
+									return value;
+								}
+							}
+						},
+						{
+							title: '金额',
+							field: 'amount',
+							class: 'amount',
+							formatter: function(value, row, index) {
+								if(row.purchase_type == '工厂外购' || row.purchase_price == undefined || row.quantity == undefined) {
+									value = 0;
+								} else {
+									value = row.purchase_price * row.quantity;
+								}
+								return value;
+							}
+						},
+
+						{
+							field: 'operator',
+							title: '操作员',
+							visible: false
+						},
+						{
+							field: 'reviewer',
+							title: '审核人',
+							visible: false,
+							formatter: function(value, row, index) {
+								if(!value) {
+									value = "————";
+								} else {
+									value = value;
+								}
+								return value;
+							}
+						}, {
+							field: 'reviewer_date',
+							title: '审核时间',
+							visible: false,
+							formatter: function(value, row, index) {
+								if(!value) {
+									value = "————";
+								} else {
+									value = value;
+								}
+								return value;
+							}
+						},
+						{
+							field: 'state',
+							title: '状态',
+							visible: false
+						},
+						{
+							title: '备注',
+							field: 'remark',
+							formatter: function(value, row, index) {
+								if(value == undefined) {
+									value = '';
+								}
+								return value;
+							}
+						}
+					],
+					data: [{
+						version: 1,
+						material_number: 'BIAOXIN-GC-001',
+						material_name: '表芯',
+						purchase_type: '鼎骏自购',
+						specification: '',
+						unit: '件',
+						weight: '',
+						size: '通码',
+						color: '通色',
+						image: 'watch1',
+						recent_transaction_price: 7,
+						purchase_price: 8,
+						quantity: 50,
+						amount: 400,
+						operator: '季童薇',
+						reviewer: '谭吉吉',
+						reviewer_date: '2018-01-02',
+						state: '已使用',
+						remark: ''
+					}, {
+						version: 1,
+						material_number: 'BIAODAI-GC-002',
+						material_name: '表带',
+						purchase_type: '鼎骏自购',
+						specification: '',
+						unit: '件',
+						weight: '',
+						size: '通码',
+						color: '通色',
+						image: 'watch1',
+						recent_transaction_price: 7,
+						purchase_price: 8,
+						quantity: 50,
+						amount: 400,
+						operator: '季童薇',
+						reviewer: '谭吉吉',
+						reviewer_date: '2018-01-02',
+						state: '已使用',
+						remark: ''
+					}]
+				});
+
+				$("#materialsTable").tablesMergeCell({
+					cols: [0]
+				});
+			}
+
+			function sum() {
+				var sumQuantity = 0;
+				var sumAmount = 0;
+				$("#materialsTable tbody td[class='quantity']").each(function() {
+					sumQuantity += +$(this).text();
+				});
+				$("#materialsTable tbody td[class='amount']").each(function() {
+					sumAmount += +$(this).text();
+				});
+				//先删除最后一行
+				if($("#materialsTable tr").hasClass('footer')) {
+					$("#materialsTable tr:last").remove();
+				}
+				var columns = $('#materialsTable thead tr').find('th').size();
+				var nextColumns = $('#materialsTable thead tr').find('th.amount').nextAll().size();
+				var colspan = parseInt(columns - nextColumns - 2);
+				var tr = '<tr class="footer"><td class="text-right" colspan="' + colspan + '">合计</td><td class="total_count">' + sumQuantity + '</td><td class="total_price" colspan="' + (nextColumns + 1) + '">' + sumAmount + '元</td></tr>';
+				$('#materialsTable').append(tr);
+			}
+
+			function audit() {
+				//data.id = $.getUrlParam('id');
+				//				$.ajax({
+				//					type: 'post',
+				//					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/setUser',
+				//					data: data,
+				//					success: function(res) {
+				//						if(Number(res)) {
+				//							parent.table.bootstrapTable('refresh');
+				//							var index = parent.layer.getFrameIndex(window.name);
+				//							parent.layer.close(index);
+				//						}
+				//					}
+				//				})
+
+				parent.layer.closeAll();
+			}
+		</script>
+	</body>
+
+</html>

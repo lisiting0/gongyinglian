@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>付款申请</title>
+		<meta name="keywords" content="付款申请">
+		<meta name="description" content="付款申请">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-editable/bootstrap-editable.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="../../css/plugins/select2/select2.min.css" />
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+		<link href="../../css/plugins/blueimp/css/blueimp-gallery.min.css" rel="stylesheet">
+	</head>
+
+	<body class="pd15">
+
+		<form class="form-horizontal m-t" id="signupForm">
+			<div class="form-group">
+				<label class="col-sm-2 control-label">到货单号</label>
+				<div class="col-sm-3">
+					<input name="arrival_order_number" class="ui-textbox disabled-text" type="text" ltype="text" value="20171225001">
+				</div>
+				<label class="col-sm-2 control-label">送货单位</label>
+				<div class="col-sm-3">
+					<select id="supplierSelect" class="js-example-basic-single form-control" ltype="select" ligeruiid="supplierSelect">
+						<option value="">请选择</option>
+						<option value="HN-GZJT-001">广州集团</option>
+						<option value="HN-GZBJ-0011">广州宝玑集团</option>
+						<option value="HB-BJZH-003">北京钟华集团</option>
+						<option value="HB-BJZH-004">北京摇摇乐集团</option>
+					</select>
+				</div>
+			</div>
+			<div class="disabled-input">
+				<div class="form-group">
+					<label class="col-sm-2 control-label">开户行</label>
+					<div class="col-sm-3">
+						<input name="bom_bank" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:4,maxlength:50}" value="建设银行">
+					</div>
+					<label class="col-sm-2 control-label">账号</label>
+					<div class="col-sm-3">
+						<input name="bom_bank_account" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:18,maxlength:18}" value="621400235656586187">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">联系人</label>
+					<div class="col-sm-3">
+						<input name="contact" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:2,maxlength:10}" value="李明">
+					</div>
+					<label class="col-sm-2 control-label">联系电话</label>
+					<div class="col-sm-3">
+						<input name="phone" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:10,maxlength:12}" value="13562656685">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">付款类型</label>
+					<div class="col-sm-3">
+						<select id="payment_type" class="js-example-basic-single form-control" ltype="select" ligeruiid="payment_type">
+							<option value=" ">请选择</option>
+							<option value="定金付款" selected="selected">定金付款</option>
+							<option value="货款">货款</option>
+							<option value="尾款">尾款</option>
+						</select>
+					</div>
+					<label class="col-sm-2 control-label">定金</label>
+					<div class="col-sm-3">
+						<input name="deposit" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}" value="1000">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">已付金额</label>
+					<div class="col-sm-3">
+						<input name="amount_paid" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}" value="7000">
+					</div>
+					<label class="col-sm-2 control-label">未付金额</label>
+					<div class="col-sm-3">
+						<input name="unpaid_amount" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}" value="2000">
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">本次付款金额</label>
+				<div class="col-sm-3">
+					<input name="this_payment_amount" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}" value="2000">
+				</div>
+				<label class="col-sm-2 control-label">最迟付款时间</label>
+				<div class="col-sm-3">
+					<input name="pay_date" id="pay_date" class="laydate-icon form-control layer-date" type="text" autocomplete="off" ltype="text" validate="{required:true,maxlength:17}" value="2018-01-08">
+				</div>
+			</div>
+			<div class="form-group additional_charges">
+				<label class="col-sm-2 control-label">额外费用</label>
+				<div class="col-sm-8">
+					<div class="bootstrap-table">
+						<div class="fixed-table-container">
+							<div class="fixed-table-header">
+								<table class="table table-hover">
+									<tbody>
+										<tr>
+											<td class="text-right"><label class="lable-fl">人工费</label><input name="labor_costs" class="ui-textbox input-width-100" type="text" validate="{number:true}"></td>
+											<td class="text-right"><label class="lable-fl">运输费</label><input name="shipping_fee" class="ui-textbox input-width-100" type="text" validate="{number:true}"></td>
+											<td class="text-right"><label class="lable-fl">附加费</label><input name="additional_fee" class="ui-textbox input-width-100" type="text" validate="{number:true}"></td>
+											<td class="text-right"><label class="lable-fl">其他费</label><input name="other_fee" class="ui-textbox input-width-100" type="text" validate="{number:true}"></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">收货清单</label>
+				<div class="col-sm-8">
+					<table id="ordersInfoTable"></table>
+				</div>
+			</div>
+			<div class="form-group text-right">
+				<div class="col-sm-8 col-sm-offset-2">
+					<button class="btn btn-primary" type="submit" onclick="submitForm();">确认</button>
+					<button class="btn btn-primary" type="submit" onclick="cancelLayer();">取消</button>
+				</div>
+			</div>
+			<div class="audit-panel display-none">
+				<div class="form-group">
+					<label class="col-sm-2 control-label">审核</label>
+					<div class="col-sm-10">
+						<div class="radio i-checks">
+							<label><input type="radio" checked="" value="是" name="audit"></label>审核通过
+							<label><input type="radio" value="否" name="audit"></label>退回修改
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">审核意见</label>
+					<div class="col-sm-10" style="padding: 1px 15px;">
+						<textarea name="audit_opinion" placeholder="请输入审核意见" class="layui-textarea" style="min-width:79.5%;min-height: 100px;height: auto;line-height: 20px;padding: 6px 10px;resize: vertical;border: 1px solid #e5e6e7;"></textarea>
+					</div>
+				</div>
+				<div class="form-group text-right">
+					<div class="col-sm-10">
+						<button type="button" class="btn btn-primary" onclick="audit()">审核</button>
+						<button class="btn btn-primary" type="submit" onclick="cancelLayer();">取消</button>
+					</div>
+				</div>
+			</div>
+		</form>
+		<div id="blueimp-gallery" class="blueimp-gallery">
+			<div class="slides"></div>
+			<h3 class="title"></h3>
+			<a class="close">×</a>
+		</div>
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/bootstrap.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-editable.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-table-editable.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-editable-select2.full.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/js.js"></script>
+		<script src="../../js/ligerui.all.js"></script>
+		<script src="../../js/plugins/layer/layer.min.js"></script>
+		<script src="../../js/plugins/validate/jquery.validate.min.js"></script>
+		<script src="../../js/plugins/validate/messages_zh.min.js"></script>
+		<script src="../../js/plugins/validate/jquery.metadata.js"></script>
+		<script src="../../js/plugins/layer/laydate/laydate.js"></script>
+		<script src="../../js/plugins/tablesMergeCell/tablesMergeCell.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/plugins/blueimp/jquery.blueimp-gallery.min.js"></script>
+
+		<script>
+			var table = $("#ordersInfoTable");
+			$(function() {
+				var loadData = [{
+					order_number: 'J2018A5001728',
+					code: '160M60LYXCL',
+					name: '表芯',
+					unit: '件',
+					image: 'watch1',
+					size: '通码',
+					color: '通色',
+					purchase_price: 8,
+					quantity: 50,
+					apportioned_amount_before: 400,
+					apportioned_amount_after: 0,
+					remark: ''
+				}, {
+					order_number: 'J2018A5001728',
+					code: '002B38068M QQF-01',
+					name: '表带',
+					unit: '件',
+					image: 'watch1',
+					size: '通码',
+					color: '通色',
+					purchase_price: 8,
+					quantity: 50,
+					apportioned_amount_before: 400,
+					apportioned_amount_after: 0,
+					remark: ''
+				}, {
+					order_number: 'J2018A5001722',
+					code: '160M69LYXCL',
+					name: '表芯',
+					unit: '件',
+					image: 'watch1',
+					size: '通码',
+					color: '通色',
+					purchase_price: 8,
+					quantity: 50,
+					apportioned_amount_before: 400,
+					apportioned_amount_after: 0,
+					remark: ''
+				}];
+
+				initTable();
+				$(".btn-default").addClass("btn-outline");
+
+				if($.getUrlParam('id')) {
+					//setData();
+					table.bootstrapTable('append', loadData);
+					//合并单元格
+					mergeCells(loadData, "order_number", null, "#ordersInfoTable");
+					//合计
+					sum();
+
+					var supplier_trigger = $("#supplierSelect").select2().val("HN-GZJT-001").trigger("change"); //获取selectid
+					supplier_trigger.change();
+
+					$("#supplierSelect").prop("disabled", true); //设置下拉框不可用
+					$(".disabled-input .ui-textbox").attr("disabled", true).css("background-color", "#eee");
+					$("#payment_type").prop("disabled", true); //设置付款类型下拉框不可用
+
+				} else {
+					//					$('.ui-textbox').val('');
+					//					$('.layer-date').val('');
+				}
+
+				new formValidate({
+					formEle: '#signupForm'
+				});
+
+				laydate({
+					elem: "#pay_date",
+					format: "YYYY/MM/DD",
+					min: laydate.now(),
+					max: "2099-06-16",
+					istime: true,
+					istoday: false,
+					choose: function(datas) {}
+				});
+				laydate({
+					elem: "#deadline",
+					format: "YYYY/MM/DD",
+					min: laydate.now(),
+					max: "2099-06-16",
+					istime: true,
+					istoday: false,
+					choose: function(datas) {}
+				});
+
+				$('#supplierSelect').select2({}).on('select2:select', function(event) {});
+
+				$("input[name=labor_costs]").blur(function() {
+					average();
+				});
+
+				$("input[name=shipping_fee]").blur(function() {
+					average();
+				});
+
+				$("input[name=additional_fee]").blur(function() {
+					average();
+				});
+
+				$("input[name=other_fee]").blur(function() {
+					average();
+				});
+			});
+
+			function initTable() {
+				table.bootstrapTable({
+					search: true,
+					showRefresh: true,
+					showColumns: true,
+					icons: {
+						refresh: "glyphicon-repeat",
+						columns: "glyphicon-list"
+					},
+					columns: [{
+							field: "order_number",
+							title: "订单编号"
+						},
+						{
+							field: "code",
+							title: "商品代码/物料型号"
+						},
+						{
+							field: "name",
+							title: "商品/物料名称"
+						},
+						{
+							field: "unit",
+							title: "单位",
+							visible: false
+						},
+						{
+							field: "size",
+							title: "尺码",
+							visible: false
+						},
+						{
+							field: "color",
+							title: "颜色",
+							visible: false
+						},
+						{
+							field: "image",
+							title: "图片",
+							formatter: function(v) {
+								return '<a href="../../img/' + v + '.jpg" title="图片" data-gallery="" class="gallery-img"><img src="../../img/' + v + '.jpg"></a>';
+							}
+						},
+						{
+							title: '单价',
+							field: 'purchase_price'
+						},
+						{
+							title: '购买数量',
+							field: 'quantity',
+							class: 'quantity'
+						},
+						{
+							title: '分摊前金额',
+							field: 'apportioned_amount_before',
+							class: 'amount',
+							formatter: function(value, row, index) {
+								if(row.purchase_type == '工厂外购' || row.purchase_price == undefined || row.quantity == undefined) {
+									value = 0;
+								} else {
+									value = row.purchase_price * row.quantity;
+								}
+								return value;
+							}
+						},
+						{
+							title: '分摊后金额',
+							class: 'apportioned_amount_after',
+							field: 'apportioned_amount_after',
+							formatter: function(value, row, index) {
+								if(row.purchase_type == '工厂外购' || value == undefined || row.apportioned_amount_before == undefined) {
+									value = 0;
+								} else {
+									value = value + row.apportioned_amount_before;
+								}
+								return value;
+							}
+						},
+						{
+							title: '备注',
+							field: 'remark',
+							formatter: function(value, row, index) {
+								if(value == undefined) {
+									value = '';
+								}
+								return '<textarea name="remark" placeholder="请输入内容" class="layui-textarea remark">' + value + '</textarea>';
+							}
+						},
+						{
+							title: '操作',
+							field: 'action',
+							formatter: function(value, row, index) {
+								return '<a class="btn btn-xs btn-warning" onclick="delInfo(this)">删除</a>';
+							}
+						}
+					],
+					onSearch: function() {
+						table.tablesMergeCell({
+							cols: [0]
+						});
+					},
+					onColumnSwitch: function(field, checked) {
+						table.tablesMergeCell({
+							cols: [0]
+						});
+					},
+				});
+			}
+
+			function priceChange(obj) {
+				//获取单价的值
+				var price = $(obj).val();
+				//获取数量的值
+				var quantity = $(obj).closest('td').prev().find('input[name=quantity]').val();
+				var total_price;
+				if(typeof(price) != undefined) {
+					if(typeof(quantity) != "undefined") {
+						total_price = parseFloat(price * quantity);
+						//分摊前金额
+						$(obj).closest('td').next().next().text(total_price);
+						//分摊后金额
+						$(obj).closest('td').next().next().text(total_price);
+						sum();
+					}
+				}
+			}
+
+			function average() {
+				var sum = 0;
+				var apportioned_amount_after = 0;
+				var apportioned_amount_after_total = 0;
+				sum += +$("input[name=labor_costs").val();
+				sum += +$("input[name=shipping_fee").val();
+				sum += +$("input[name=additional_fee").val();
+				sum += +$("input[name=other_fee").val();
+				var rowIndex = table.find('tbody tr').length;
+				var bisection = sum / (rowIndex - 1);
+
+				//分摊后的金额
+				$("#ordersInfoTable tbody tr").each(function(i, e) {
+					apportioned_amount_after = parseFloat(bisection + parseFloat($(e).find("td[class='amount']").text()))
+					$(e).find("td[class='apportioned_amount_after']").text(apportioned_amount_after);
+				});
+
+				//合计分摊后的金额
+				$("#ordersInfoTable td[class='apportioned_amount_after']").each(function() {
+					apportioned_amount_after_total += +$(this).text();
+				});
+
+				$(".apportioned_amount_after_total").text(apportioned_amount_after_total + '元');
+			}
+
+			function sum() {
+				var sumQuantity = 0;
+				var sumAmount = 0;
+				var sumAmountAfter = 0;
+				//数量合计
+				$("#ordersInfoTable td[class='quantity']").each(function() {
+					sumQuantity += +$(this).text();
+				});
+				//分摊前金额合计
+				$("#ordersInfoTable td[class='amount']").each(function() {
+					sumAmount += +$(this).text();
+				});
+				//分摊后金额合计
+				$("#ordersInfoTable td[class='apportioned_amount_after']").each(function() {
+					sumAmountAfter += +$(this).text();
+				});
+				//先删除最后一行
+				if($("#ordersInfoTable tr").hasClass('footer')) {
+					$("#ordersInfoTable tr:last").remove();
+				}
+				var columns = $('table thead tr').find('th').size();
+				var nextColumns = $('table thead tr').find('th.apportioned_amount_after').nextAll().size();
+				var colspan = parseInt(columns - 3 - nextColumns);
+				var tr = '<tr class="footer"><td class="text-right" colspan="' + colspan + '">合计</td><td class="total_count">' + sumQuantity + '</td><td class="total_price">' + sumAmount + '元</td><td class="apportioned_amount_after_total" colspan="' + (nextColumns + 1) + '">' + sumAmountAfter + '元</td></tr>';
+				$('#ordersInfoTable').append(tr);
+			}
+
+			function valid() {
+				var form = liger.get("signupForm");
+				alert(form.valid());
+			}
+
+			function getData() {
+				var form = liger.get("signupForm");
+				var data = form.getData();
+				alert(JSON.stringify(data));
+			}
+
+			function setData() {
+				$.ajax({
+					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/getUser',
+					data: {
+						id: $.getUrlParam('id')
+					},
+					success: function(res) {
+						res = $.parseJSON(res);
+						var form = new liger.get("signupForm");
+						form.setData(res);
+					}
+				})
+			}
+
+			function submitForm() {
+				var form = liger.get("signupForm");
+				if(!form.valid()) {
+					return;
+				}
+				var data = {};
+				$("input,select,textarea").each(function() {
+					var name = $(this).attr("name");
+					if(name && name.indexOf('ligerui') == -1) {
+						data[name] = this.value;
+					}
+				});
+				data.id = $.getUrlParam('id');
+
+				$.ajax({
+					type: 'post',
+					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/setUser',
+					data: data,
+					success: function(res) {
+						if(Number(res)) {
+							parent.table.bootstrapTable('refresh');
+							var index = parent.layer.getFrameIndex(window.name);
+							parent.layer.close(index);
+						}
+					}
+				})
+				/*
+				            parent.table.bootstrapTable('refresh');
+				            var index = parent.layer.getFrameIndex(window.name);
+				            parent.layer.close(index);*/
+			}
+		</script>
+	</body>
+
+</html>

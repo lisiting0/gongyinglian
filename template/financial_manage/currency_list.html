@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>多币种管理</title>
+		<meta name="keywords" content="多币种管理">
+		<meta name="description" content="多币种管理">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="../../css/plugins/bootstrap-editable/bootstrap-editable-select2.css" />
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+
+	</head>
+
+	<body class="gray-bg pd15">
+		<div class="panel panel-default ibox float-e-margins border-bottom margin-bottom">
+			<div class="panel-heading">
+				<div class="row">
+					<div class="col-sm-4 mgt2">查询条件</div>
+					<div class="col-sm-8 text-right">
+						<a class="collapse-link">
+							<i class="fa fa-chevron-down"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="panel-body d-serach ibox-content">
+				<form id="form">
+					<div class="row form-group">
+						<label class="col-sm control-label">外币类型</label>
+						<div class="col-sm-2">
+							<select id="billing_currency" class="js-example-basic-single form-control" ltype="select" ligeruiid="billing_currency">
+								<option value="">所有</option>
+								<option value="美元">美元（USD）</option>
+								<option value="德国马克">德国马克（DEM）</option>
+								<option value="日元">日元（JPY）</option>
+								<option value="瑞士法郎">瑞士法郎（CHF）</option>
+								<option value="法国法郎">法国法郎（FRF）</option>
+								<option value="意大利里拉">意大利里拉（ITL）</option>
+								<option value="荷兰盾">荷兰盾（NLG）</option>
+								<option value="比利时法郎">比利时法郎（BEU）</option>
+								<option value="丹麦克朗">丹麦克朗（DKR）</option>
+								<option value="瑞典克朗">瑞典克朗（SKR）</option>
+								<option value="挪威克朗">挪威克朗（NKR）</option>
+								<option value="奥地利先令">奥地利先令（ATS）</option>
+								<option value="港币">港币（HKD）</option>
+								<option value="加拿大元">加拿大元（CAD）</option>
+								<option value="澳大利亚元">澳大利亚元（AUD）</option>
+								<option value="新西兰元">新西兰元（NZD）</option>
+								<option value="新加坡元">新加坡元（SGD）</option>
+								<option value="欧元">欧元（EUR）</option>
+								<option value="英镑">英镑（GBP）</option>
+							</select>
+						</div>
+						<div class="row form-group">
+							<label class="col-sm control-label">操作员</label>
+							<div class="col-sm-2">
+								<input name="operator" type="text" class="ui-textbox" />
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-sm control-label">创建时间</label>
+							<div class="col-sm-2">
+								<input name="creation_time" id="creationTimeStart" class="form-control layer-date date-width" placeholder="开始日期" autocomplete="off" value="">
+								<input name="creation_time" id="creationTimeEnd" class="form-control layer-date date-width" placeholder="结束日期" autocomplete="off" value="">
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="panel-body">
+			<div class="row text-right">
+				<button class="btn btn-primary " type="button"><i class="fa fa-check"></i>&nbsp;查询</button>
+				<button class="btn btn-info " type="button" onclick="add('添加','currency_list_edit.html')"><i class="fa fa-paste"></i>&nbsp;添加</button>
+				<button class="btn btn-success " type="button"><i class="fa fa-download"></i>&nbsp;&nbsp;<span class="bold">导出</span></button>
+			</div>
+		</div>
+		<div class="content-style0">
+			<table id="currencyTable"></table>
+		</div>
+
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/bootstrap.min.js"></script>
+		<script src="../../js/content.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-editable-select2.full.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/plugins/layer/layer.min.js"></script>
+		<script src="../../js/ligerui.all.js"></script>
+		<script src="../../js/js.js"></script>
+		<script src="../../js/plugins/layer/laydate/laydate.js"></script>
+		<script>
+			var pageIndex; //当前第几页
+			var pageSize; //总页数
+			var table = $("#currencyTable");
+
+			$(document).ready(function() {
+				$("#form").ligerForm({
+					inputWidth: '',
+					validate: true
+				});
+				$('#billing_currency').select2().on('select2:select', function(event) {});
+				var creationTimeStart = {
+					elem: "#creationTimeStart",
+					format: "YYYY/MM/DD",
+					min: '1900-01-01', //最小日期
+					max: "2099-06-16",
+					istime: true,
+					istoday: false,
+					choose: function(datas) {
+						creationTimeEnd.min = datas;
+					}
+				};
+				var creationTimeEnd = {
+					elem: "#creationTimeEnd",
+					format: "YYYY/MM/DD",
+					min: '1900-01-01', //最小日期
+					max: "2099-06-16 23:59 ",
+					istime: true,
+					istoday: false,
+					choose: function(datas) {}
+				};
+				laydate(creationTimeStart);
+				laydate(creationTimeEnd);
+				initTable();
+			});
+
+			function initTable() {
+				table.bootstrapTable({
+					//url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/noteListDemo', //服务端需要返回rows与total字段
+					pagination: true, //分页
+					pageSize: 5, //每页多少条
+					//method: 'post',
+					//sidePagination: "server", //服务端处理分页
+					columns: [{
+						title: '编号',
+						field: 'id',
+						visible: false
+					}, {
+						title: '外币类型',
+						field: 'type2'
+					}, {
+						title: '外币兑人民币汇率',
+						field: 'rate'
+					}, {
+						title: '操作员',
+						field: 'operator'
+					}, {
+						title: '创建时间',
+						field: 'creation_time'
+					}, {
+						title: '备注',
+						field: 'remark',
+						formatter: function(value, row, index) {
+							if(value == undefined) {
+								value = "";
+							}
+							return value;
+						}
+					}, {
+						title: '操作',
+						width: '200',
+						formatter: function(value, row, index) {
+							var str = '';
+							str += '<a class="btn btn-info btn-xs" onclick="edit(\'编辑\',\'currency_list_edit.html\',' + row.id + ')">编辑 </a> ';
+							str += '<a class="btn btn-warning btn-xs" onclick="del(' + row.id + ')">删除 </a>';
+							return str;
+						}
+					}],
+					data: [{
+						id: 1,
+						type2: '美元',
+						rate: '0.15772',
+						operator: '季童薇',
+						creation_time: '2017-02-03'
+					}, {
+						id: 2,
+						type2: '加元',
+						rate: '0.15772',
+						operator: '季童薇',
+						creation_time: '2017-02-03'
+					}, {
+						id: 3,
+						type2: '欧元',
+						rate: '0.15772',
+						operator: '季童薇',
+						creation_time: '2017-02-03'
+					}, {
+						id: 4,
+						type2: '澳元',
+						rate: '0.15772',
+						operator: '季童薇',
+						creation_time: '2017-02-03'
+					}, {
+						id: 5,
+						type2: '日元',
+						rate: '0.15772',
+						operator: '季童薇',
+						creation_time: '2017-02-03'
+					}, {
+						id: 6,
+						type2: '英镑',
+						rate: '0.15772',
+						operator: '季童薇',
+						creation_time: '2017-02-03'
+					}, {
+						id: 7,
+						type2: '瑞士法郎',
+						rate: '0.15772',
+						operator: '季童薇',
+						creation_time: '2017-02-03'
+					}],
+					//					queryParams: function(params) {
+					//						var form = liger.get("form");
+					//						var data = form.getData();
+					//						var temp = {
+					//							pageSize: params.limit, //页面大小
+					//							pageIndex: (params.offset / params.limit) + 1, //页码
+					//							sort: params.sort, //排序列名
+					//							sortOrder: params.order //排位命令（desc，asc）
+					//						};
+					//						mergeObj(temp, data); //合并对象
+					//						pageSize = temp.pageSize;
+					//						pageIndex = temp.pageIndex;
+					//						return temp;
+					//					}
+					detailView: true,
+					onExpandRow: function(index, row, $detail) {
+						var childTable = $detail.html('<table id="childTable' + index + '"></table>').find('table'); //创建子表
+						$(childTable).bootstrapTable({
+							columns: [{
+								title: '版本号',
+								field: 'version'
+							}, {
+								title: '外币兑人民币汇率',
+								field: 'rate'
+							}, {
+								title: '操作员',
+								field: 'operator'
+							}, {
+								title: '修改时间',
+								field: 'update_time'
+							}],
+							data: [{
+								version: 2,
+								rate: '0.6',
+								operator: '季童薇',
+								update_time: '2017-08-03'
+							}, {
+								version: 1,
+								rate: '0.8',
+								operator: '季童薇',
+								update_time: '2017-06-15'
+							}],
+						});
+					},
+					onDblClickRow: function(row, $element, field) { //row点击行的
+						table.bootstrapTable('collapseAllRows');
+						table.bootstrapTable('expandRow', (row.id - 1));
+					},
+					onClickRow: function(row, $element, field) { //row点击行的
+						table.bootstrapTable('collapseRow', (row.id - 1));
+					},
+				});
+			}
+
+			function serach() {
+				table.bootstrapTable('refresh');
+			}
+
+			function add(title, url, id, w, h) {
+				var index = layer.open({
+					type: 2,
+					close: true,
+					maxmin: true,
+					title: title,
+					area: ['80%', '80%'],
+					content: url
+				});
+			}
+
+			function edit(title, url, id, w, h) {
+				var index = layer.open({
+					type: 2,
+					close: true,
+					maxmin: true,
+					title: title,
+					area: ['80%', '80%'],
+					content: url + '?id=' + id
+				});
+			}
+
+			function del(id) {
+				//询问框
+				layer.confirm('是否需要删除？', {
+					btn: ['确定', '取消'], //按钮
+					shade: false //不显示遮罩
+				}, function(index) {
+					$.ajax({
+						type: 'post',
+						url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/dels',
+						data: {
+							id: id
+						},
+						success: function(res) {
+							table.bootstrapTable('refresh');
+							layer.close(index);
+						}
+					})
+				}, function() {});
+			}
+		</script>
+
+	</body>
+
+</html>

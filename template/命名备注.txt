@@ -1,0 +1,7 @@
+product_manage       产品管理
+supplier_manage      供应商管理
+production_manage    生产管理
+purchase_manage      采购管理
+warehouse_manage     仓库管理
+financial_manage     财务核算
+system_manage        系统管理

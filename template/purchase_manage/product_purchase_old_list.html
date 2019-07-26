@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>订单管理</title>
+		<meta name="keywords" content="订单管理">
+		<meta name="description" content="订单管理">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="../../css/plugins/select2/select2.min.css" />
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+		<link href="../../css/plugins/blueimp/css/blueimp-gallery.min.css" rel="stylesheet">
+	</head>
+	<style type="text/css">
+		.btn-xs {
+			margin-bottom: 3px;
+		}
+	</style>
+
+	<body class="gray-bg pd15">
+		<div class="panel panel-default ibox float-e-margins border-bottom margin-bottom">
+			<div class="panel-heading">
+				<div class="row">
+					<div class="col-sm-4 mgt2">查询条件</div>
+					<div class="col-sm-8 text-right">
+						<a class="collapse-link">
+							<i class="fa fa-chevron-down"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="panel-body d-serach ibox-content">
+				<form id="form">
+					<div class="row form-group">
+						<label class="col-sm control-label">订单编号</label>
+						<div class="col-sm-2">
+							<input type="text" class="ui-textbox" name="order_number" />
+						</div>
+						<label class="col-sm control-label">供应商</label>
+						<div class="col-sm-2">
+							<select id="supplierSelect" class="js-example-basic-single form-control" ltype="select" ligeruiid="supplierSelect">
+								<option value="">所有</option>
+								<option value="HN-GZJT-001">广州集团</option>
+								<option value="HN-GZBJ-0011">广州宝玑集团</option>
+								<option value="HB-BJZH-003">北京钟华集团</option>
+								<option value="HB-BJZH-004">北京摇摇乐集团</option>
+							</select>
+						</div>
+						<label class="col-sm control-label">商品型号</label>
+						<div class="col-sm-2">
+							<input type="text" class="ui-textbox" name="product_model" />
+						</div>
+					</div>
+					<div class="row">
+						<label class="col-sm control-label">订单状态</label>
+						<div class="col-sm-2">
+							<select name="order_state">
+								<option value="">未完成</option>
+								<option value="">已超期</option>
+								<option value="">已完成</option>
+							</select>
+						</div>
+						<label class="col-sm control-label">下单日期</label>
+						<div class="col-sm-2">
+							<input name="orderDateStart" id="orderDateStart" class="form-control layer-date date-width" placeholder="开始日期" autocomplete="off" value="">
+							<input name="orderDateEnd" id="orderDateEnd" class="form-control layer-date date-width" placeholder="结束日期" autocomplete="off" value="">
+						</div>
+						<label class="col-sm control-label">到货日期</label>
+						<div class="col-sm-2">
+							<input name="arrivalDateStart" id="arrivalDateStart" class="form-control layer-date date-width" placeholder="开始日期" autocomplete="off" value="">
+							<input name="arrivalDateEnd" id="arrivalDateEnd" class="form-control layer-date date-width" placeholder="结束日期" autocomplete="off" value="">
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="panel-body">
+			<div class="row text-right">
+				<button class="btn btn-primary " type="button"><i class="fa fa-check"></i>&nbsp;查询</button>
+				<button class="btn btn-info " type="button" onclick="add('订货单','order_for_goods_edit.html')"><i class="fa fa-paste"></i>&nbsp;添加</button>
+				<button class="btn btn-info " type="button" onclick="addPurchaseOrder('采购订单向导','../../template/production_manage/addplan_list_edit.html')"><i class="fa fa-paste"></i>&nbsp;采购订单向导</button>
+				<button class="btn btn-success " type="button"><i class="fa fa-upload"></i>&nbsp;&nbsp;<span class="bold">导入</span></button>
+				<button class="btn btn-success " type="button"><i class="fa fa-download"></i>&nbsp;&nbsp;<span class="bold">导出</span></button>
+			</div>
+		</div>
+		<div class="content-style0">
+			<table id="exampleTableEvents"></table>
+		</div>
+
+		<!--显示图片层-->
+		<div id="blueimp-gallery" class="blueimp-gallery">
+			<div class="slides"></div>
+			<h3 class="title"></h3>
+			<a class="close">×</a>
+		</div>
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/bootstrap.min.js"></script>
+		<script src="../../js/js.js"></script>
+		<script src="../../js/plugins/datapicker/bootstrap-datepicker.js "></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+		<script src="../../js/plugins/select2/select2.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/plugins/layer/layer.min.js"></script>
+		<script src="../../js/ligerui.all.js"></script>
+		<script src="../../js/plugins/layer/laydate/laydate.js "></script>
+		<script src="../../js/plugins/blueimp/jquery.blueimp-gallery.min.js"></script>
+
+		<script>
+			$(function() {
+				$("#form").ligerForm({
+					inputWidth: '',
+					validate: true
+				});
+
+				var orderDateStart = {
+					elem: "#orderDateStart",
+					format: "YYYY/MM/DD ",
+					min: '1900-01-01', //最小日期
+					max: "2099-06-16 ",
+					istime: true,
+					istoday: false,
+					choose: function(datas) {
+						orderDateEnd.min = datas;
+					}
+				};
+				var orderDateEnd = {
+					elem: "#orderDateEnd",
+					format: "YYYY/MM/DD",
+					min: $("#orderDateStart").val(), //最小日期
+					max: "2099-06-16",
+					istime: true,
+					istoday: false,
+					choose: function(datas) {}
+				};
+
+				var arrivalDateStart = {
+					elem: "#arrivalDateStart",
+					format: "YYYY/MM/DD",
+					min: '1900-01-01', //最小日期
+					max: "2099-06-16",
+					istime: true,
+					istoday: false,
+					choose: function(datas) {
+						arrivalDateEnd.min = datas;
+					}
+				};
+				var arrivalDateEnd = {
+					elem: "#arrivalDateEnd",
+					format: "YYYY/MM/DD",
+					min: '1900-01-01', //最小日期
+					max: "2099-06-16 23:59 ",
+					istime: true,
+					istoday: false,
+					choose: function(datas) {}
+				};
+				laydate(orderDateStart);
+				laydate(orderDateEnd);
+				laydate(arrivalDateStart);
+				laydate(arrivalDateEnd);
+
+				$('#supplierSelect').select2({}).on('select2:select', function(event) {});
+
+				var pageSize; //总页数
+				var pageIndex; //当前第几页
+				var table = $("#exampleTableEvents");
+				table.bootstrapTable({
+					//url: USER_INFO.SITE_URL+'/tp5/public/index.php/Admin/Admin/noteListDemo', //服务端需要返回rows与total字段
+					pagination: true, //分页
+					pageSize: 5, //每页多少条
+					// method:'post',
+					// sidePagination: "server", //服务端处理分页
+					columns: [{
+							align: 'center',
+							checkbox: true
+						},
+						{
+							title: '编号',
+							field: 'id',
+							visible: false
+						},
+						{
+							title: '订单编号',
+							field: 'order_number',
+							formatter: function(value, row, index) {
+								var a = '<a onclick="edit(\'详情\',\'../../template/common/order_list_see.html\',' + row.id + ')">' + row.order_number + ' </a> ';
+								return a;
+							}
+						},
+						{
+							title: '日期',
+							field: 'date'
+						},
+						{
+							title: '供应商',
+							field: 'supplier',
+							formatter: function(value, row, index) {
+								var a = '<a onclick="edit(\'详情\',\'../../template/supplier_manage/supplier_info_list_edit.html\',' + row.id + ')">' + row.supplier + ' </a> ';
+								return a;
+							}
+						},
+						{
+							title: '定金',
+							field: 'earnest_money'
+						},
+						{
+							title: '送货批次',
+							field: 'batch'
+						},
+						{
+							title: '订单总额',
+							field: 'total_cost'
+						},
+						{
+							title: '折扣',
+							field: 'discount'
+						},
+						{
+							title: '结算渠道',
+							field: 'billing_channel'
+						},
+						{
+							title: '结算货币',
+							field: 'settlement_currency'
+						},
+						{
+							title: '货币汇率',
+							field: 'currency_exchange_rate'
+						},
+						{
+							title: '已付金额',
+							field: 'amount_paid'
+						},
+						{
+							title: '未付金额',
+							field: 'unpaid_amount'
+						},
+						{
+							title: '入库类型',
+							field: 'storage_type'
+						},
+						{
+							title: '状态',
+							field: 'state'
+						},
+						{
+							title: '业务员',
+							field: 'salesman'
+						},
+						{
+							title: '操作',
+							width: '200',
+							formatter: function(value, row, index) {
+								var str = '';
+								str += '<a class="btn btn-xs btn-info" onclick="edit(\'编辑采购单\',\'order_for_goods_edit.html\',' + row.id + ')">编辑 </a> ';
+
+								//如果是待订单调整审核，显示付款申请审核，则不显示付款申请和付款申请审核
+								if(row.state == '待订单调整审核') {
+									str += '<a class="btn btn-xs btn-success" onclick="action(\'订单调整审核\',\'order_adjustment.html\',' + row.id + ',\'action\')">订单调整审核</a> ';
+								} else if(row.state == '待付款申请') {
+									//如果是待付款申请，显示付款申请，则不显示订单调整和订单调整审核
+									str += '<a class="btn btn-xs btn-success" onclick="action(\'定金申请\',\'../../template/financial_manage/paymentreminder_list_edit.html\',' + row.id + ',\'PAY\')">定金申请 </a> ';
+								} else {
+									//什么状态都没有，显示订单调整、付款申请
+									str += '<a class="btn btn-xs btn-success" onclick="action(\'订单调整\',\'order_adjustment.html\',' + row.id + ',\'action\')">订单调整</a> ';
+								}
+
+								str += '<a class="btn btn-xs btn-success" onclick="action(\'到货通知\',\'../../template/warehouse_manage/receiptnotice_list_edit.html\',' + row.id + ')">到货通知</a> ';
+								str += '<a class="btn btn-xs btn-success" onclick="returns()">退货</a> ';
+
+								str += '<a class="btn btn-xs btn-warning" onclick="del(' + row.id + ')">删除 </a>';
+								return str;
+							}
+						}
+					],
+					data: [{
+						id: 1,
+						order_number: 369258, //订单编号
+						date: '2017-05-06 10:23', //日期
+						supplier: '美国飞企', //供应商
+						earnest_money: 500, //定金
+						batch: 2, //总批次
+						total_cost: '1050', //订单总费用
+						discount: '9.5折', //折扣
+						billing_channel: '转账', //结算渠道
+						settlement_currency: '$', //结算货币
+						currency_exchange_rate: 0.7, //货币汇率
+						amount_paid: 500, //已付金额
+						unpaid_amount: 650, //未付金额
+						storage_type: '', //入库类型
+						state: '待付款申请',
+						salesman: '倪妮', //业务员
+
+					}, {
+						id: 2,
+						order_number: 147258,
+						date: '2017-05-06 10:23', //日期
+						supplier: '德国飞企',
+						earnest_money: 10200,
+						batch: 2, //总批次
+						total_cost: '1050', //订单总费用
+						discount: '9.5折', //折扣
+						billing_channel: '转账', //结算渠道
+						settlement_currency: '$', //结算货币
+						currency_exchange_rate: 0.7, //货币汇率
+						amount_paid: 500, //已付金额
+						unpaid_amount: 650, //未付金额
+						storage_type: '', //入库类型
+						state: '待订单调整审核',
+						salesman: '倪妮'
+					}, {
+						id: 3,
+						order_number: 123456,
+						date: '2017-05-06 10:23', //日期
+						supplier: '英国飞企',
+						earnest_money: 500,
+						batch: 2, //总批次
+						total_cost: '1050', //订单总费用
+						discount: '9.5折', //折扣
+						billing_channel: '转账', //结算渠道
+						settlement_currency: '$', //结算货币
+						currency_exchange_rate: 0.7, //货币汇率
+						amount_paid: 500, //已付金额
+						unpaid_amount: 650, //未付金额
+						storage_type: '', //入库类型
+						state: '待付款申请审核',
+					}, {
+						id: 4,
+						order_number: 12345,
+						date: '2017-05-06 10:23', //日期
+						supplier: '德国飞企',
+						earnest_money: 500,
+						batch: 2, //总批次
+						total_cost: '1050', //订单总费用
+						discount: '9.5折', //折扣
+						billing_channel: '转账', //结算渠道
+						settlement_currency: '$', //结算货币
+						currency_exchange_rate: 0.7, //货币汇率
+						amount_paid: 500, //已付金额
+						unpaid_amount: 650, //未付金额
+						storage_type: '', //入库类型
+						state: '待付款申请审核',
+						salesman: '倪妮'
+					}, {
+						id: 5,
+						order_number: 12345,
+						date: '2017-05-06 10:23', //日期
+						supplier: '德国飞企',
+						earnest_money: 500,
+						batch: 2, //总批次
+						total_cost: '1050', //订单总费用
+						discount: '9.5折', //折扣
+						billing_channel: '转账', //结算渠道
+						settlement_currency: '$', //结算货币
+						currency_exchange_rate: 0.7, //货币汇率
+						amount_paid: 500, //已付金额
+						unpaid_amount: 650, //未付金额
+						storage_type: '', //入库类型
+						state: '已超期',
+						salesman: '倪妮'
+					}, {
+						id: 6,
+						date: '2017-05-06 10:23', //日期
+						order_number: 12345,
+						supplier: '德国飞企',
+						earnest_money: 500,
+						batch: 2, //总批次
+						total_cost: '1050', //订单总费用
+						discount: '9.5折', //折扣
+						billing_channel: '转账', //结算渠道
+						settlement_currency: '$', //结算货币
+						currency_exchange_rate: 0.7, //货币汇率
+						amount_paid: 500, //已付金额
+						unpaid_amount: 650, //未付金额
+						storage_type: '', //入库类型
+						state: '已超期',
+						salesman: '倪妮'
+					}],
+					detailView: true,
+					onExpandRow: function(index, row, $detail) {
+						var childTable = $detail.html('<table id="childTable"></table>').find('table'); //创建子表
+						$(childTable).bootstrapTable({
+							columns: [{
+									field: 'id',
+									title: '编号',
+									visible: false
+								},
+								{
+									field: 'code',
+									title: '商品代码/物料型号'
+								}, {
+									field: 'name',
+									title: '商品名称/物料名称'
+								}, {
+									field: 'images',
+									title: '图片',
+									formatter: function(v) {
+										return '<a href="../../img/' + v + '.jpg" data-gallery="" class="gallery-img"><img src="../../img/' + v + '.jpg"></a>';
+									}
+								},
+								{
+									field: 'unit',
+									title: '单位'
+								},
+								{
+									field: 'size',
+									title: '尺码'
+								}, {
+									field: 'color',
+									title: '颜色'
+								}, {
+									field: 'require_amount',
+									title: '需求数量'
+								}
+							],
+							data: [{
+								id: 1,
+								code: '002B38068M SBB',
+								name: 'CASIO 表芯',
+								images: 'watch1',
+								unit: '只',
+								size: '通码',
+								color: '通色',
+								require_amount: 500
+							}]
+						});
+					},
+					onDblClickRow: function(row, $element, field) { //row点击行的
+						table.bootstrapTable('collapseAllRows');
+						table.bootstrapTable('expandRow', (row.id - 1));
+					},
+					onClickRow: function(row, $element, field) { //row点击行的
+						table.bootstrapTable('collapseRow', (row.id - 1));
+					},
+					/*,
+		            queryParams: function(params) {
+		                var form = liger.get("form");
+		                var data = form.getData();
+		                var temp = {
+		                    pageSize: params.limit,                         //页面大小
+		                    pageIndex: (params.offset / params.limit) + 1,   //页码
+		                    sort: params.sort,      //排序列名
+		                    sortOrder: params.order //排位命令（desc，asc）
+		                };
+		                mergeObj(temp,data); //合并对象
+		                pageSize = temp.pageSize;
+		                pageIndex = temp.pageIndex;
+		                return temp;
+		            }*/
+				});
+				initSelect();
+
+			});
+
+			function initSelect() {
+				$('input[name="country"]').ligerComboBox({
+					url: '../../data/city.txt',
+					valueField: 'value',
+					textField: 'text'
+				});
+				$('input[name="country3"]').ligerComboBox({
+					url: '../../data/city.txt',
+					valueField: 'value',
+					textField: 'text'
+				});
+				$('input[name="country4"]').ligerComboBox({
+					url: '../../data/city.txt',
+					valueField: 'value',
+					textField: 'text'
+				});
+			}
+
+			function serach() {
+				table.bootstrapTable('refresh');
+			}
+
+			function add(title, url, id, w, h) {
+				var index = layer.open({
+					type: 2,
+					close: true,
+					maxmin: true,
+					title: title,
+					area: ['80%', '95%'],
+					content: url
+				});
+			}
+
+			function edit(title, url, id, w, h) {
+				var index = layer.open({
+					type: 2,
+					close: true,
+					maxmin: true,
+					title: title,
+					area: ['80%', '95%'],
+					content: url + '?id=' + id
+				});
+			}
+
+			function del(id) {
+				//询问框
+				layer.confirm('是否需要删除？', {
+					btn: ['确定', '取消'], //按钮
+					shade: false //不显示遮罩
+				}, function(index) {
+					$.ajax({
+						type: 'post',
+						url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/dels',
+						data: {
+							id: id
+						},
+						success: function(res) {
+							table.bootstrapTable('refresh');
+							layer.close(index);
+						}
+					})
+				}, function() {});
+			}
+
+			function action(title, url, id, action, w, h) {
+				var index = layer.open({
+					type: 2,
+					close: true,
+					maxmin: true,
+					title: title,
+					area: ['80%', '80%'],
+					content: url + '?id=' + id + '&action=' + action
+				});
+			}
+
+			function addPurchaseOrder(title, url, id, w, h) {
+				var index = layer.open({
+					type: 2,
+					close: true,
+					maxmin: true,
+					title: title,
+					area: ['80%', '95%'],
+					content: url
+				});
+			}
+		</script>
+
+	</body>
+
+</html>

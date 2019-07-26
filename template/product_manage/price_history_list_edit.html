@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>历史记录</title>
+		<meta name="keywords" content="历史记录">
+		<meta name="description" content="历史记录">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-editable/bootstrap-editable.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="../../css/plugins/select2/select2.min.css" />
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+	</head>
+
+	<body class="pd15">
+
+		<form class="form-horizontal m-t" id="signupForm">
+			<div class="form-group">
+				<label class="col-sm-2 control-label">物料型号</label>
+				<div class="col-sm-3">
+					<input name="material_number" value="BIAOXIN-GC-001" class="ui-textbox disabled-text" type="text">
+				</div>
+				<label class="col-sm-2 control-label">物料名称</label>
+				<div class="col-sm-3">
+					<input name="material_name" value="表芯" class="ui-textbox disabled-text" type="text" ltype="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">历史版本物料价格清单</label>
+				<div class="col-sm-8">
+					<table id="historyPriceTable"></table>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">备注</label>
+				<div class="col-sm-10" style="padding: 1px 15px;">
+					<textarea name="remark" placeholder="请输入内容" class="layui-textarea" style="min-width:79.5%;min-height: 100px;height: auto;line-height: 20px;padding: 6px 10px;resize: vertical;border: 1px solid #e5e6e7;"></textarea>
+				</div>
+			</div>
+			<div class="form-group text-right">
+				<div class="col-sm-10">
+					<button class="btn btn-primary" type="button" onclick="submitForm();">提交</button>
+					<button class="btn btn-primary" type="button" onclick="cancelLayer();">取消</button>
+				</div>
+			</div>
+		</form>
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/bootstrap.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-editable.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-table-editable.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-editable-select2.full.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/js.js"></script>
+		<script src="../../js/ligerui.all.js"></script>
+		<script src="../../js/plugins/layer/layer.min.js"></script>
+		<script src="../../js/plugins/validate/jquery.validate.min.js"></script>
+		<script src="../../js/plugins/validate/messages_zh.min.js"></script>
+		<script src="../../js/plugins/validate/jquery.metadata.js"></script>
+		<script src="../../js/plugins/tablesMergeCell/tablesMergeCell.js" type="text/javascript" charset="utf-8"></script>
+
+		<script>
+			var table = $("#historyPriceTable");
+			$(function() {
+				new formValidate({
+					formEle: '#signupForm'
+				});
+
+				initTable();
+				$(".btn-default").addClass("btn-outline");
+
+				//setData();
+				table.bootstrapTable('append', [{
+					version: 1,
+					supplier: '广州几何集团',
+					deposit_percentage: '10%',
+					delivery_period: 7,
+					contacts: '李明',
+					contact_number: '13452985556',
+					supply_price: 8,
+					operator: '季童薇',
+					reviewer: '谭吉吉',
+					reviewer_date: '2017-05-01',
+					state: '已使用',
+					remark: ''
+				}, {
+					version: 2,
+					supplier: '北京劳力士集团',
+					deposit_percentage: '10%',
+					delivery_period: 10,
+					contacts: '李明',
+					contact_number: '13452985556',
+					supply_price: 8.5,
+					operator: '季薇',
+					reviewer: '谭吉',
+					reviewer_date: '2017-08-01',
+					state: '已使用',
+					remark: ''
+				}, {
+					version: 3,
+					supplier: '北京劳力士集团',
+					deposit_percentage: '10%',
+					delivery_period: '',
+					contacts: '李明',
+					contact_number: '13452985556',
+					supply_price: 8.5,
+					operator: '王大陆',
+					reviewer: '唐浩然',
+					reviewer_date: '2017-09-01',
+					state: '已使用',
+					remark: ''
+				}, {
+					version: 4,
+					supplier: '北京劳力士集团',
+					deposit_percentage: '10%',
+					delivery_period: '',
+					account_period: '30',
+					contacts: '李明',
+					contact_number: '13452985556',
+					supply_price: 8.5,
+					operator: '',
+					reviewer: '',
+					reviewer_date: '',
+					state: '待审核',
+					remark: ''
+				}]);
+				sum();
+				table.tablesMergeCell({
+					cols: [0]
+				});
+			});
+
+			function valid() {
+				var form = liger.get("signupForm");
+				alert(form.valid());
+			}
+
+			function getData() {
+				var form = liger.get("signupForm");
+				var data = form.getData();
+				alert(JSON.stringify(data));
+			}
+
+			function setData() {
+				$.ajax({
+					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/getUser',
+					data: {
+						id: $.getUrlParam('id')
+					},
+					success: function(res) {
+						res = $.parseJSON(res);
+						var form = new liger.get("signupForm");
+						form.setData(res);
+					}
+				})
+			}
+
+			function initTable() {
+				table.bootstrapTable({
+					search: true,
+					showRefresh: true,
+					showColumns: true,
+					icons: {
+						refresh: "glyphicon-repeat",
+						columns: "glyphicon-list"
+					},
+					columns: [{
+							field: 'version',
+							title: '版本号'
+						},
+						{
+							field: 'supplier',
+							title: '供应商',
+						},
+						{
+							field: 'contacts',
+							title: '联系人'
+						},
+						{
+							field: 'contact_number',
+							title: '联系电话'
+						},
+						{
+							field: 'delivery_period',
+							title: '供货期'
+						},
+						{
+							field: 'supply_price',
+							title: '供应价格'
+						},
+						{
+							field: 'operator',
+							title: '操作员'
+						},
+						{
+							field: 'reviewer',
+							title: '审核人',
+							formatter: function(value, row, index) {
+								return value;
+							}
+						}, {
+							field: 'reviewer_date',
+							title: '审核时间',
+							formatter: function(value, row, index) {
+								return value;
+							}
+						},
+						{
+							field: 'state',
+							title: '状态'
+						},
+						{
+							title: '备注',
+							field: 'remark'
+						},
+//						{
+//							title: '操作',
+//							field: 'action',
+//							formatter: function(value, row, index) {
+//								return '<a class="btn btn-xs btn-warning" onclick="copy()">复制版本</a>';
+//							}
+//						}
+					],
+					//得到查询的参数
+					queryParams: function(params) {
+						//						//这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+						//						var temp = {
+						//							rows: params.limit, //页面大小
+						//							page: (params.offset / params.limit) + 1, //页码
+						//							sort: params.sort, //排序列名  
+						//							sortOrder: params.order //排位命令（desc，asc） 
+						//						};
+						//						return temp;
+					},
+				});
+			}
+
+			function setValue(obj) {
+				//获得焦点时，如果值为默认值，则设置为空				
+				$(obj).attr("value", $(obj).val());
+			}
+
+			function submitForm() {
+				var form = liger.get("signupForm");
+				if(!form.valid()) {
+					return;
+				}
+				var data = {};
+				$("input,select,textarea").each(function() {
+					var name = $(this).attr("name");
+					if(name && name.indexOf('ligerui') == -1) {
+						data[name] = this.value;
+					}
+				});
+				data.id = $.getUrlParam('id');
+
+				$.ajax({
+					type: 'post',
+					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/setUser',
+					data: data,
+					success: function(res) {
+						if(Number(res)) {
+							parent.table.bootstrapTable('refresh');
+							var index = parent.layer.getFrameIndex(window.name);
+							parent.layer.close(index);
+						}
+					}
+				})
+				/*
+				            parent.table.bootstrapTable('refresh');
+				            var index = parent.layer.getFrameIndex(window.name);
+				            parent.layer.close(index);*/
+			}
+		</script>
+	</body>
+
+</html>

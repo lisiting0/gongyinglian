@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>添加物料价格</title>
+		<meta name="keywords" content="添加物料价格">
+		<meta name="description" content="添加物料价格">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link href="../../css/plugins/select2/select2.min.css" rel="stylesheet" type="text/css" />
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+		<link href="../../css/plugins/iCheck/custom.css" rel="stylesheet">
+
+	</head>
+
+	<body class="pd15">
+		<form class="form-horizontal m-t" id="signupForm">
+			<div class="form-group">
+				<label class="col-sm-2 control-label">物料名称</label>
+				<div class="col-sm-3">
+					<input name="material_name" class="ui-textbox disabled-text" type="text" ltype="text" value="表芯">
+				</div>
+				<label class="col-sm-2 control-label">供应商</label>
+				<div class="col-sm-3">
+					<select id="supplierSelect" class="js-example-basic-single form-control" ltype="select" ligeruiid="supplier">
+						<option value="">请选择</option>
+						<option value="HN-GZJT-001">广州集团</option>
+						<option value="HN-GZBJ-0011">广州宝玑集团</option>
+						<option value="HB-BJZH-003">北京钟华集团</option>
+						<option value="HB-BJZH-004">北京摇摇乐集团</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">联系人</label>
+				<div class="col-sm-3">
+					<input name="contacts" class="ui-textbox disabled-text" type="text" ltype="text" value="">
+				</div>
+				<label class="col-sm-2 control-label">联系电话</label>
+				<div class="col-sm-3">
+					<input name="contact_number" class="ui-textbox disabled-text" type="text" ltype="text" value="">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">供货期</label>
+				<div class="col-sm-3">
+					<div class="input-group m-b">
+						<input name="delivery_period" class="ui-textbox form-control" type="text" ltype="text"> <span class="input-group-addon">天</span>
+					</div>
+				</div>
+				<label class="col-sm-2 control-label">供应价格</label>
+				<div class="col-sm-3">
+					<input name="supply_price" class="ui-textbox" type="text" ltype="text" value="">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">备注</label>
+				<div class="col-sm-10" style="padding: 1px 15px;">
+					<textarea name="remark" placeholder="请输入内容" class="layui-textarea remark" style="min-width:79.5%;min-height: 100px;height: auto;line-height: 20px;padding: 6px 10px;resize: vertical;border: 1px solid #e5e6e7;"></textarea>
+				</div>
+			</div>
+			<div class="col-sm-10 text-right hidden-panel">
+				<button class="btn btn-primary" type="button" onclick="submitForm();">保存</button>
+				<button class="btn btn-primary" type="button" onclick="cancelLayer();">取消</button>
+			</div>
+			<div class="review_panel display-none">
+				<div class="form-group">
+					<label class="col-sm-2 control-label">审核</label>
+					<div class="col-sm-10">
+						<div class="radio i-checks">
+							<label><input type="radio" checked="" value="是" name="audit"></label>审核通过
+							<label><input type="radio" value="否" name="audit"></label>退回修改
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">审核意见</label>
+					<div class="col-sm-10" style="padding: 1px 15px;">
+						<textarea name="audit_opinion" placeholder="请输入审核意见" class="layui-textarea" style="min-width:79.5%;min-height: 100px;height: auto;line-height: 20px;padding: 6px 10px;resize: vertical;border: 1px solid #e5e6e7;"></textarea>
+					</div>
+				</div>
+				<div class="form-group text-right">
+					<div class="col-sm-10">
+						<button type="button" class="btn btn-primary" onclick="audit()">审核</button>
+						<button class="btn btn-primary" type="submit" onclick="cancelLayer();">取消</button>
+					</div>
+				</div>
+			</div>
+		</form>
+
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/bootstrap.min.js"></script>
+		<script src="../../js/content.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-editable-select2.full.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/js.js"></script>
+		<script src="../../js/plugins/iCheck/icheck.min.js"></script>
+
+		<script>
+			$(document).ready(function() {
+				$(".i-checks").iCheck({
+					checkboxClass: "icheckbox_square-green",
+					radioClass: "iradio_square-green",
+				});
+
+				if($.getUrlParam('id')) {
+					var name = $.getUrlParam('name');
+					$('input[name=material_name]').val(name);
+					if($.getUrlParam('state') != 'ADD') {
+						var supplier_trigger = $("#supplierSelect").select2().val("HN-GZJT-001").trigger("change"); //获取selectid
+						supplier_trigger.change();
+						$('input[name=contacts]').val('张三');
+						$('input[name=contact_number]').val('13415244636');
+						$('input[name=delivery_period]').val('');
+						$('input[name=account_period]').val(30);
+						$('input[name=deposit_percentage]').val('10');
+						$('input[name=supply_price]').val('7.5');
+
+						if(($.getUrlParam('state') == "REVIEW")) {
+							$('.ui-textbox').attr('disabled', true).css('background-color', '#f5f5f5');
+							$('.layui-textarea.remark').attr('disabled', true).css('background-color', '#f5f5f5');
+							$(".review_panel").removeClass('display-none');
+							$(".hidden-panel").addClass('display-none');							 
+							$("#supplierSelect").prop("disabled", true); //设置下拉框不可用
+						}
+					}
+				}
+
+				//选择供应商change事件
+				$('#supplierSelect').select2().on('select2:select', function(event) {
+					var supplier = $('#supplierSelect').select2('val');
+					if(supplier == undefined || supplier == "") {
+						alert('请选择供应商');
+						$('input[name=contacts]').val('');
+						$('input[name=contact_number]').val('');
+						$('input[name=delivery_period]').val('');
+						$('input[name=account_period]').val('');
+						$('input[name=deposit_percentage]').val('');
+						$('input[name=supply_price]').val('');
+						return;
+					} else {
+						$('input[name=contacts]').val('张三');
+						$('input[name=contact_number]').val('13415244636');
+						$('input[name=delivery_period]').val('');
+						$('input[name=account_period]').val(30);
+						$('input[name=deposit_percentage]').val('10');
+						$('input[name=supply_price]').val('7.5');
+					}
+				});
+
+			})
+		</script>
+
+	</body>
+
+</html>

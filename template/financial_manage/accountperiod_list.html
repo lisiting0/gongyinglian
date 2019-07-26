@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>账期计算</title>
+		<meta name="keywords" content="账期计算">
+		<meta name="description" content="账期计算">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+
+	</head>
+
+	<body class="gray-bg pd15">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<div class="row">
+					<div class="col-sm-4 mgt2">查询条件</div>
+					<div class="col-sm-8 text-right">
+						<button class="btn btn-xs btn-primary" onclick="add('添加','accountperiod_list_edit.html')">添加</button>
+						<button type="button" class="btn btn-success" onclick="exportExcel()">导出</button>
+						<button class="btn btn-xs btn-primary" onclick="serach()">查询</button>
+					</div>
+				</div>
+			</div>
+
+			<div class="panel-body d-serach">
+				<form id="form">
+					<div class="row ">
+						<label class="col-sm-2 control-label">供应商</label>
+						<div class="col-sm-2">
+							<input type="text" class="ui-textbox" name="supplier" id="search_name" />
+						</div>
+						<label class="col-sm-2 control-label">订单编号</label>
+						<div class="col-sm-2">
+							<input type="text" class="ui-textbox" name="order_num" id="search_tel" />
+						</div>
+					</div>
+					<!--<div class="row">
+						<label class="col-sm-2 control-label">捐赠的国家</label>
+						<div class="col-sm-2">
+							<input name="country" type="hidden" class="ui-combobox" />
+						</div>
+						<label class="col-sm-2 control-label">捐赠的国家</label>
+						<div class="col-sm-2">
+							<input name="country3" type="hidden" class="ui-combobox" />
+						</div>
+						<label class="col-sm-2 control-label">补助的国家</label>
+						<div class="col-sm-2">
+							<input name="country4" type="hidden" class="ui-combobox" />
+						</div>
+					</div>-->
+				</form>
+			</div>
+		</div>
+		<div class="content-style0">
+			<table id="exampleTableEvents"></table>
+		</div>
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/bootstrap.min.js"></script>
+		<script src="../../js/content.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+		<script src="../../js/plugins/layer/layer.min.js"></script>
+		<script src="../../js/ligerui.all.js"></script>
+		<script src="../../js/js.js"></script>
+		<script>
+			$("#form").ligerForm({
+				inputWidth: '',
+				validate: true
+			});
+			var pageSize; //总页数
+			var pageIndex; //当前第几页
+			var table = $("#exampleTableEvents");
+			table.bootstrapTable({
+				//url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/noteListDemo', //服务端需要返回rows与total字段
+				data: [{
+					id: 1,
+					supplier: 'Seewoo',
+					order_num: '10010',
+					earnest_money: '10000',
+					type2: '转账',
+					batch: '3',
+					type3: '转账',
+					batch2: '3',
+					state: '进行中'
+				}, {
+					id: 2,
+					supplier: 'Seewoo',
+					order_num: '10010',
+					earnest_money: '10000',
+					type2: '转账',
+					batch: '3',
+					type3: '转账',
+					batch2: '3',
+					state: '进行中'
+				}, {
+					id: 3,
+					supplier: 'Seewoo',
+					order_num: '10010',
+					earnest_money: '10000',
+					type2: '转账',
+					batch: '3',
+					type3: '转账',
+					batch2: '3',
+					state: '进行中'
+				}, {
+					id: 4,
+					supplier: 'Seewoo',
+					order_num: '10010',
+					earnest_money: '10000',
+					type2: '转账',
+					batch: '3',
+					type3: '转账',
+					batch2: '3',
+					state: '进行中'
+				}, {
+					id: 5,
+					supplier: 'Seewoo',
+					order_num: '10010',
+					earnest_money: '10000',
+					type2: '转账',
+					batch: '3',
+					type3: '转账',
+					batch2: '3',
+					state: '进行中'
+				}, {
+					id: 6,
+					supplier: 'Seewoo',
+					order_num: '10010',
+					earnest_money: '10000',
+					type2: '转账',
+					batch: '3',
+					type3: '转账',
+					batch2: '3',
+					state: '进行中'
+				}, {
+					id: 7,
+					supplier: 'Seewoo',
+					order_num: '10010',
+					earnest_money: '10000',
+					type2: '转账',
+					batch: '3',
+					type3: '转账',
+					batch2: '3',
+					state: '进行中'
+				}, {
+					id: 8,
+					supplier: 'Seewoo',
+					order_num: '10010',
+					earnest_money: '10000',
+					type2: '转账',
+					batch: '3',
+					type3: '转账',
+					batch2: '3',
+					state: '进行中'
+				}, ],
+				pagination: true, //分页
+				pageSize: 5, //每页多少条
+				//method: 'post',
+				//sidePagination: "server", //服务端处理分页
+				columns: [{
+						align: 'center',
+						checkbox: true
+					},
+					{
+						title: '编号',
+						field: 'id'
+					},
+					{
+						title: '供应商',
+						field: 'supplier'
+					},
+					{
+						title: '订单编号',
+						field: 'order_num'
+					},
+					{
+						title: '定金',
+						field: 'earnest_money'
+					},
+					{
+						title: '交付方式',
+						field: 'type2'
+					},
+					{
+						title: '交付总批次',
+						field: 'batch'
+					},
+					{
+						title: '付款方式',
+						field: 'type3'
+					},
+					{
+						title: '付款总批次',
+						field: 'batch2'
+					},
+					{
+						title: '订单状态',
+						field: 'state'
+					},
+					{
+						title: '操作',
+						width: '200',
+						formatter: function(value, row, index) {
+							var str = '';
+							// str+='<a class="btn btn-white btn-xs" onclick="see(\'查看\','+row.id+')"><i class="fa fa-folder"></i> 查看 </a>&nbsp;';
+							str += '<a class="btn btn-white btn-xs" onclick="see(\'查看\',\'accountperiod_list_see.html\',' + row.id + ')">查看 </a> ';
+							str += '<a class="btn btn-white btn-xs" onclick="edit(\'编辑\',\'accountperiod_list_edit.html\',' + row.id + ')">编辑 </a> ';
+							str += '<a class="btn btn-white btn-xs" onclick="del(' + row.id + ')">删除 </a>';
+							return str;
+						}
+					}
+				],
+				queryParams: function(params) {
+					var form = liger.get("form");
+					var data = form.getData();
+					var temp = {
+						pageSize: params.limit, //页面大小
+						pageIndex: (params.offset / params.limit) + 1, //页码
+						sort: params.sort, //排序列名
+						sortOrder: params.order //排位命令（desc，asc）
+					};
+					mergeObj(temp, data); //合并对象
+					pageSize = temp.pageSize;
+					pageIndex = temp.pageIndex;
+					return temp;
+				}
+			});
+			initSelect();
+
+			function initSelect() {
+				$('input[name="country"]').ligerComboBox({
+					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/getMap',
+					valueField: 'value',
+					textField: 'text'
+				});
+				$('input[name="country3"]').ligerComboBox({
+					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/getMap',
+					valueField: 'value',
+					textField: 'text'
+				});
+				$('input[name="country4"]').ligerComboBox({
+					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/getMap',
+					valueField: 'value',
+					textField: 'text'
+				});
+			}
+
+			function serach() {
+				table.bootstrapTable('refresh');
+			}
+
+			function see(title, url, id, w, h) {
+				var index = layer.open({
+					type: 2,
+					close: true,
+					shadeClose: true,
+					title: title,
+					area: ['80%', '80%'],
+					content: url + '?id=' + id
+				});
+//				layer.full(index);
+			}
+
+			function add(title, url, id, w, h) {
+				var index = layer.open({
+					type: 2,
+					close: true,
+					shadeClose: true,
+					title: title,
+					area: ['80%', '80%'],
+					content: url
+				});
+//				layer.full(index);
+			}
+
+			function edit(title, url, id, w, h) {
+				var index = layer.open({
+					type: 2,
+					close: true,
+					shadeClose: true,
+					title: title,
+					area: ['80%', '80%'],
+					content: url + '?id=' + id
+				});
+//				layer.full(index);
+			}
+
+			function del(id) {
+				//询问框
+				layer.confirm('是否需要删除？', {
+					btn: ['确定', '取消'], //按钮
+					shade: false //不显示遮罩
+				}, function(index) {
+					$.ajax({
+						type: 'post',
+						url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/dels',
+						data: {
+							id: id
+						},
+						success: function(res) {
+							table.bootstrapTable('refresh');
+							layer.close(index);
+						}
+					})
+				}, function() {});
+			}
+		</script>
+
+	</body>
+
+</html>

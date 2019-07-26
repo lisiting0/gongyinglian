@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>物料基础信息</title>
+		<meta name="keywords" content="物料基础信息">
+		<meta name="description" content="物料基础信息">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+
+	</head>
+
+	<body class="pd15">
+
+		<form class="form-horizontal m-t" id="signupForm">
+			<div class="form-group">
+				<div class="col-sm-1"></div>
+				<div class="col-sm-3">
+					<div class="cropbox-container">
+						<div class="imageBox">
+							<div class="thumbBox"></div>
+							<div class="spinner" style="display: none">Loading...</div>
+						</div>
+						<div class="action">
+							<div class="new-contentarea tc">
+								<a href="javascript:void(0)" class="upload-img">
+									<label for="upload-file">上传图像</label>
+								</a>
+								<input type="file" class="" name="upload-file" id="upload-file" />
+							</div>
+							<input type="button" id="btnCrop" class="Btnsty_peyton" value="裁切">
+							<input type="button" id="btnZoomIn" class="Btnsty_peyton" value="+">
+							<input type="button" id="btnZoomOut" class="Btnsty_peyton" value="-">
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-1">
+					<div class="cropped"></div>
+				</div>
+			</div>
+			<div class="form-group" style="margin-top: -315px;">
+				<label class="col-sm-2 control-label">物料型号</label>
+				<div class="col-sm-3">
+					<input name="bom_code" value="001" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:100}">
+				</div>
+			</div>
+			<div class="form-group" style="margin-top: -262px;">
+				<label class="col-sm-2 control-label">物料名称</label>
+				<div class="col-sm-3">
+					<input name="bom_name" value="表芯" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}">
+				</div>
+			</div>
+			<div class="form-group" style="margin-top: -210px;">
+				<label class="col-sm-2 control-label">物料属性</label>
+				<div class="col-sm-3">
+					<input name="bom_properties" value="外购" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}">
+				</div>
+			</div>
+			<div class="form-group" style="margin-top: -155px;">
+				<label class="col-sm-2 control-label">规格</label>
+				<div class="col-sm-3">
+					<input name="unit" value=" " class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}">
+				</div>
+			</div>
+			<div class="form-group" style="margin-top: -102px;">
+				<label class="col-sm-2 control-label">重量（g）</label>
+				<div class="col-sm-3">
+					<input name="weight" value=" " class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}">
+				</div>
+			</div>
+			<div class="form-group" style="margin-top: -50px;">
+				<label class="col-sm-2 control-label">单位</label>
+				<div class="col-sm-3">
+					<input name="unit" value="件" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">尺码</label>
+				<div class="col-sm-3">
+					<input name="size" value="通码" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}">
+				</div>
+				<label class="col-sm-2 control-label">颜色</label>
+				<div class="col-sm-3">
+					<input name="color" value="通色" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">库存数量</label>
+				<div class="col-sm-3">
+					<input name="amount" value="40" class="ui-textbox disabled-text" type="text" ltype="text">
+				</div>
+				<label class="col-sm-2 control-label">最近交易价格</label>
+				<div class="col-sm-3">
+					<input name="money" value="7" class="ui-textbox disabled-text" type="text" ltype="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">参考价格</label>
+				<div class="col-sm-3">
+					<input name="proposedPrice" value="7" class="ui-textbox disabled-text" type="text" ltype="text">
+				</div>
+				<label class="col-sm-2 control-label">创建人</label>
+				<div class="col-sm-3">
+					<input name="founder" value="季童薇" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}" disabled="disabled">
+				</div>
+			</div>
+			<div class="form-group text-right">
+				<div class="col-sm-10">
+					<button class="btn btn-primary" type="submit" onclick="submitForm();">提交</button>
+					<button class="btn btn-primary" type="submit" onclick="cancelLayer();">取消</button>
+				</div>
+			</div>
+		</form>
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/bootstrap.min.js"></script>
+		<script src="../../js/js.js"></script>
+		<!-- <script src="../../js/content.min.js"></script> -->
+		<script src="../../js/ligerui.all.js"></script>
+		<script src="../../js/plugins/layer/layer.min.js"></script>
+		<script src="../../js/plugins/validate/jquery.validate.min.js"></script>
+		<script src="../../js/plugins/validate/messages_zh.min.js"></script>
+		<script src="../../js/plugins/validate/jquery.metadata.js"></script>
+		<!-- <script src="../../js/demo/form-validate-demo.min.js"></script> -->
+		<script src="../../js/cropbox.js"></script>
+		<script>
+			$(function() {
+				if($.getUrlParam('id')) {
+					setData();
+				} else {
+
+				}
+				new formValidate({
+					formEle: '#signupForm'
+				});
+			});
+
+			function valid() {
+				var form = liger.get("signupForm");
+				alert(form.valid());
+			}
+
+			function getData() {
+				var form = liger.get("signupForm");
+				var data = form.getData();
+				alert(JSON.stringify(data));
+			}
+
+			function setData() {
+				$.ajax({
+					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/getUser',
+					data: {
+						id: $.getUrlParam('id')
+					},
+					success: function(res) {
+						res = $.parseJSON(res);
+						var form = new liger.get("signupForm");
+						form.setData(res);
+					}
+				})
+			}
+
+			function submitForm() {
+
+				var form = liger.get("signupForm");
+				if(!form.valid()) {
+					return;
+				}
+				var data = {};
+				$("input,select,textarea").each(function() {
+					var name = $(this).attr("name");
+					if(name && name.indexOf('ligerui') == -1) {
+						data[name] = this.value;
+					}
+				});
+				data.id = $.getUrlParam('id');
+
+				$.ajax({
+					type: 'post',
+					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/setUser',
+					data: data,
+					success: function(res) {
+						if(Number(res)) {
+							parent.table.bootstrapTable('refresh');
+							var index = parent.layer.getFrameIndex(window.name);
+							parent.layer.close(index);
+						}
+					}
+				})
+				/*
+				            parent.table.bootstrapTable('refresh');
+				            var index = parent.layer.getFrameIndex(window.name);
+				            parent.layer.close(index);*/
+			}
+
+			$(window).load(function() {
+
+				var img = '../../img/p_big1.jpg';
+				displayCroppedPic(img);
+
+				function initCropbox() {
+					var options = {
+						thumbBox: '.thumbBox',
+						spinner: '.spinner'
+					}
+					var ddd = $('.imageBox');
+					var cropper = $('.imageBox').cropbox(options);
+					$('#upload-file').on('change', function() {
+
+						var reader = new FileReader();
+						reader.onload = function(e) {
+							options.imgSrc = e.target.result;
+							cropper = $('.imageBox').cropbox(options);
+						}
+						reader.readAsDataURL(this.files[0]);
+						this.files = [];
+					})
+					$('#btnCrop').on('click', function() {
+						var img = cropper.getDataURL();
+						displayCroppedPic(img);
+					})
+					$('#btnZoomIn').on('click', function() {
+						cropper.zoomIn();
+					})
+					$('#btnZoomOut').on('click', function() {
+						cropper.zoomOut();
+					})
+				}
+				initCropbox();
+				//剪切后照片展示方法
+				function displayCroppedPic(img) {
+					$('.cropped').html('');
+					$('.cropped').append('<div><img src="' + img + '" align="absmiddle" style="width:70%;margin-top:4px;border-radius:40px;box-shadow:0px 0px 12px #7E7E7E;" ><p>图片1</p></div>');
+					$('.cropped').append('<div><img src="' + img + '" align="absmiddle" style="width:80%;margin-top:4px;border-radius:64px;box-shadow:0px 0px 12px #7E7E7E;"><p>图片2</p></div>');
+					$('.cropped').append('<div><img src="' + img + '" align="absmiddle" style="width:90%;margin-top:4px;border-radius:80px;box-shadow:0px 0px 12px #7E7E7E;"><p>图片3</p></div>');
+				}
+
+				$(function() {
+					var $divWidth1 = $('.cropped img:eq(0)').width();
+					$('.cropped img:eq(0)').css({
+						'height': $divWidth1
+					});
+					var $divWidth2 = $('.cropped img:eq(1)').width();
+					$('.cropped img:eq(1)').css({
+						'height': $divWidth2
+					});
+					var $divWidth3 = $('.cropped img:eq(2)').width();
+					$('.cropped img:eq(2)').css({
+						'height': $divWidth3
+					});
+				})
+
+			});
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>打印单据</title>
+		<meta name="keywords" content="打印单据">
+		<meta name="description" content="打印单据">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-editable/bootstrap-editable.css" rel="stylesheet">
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+		<link href="../../css/plugins/blueimp/css/blueimp-gallery.min.css" rel="stylesheet">
+
+	</head>
+
+	<body class="pd15">
+		<div class="bootstrap-table" style="margin: 0 auto 15px;">
+			<div class="fixed-table-container">
+				<div class="fixed-table-header">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th colspan="7">
+									<div class="th-inner order_title" style="padding: 15px;line-height: 15px;text-align: center;font-size: 18px;"></div>
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="receipts">
+								<td class="text-right">到货单号</td>
+								<td colspan="2">J2018000408</td>
+								<td class="text-right">打印日期</td>
+								<td colspan="2" class="today"></td>
+							</tr>
+							<tr class="qualityInspection">
+								<td class="text-right">到货单号</td>
+								<td colspan="2">J2018000408</td>
+								<td class="text-right">打印日期</td>
+								<td colspan="2" class="today"></td>
+							</tr>
+							<tr class="receipt">
+								<td class="text-right">到货单号</td>
+								<td>J2018000408</td>
+								<td class="text-right">入库仓位</td>
+								<td>世港总仓</td>
+								<td class="text-right">打印日期</td>
+								<td class="today"></td>
+							</tr>
+							<tr>
+								<td colspan="6" style="padding: 10px;">
+									<table id="ordersInfoTable"></table>
+								</td>
+							</tr>
+							<tr>
+								<td class="text-right">备注</td>
+								<td colspan="5"><textarea name="remark" placeholder="请输入内容" class="layui-textarea remark" style="min-width: 100%;"></textarea></td>
+							</tr>
+							<tr class="receipts">
+								<td class="text-right">收货员</td>
+								<td colspan="5"></td>
+							</tr>
+							<tr class="qualityInspection">
+								<td class="text-right">收货员</td>
+								<td colspan="2">张三</td>
+								<td class="text-right">质检员</td>
+								<td colspan="2"></td>
+							</tr>
+							<tr class="receipt">
+								<td class="text-right">收货员</td>
+								<td>张三</td>
+								<td class="text-right">质检员</td>
+								<td>李四</td>
+								<td class="text-right">入库员</td>
+								<td></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<div class="form-group text-right button-group">
+			<div class="col-sm-12">
+				<button class="btn btn-primary" type="button" onclick="printOrder();"><i class="fa fa-paste"></i>&nbsp;打印</button>
+				<button class="btn btn-primary" type="submit" onclick="cancelLayer();">取消</button>
+			</div>
+		</div>
+		<div id="blueimp-gallery" class="blueimp-gallery">
+			<div class="slides"></div>
+			<h3 class="title"></h3>
+			<a class="close">×</a>
+		</div>
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/bootstrap.min.js"></script>
+		<script src="../../js/js.js"></script>
+		<script src="../../js/ligerui.all.js"></script>
+		<script src="../../js/plugins/layer/laydate/laydate.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-editable.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-table-editable.js"></script>
+		<script src="../../js/plugins/validate/jquery.validate.min.js"></script>
+		<script src="../../js/plugins/validate/messages_zh.min.js"></script>
+		<script src="../../js/plugins/validate/jquery.metadata.js"></script>
+		<script src="../../js/plugins/blueimp/jquery.blueimp-gallery.min.js"></script>
+		<script>
+			var table = $("#ordersInfoTable");
+			var print;
+			$(function() {
+				print = $.getUrlParam('print');
+				if($.getUrlParam('id')) {
+					$(".order_title").text($.getUrlParam('title'));
+
+					//receipts打印收货单  qualityInspection打印质检单 receipt打印入库单
+					if(print == "receipts") {
+						$(".receipts").removeClass("display-none");
+						$(".qualityInspection").addClass("display-none");
+						$(".receipt").addClass("display-none");
+					} else if(print == "qualityInspection") {
+						$(".qualityInspection").removeClass("display-none");
+						$(".receipts").addClass("display-none");
+						$(".receipt").addClass("display-none");
+					} else {
+						$(".receipt").removeClass("display-none");
+						$(".qualityInspection").addClass("display-none");
+						$(".receipts").addClass("display-none");
+					}
+					//setData();
+					initTable();
+					sum();
+				} else {
+
+				}
+
+				$(".today").text(showCurrentDate());
+			});
+
+			function initTable() {
+				table.bootstrapTable({
+					columns: [{
+						field: "code",
+						title: "商品代码/物料型号"
+					}, {
+						field: "name",
+						title: "商品/物料名称"
+					}, {
+						title: "收货数量",
+						field: "receipt_quantity",
+						class: "receipt_quantity",
+						visible: (print == "receipts" ? true : false)
+					}, {
+						title: "良品数量",
+						field: "AAmount",
+						class: "AAmount",
+						visible: (print == "qualityInspection" ? true : false)
+					},{
+						title: "入库数量",
+						field: "incoming_storage",
+						class: "incoming_storage",
+						visible: (print == "receipts" ? true : false)
+					}, {
+						title: '备注',
+						field: 'remark',
+						formatter: function(value, row, index) {
+							if(value == undefined) {
+								value = '';
+							}
+							return '<textarea name="remark" placeholder="请输入内容" class="layui-textarea remark">' + value + '</textarea>';
+						}
+					}],
+					data: [{
+						code: '0 160M60LYXCL',
+						name: '表针',
+						receipt_quantity: 250,
+						AAmount: 250,
+						incoming_storage: 250,
+						remark: ''
+					}, {
+						code: '1 02B38068M QQF-01',
+						name: '表盘',
+						receipt_quantity: 200,
+						AAmount: 198,
+						incoming_storage: 200,
+						remark: ''
+					}, {
+						code: '2 02B38068M QQF-01',
+						name: '表带',
+						receipt_quantity: 150,
+						AAmount: 150,
+						incoming_storage: 150,
+						remark: ''
+					}, {
+						code: '3 02B38068M QQF-01',
+						name: '表壳',
+						receipt_quantity: 100,
+						AAmount: 97,
+						incoming_storage: 100,
+						remark: ''
+					}, {
+						code: '0 MTP1329D5A',
+						name: 'CASIO MTP-1329D-5A',
+						receipt_quantity: 100,
+						AAmount: 97,
+						incoming_storage: 100,
+						remark: ''
+					}, {
+						code: '1 MTP1329D5A',
+						name: 'CASIO 石英表',
+						receipt_quantity: 10,
+						AAmount: 9,
+						incoming_storage: 10,
+						remark: ''
+					}, {
+						code: '2 MTP1329D5A',
+						name: 'CASIO M750',
+						receipt_quantity: 20,
+						AAmount: 20,
+						incoming_storage: 20,
+						remark: ''
+					}]
+				});
+			}
+
+			function sum() {
+				var sumQuantity = 0;
+				//数量合计
+				if(print == "receipts") {
+					$("#ordersInfoTable td[class='receipt_quantity']").each(function() {
+						sumQuantity += +$(this).text();
+					});
+				} else if(print == "qualityInspection"){
+					$("#ordersInfoTable td[class='AAmount']").each(function() {
+						sumQuantity += +$(this).text();
+					});
+				}else{
+					$("#ordersInfoTable td[class='incoming_storage']").each(function() {
+						sumQuantity += +$(this).text();
+					});
+				}
+				var tr = '<tr class="footer"><td class="text-right" colspan="2">合计</td><td>' + sumQuantity + '</td><td></td></tr>';
+				table.append(tr);
+			}
+		</script>
+	</body>
+
+</html>

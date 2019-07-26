@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>订单管理</title>
+		<meta name="keywords" content="订单管理">
+		<meta name="description" content="订单管理">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-editable/bootstrap-editable.css" rel="stylesheet">
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+		<link href="../../css/plugins/datapicker/bootstrap-datetimepicker.css" rel="stylesheet">
+
+	</head>
+
+	<body class="pd15">
+		<form class="form-horizontal m-t" id="signupForm">
+			<div class="form-group">
+				<label class="col-sm-2 control-label">订单编号</label>
+				<div class="col-sm-3">
+					<input name="order_num" value="12345" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}">
+				</div>
+				<label class="col-sm-2 control-label">日期</label>
+				<div class="col-sm-3">
+					<input name="date" id="date" class="laydate-icon form-control layer-date" type="text" autocomplete="off" ltype="text" validate="{required:true,maxlength:17}" value="2017-03-01 16:53">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">供应商</label>
+				<div class="col-sm-3">
+					<input name="supplier" value="德国飞企" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}">
+				</div>
+				<label class="col-sm-2 control-label">定金</label>
+				<div class="col-sm-3">
+					<input name="earnest_money" value="500" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">总批次</label>
+				<div class="col-sm-3">
+					<input name="batch" value="2" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}">
+				</div>
+				<label class="col-sm-2 control-label">订单总额</label>
+				<div class="col-sm-3">
+					<input name="totalCost" value="1050" class="ui-textbox none" type="text" ltype="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">折扣</label>
+				<div class="col-sm-3">
+					<input name="discount" value="9.5折" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}">
+				</div>
+				<label class="col-sm-2 control-label">结算渠道</label>
+				<div class="col-sm-3">
+					<input name="billingChannel" value="转账" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">结算货币</label>
+				<div class="col-sm-3">
+					<input name="settlementCurrency" value="$" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}">
+				</div>
+				<label class="col-sm-2 control-label">货币汇率</label>
+				<div class="col-sm-3">
+					<input name="currencyExchangeRate" value="0.7" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">已付金额</label>
+				<div class="col-sm-3">
+					<input name="amountPaid" value="500" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}">
+				</div> <label class="col-sm-2 control-label">未付金额</label>
+				<div class="col-sm-3">
+					<input name="unpaidAmount" value="650" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">入库类型</label>
+				<div class="col-sm-3">
+					<input name="storageType" value="" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}">
+				</div> <label class="col-sm-2 control-label">业务员</label>
+				<div class="col-sm-3">
+					<input name="Salesman" value="倪妮" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">制单人</label>
+				<div class="col-sm-3">
+					<input name="preparedBy" value="倪妮" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}">
+				</div> <label class="col-sm-2 control-label">制单日期</label>
+				<div class="col-sm-3">
+					<input name="orderDate" id="orderDate" class="laydate-icon form-control layer-date" type="text" ltype="text" validate="{required:true,maxlength:17}" value="2017-05-06 10:23">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">品检人</label>
+				<div class="col-sm-3">
+					<input name="productInspector" value="萧筱晓" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}">
+				</div>
+				<label class="col-sm-2 control-label">品检日期</label>
+				<div class="col-sm-3">
+					<input name="qualityInspectionDate" id="qualityInspectionDate" class="laydate-icon form-control layer-date" type="text" ltype="text" validate="{required:true,maxlength:17}" value="2017-05-12 10:23">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">验收人</label>
+				<div class="col-sm-3">
+					<input name="acceptancePerson" value="莫默模" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}">
+				</div>
+				<label class="col-sm-2 control-label">验收日期</label>
+				<div class="col-sm-3">
+					<input name="acceptanceDate" id="acceptanceDate" class="laydate-icon form-control layer-date" type="text" ltype="text" validate="{required:true,maxlength:17}" value="2017-05-18 10:23">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">记账人</label>
+				<div class="col-sm-3">
+					<input name="booker" value="唐糖汤" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}">
+				</div> <label class="col-sm-2 control-label">记账日期</label>
+				<div class="col-sm-3">
+					<input name="billingDate" id="billingDate" class="laydate-icon form-control layer-date" type="text" ltype="text" validate="{required:true,maxlength:17}" value="2017-05-06 10:23">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">采购物资</label>
+				<div class="col-sm-8">
+					<p><button class="btn btn-sm btn-primary" type="button" onclick="addTable();">添加</button></p>
+					<table id="purchaseMaterielTable"></table>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">付款计划</label>
+				<div class="col-sm-8">
+					<p><button class="btn btn-sm btn-primary" type="button" onclick="addPayment();">添加</button></p>
+					<table id="paymentTableEvents"></table>
+				</div>
+			</div>
+			<div class="form-group text-right">
+				<div class="col-sm-10">
+					<button class="btn btn-primary" type="button" onclick="contractUpload()">合同上传</button>
+					<button class="btn btn-primary" type="submit" onclick="submitForm();">下单</button>
+				</div>
+			</div>
+		</form>
+
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/bootstrap.min.js"></script>
+		<script src="../../js/js.js"></script>
+		<!-- <script src="../../js/content.min.js"></script> -->
+		<script src="../../js/ligerui.all.js"></script>
+		<script src="../../js/plugins/datapicker/bootstrap-datepicker.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-editable.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-table-editable.js"></script>
+		<script src="../../js/plugins/validate/jquery.validate.min.js"></script>
+		<script src="../../js/plugins/validate/messages_zh.min.js"></script>
+		<script src="../../js/plugins/validate/jquery.metadata.js"></script>
+		<script src="../../js/plugins/layer/laydate/laydate.js"></script>
+		<script>
+			$(function() {
+				if($.getUrlParam('id')) {
+					setData();
+				} else {}
+
+				initTable();
+				initPayment();
+
+				new formValidate({
+					formEle: '#signupForm'
+				});
+
+				laydate({
+					elem: "#date",
+					format: "YYYY/MM/DD hh:mm",
+					min: laydate.now(),
+					max: "2099-06-16 23:59",
+					istime: true,
+					istoday: false,
+					choose: function(datas) {}
+				});
+				laydate({
+					elem: "#orderDate",
+					format: "YYYY/MM/DD hh:mm",
+					min: laydate.now(),
+					max: "2099-06-16 23:59",
+					istime: true,
+					istoday: false,
+					choose: function(datas) {}
+				});
+				laydate({
+					elem: "#qualityInspectionDate",
+					format: "YYYY/MM/DD hh:mm",
+					min: laydate.now(),
+					max: "2099-06-16 23:59",
+					istime: true,
+					istoday: false,
+					choose: function(datas) {}
+				});
+				laydate({
+					elem: "#acceptanceDate",
+					format: "YYYY/MM/DD hh:mm",
+					min: laydate.now(),
+					max: "2099-06-16 23:59",
+					istime: true,
+					istoday: false,
+					choose: function(datas) {}
+				});
+				laydate({
+					elem: "#billingDate",
+					format: "YYYY/MM/DD hh:mm",
+					min: laydate.now(),
+					max: "2099-06-16 23:59",
+					istime: true,
+					istoday: false,
+					choose: function(datas) {}
+				});
+			});
+
+			//初始化采购物资信息
+			function initTable() {
+				var table = $("#purchaseMaterielTable");
+				table.bootstrapTable({
+					pagination: true, //分页
+					pageSize: 5, //每页多少条
+					data: [{
+						id: 1,
+						name: '1',
+						unit: '件',
+						size: '通码',
+						color: '通色',
+						stock: 10,
+						amount: 10,
+						total: 10
+					}],
+					columns: [{
+							field: "id",
+							title: "编号",
+							visible: false
+						}, {
+							field: "name",
+							title: "商品/物料名称",
+							editable: {
+								type: 'select',
+								emptytext: '请选择',
+								title: '商品/物料名称',
+								// source:[{value:"1",text:"研发部"},{value:"2",text:"销售部"},{value:"3",text:"行政部"}],
+								source: function() {
+									// var result = [];
+									/* $.ajax({
+									     url: '/Editable/GetDepartments',
+									     async: false,
+									     type: "get",
+									     data: {},
+									     success: function (data) {*/
+									data = [{
+										value: "1",
+										text: "表芯"
+									}, {
+										value: "2",
+										text: "表带"
+									}, {
+										value: "3",
+										text: "表壳"
+									}]
+									/*  }
+                                });*/
+									return data;
+								}
+							}
+						},
+						{
+							title: '库存',
+							field: 'stock'
+						},
+						{
+							title: '单位',
+							field: 'unit'
+						},
+						{
+							title: '尺码',
+							field: 'size'
+						},
+						{
+							title: '颜色',
+							field: 'color'
+						},
+						{
+							title: '采购数量',
+							field: 'amount',
+							editable: {
+								emptytext: '请输入',
+								type: 'text',
+								title: '数量',
+								validate: function(v) {
+									if(!v) return '数量不能为空';
+								}
+							}
+						},
+						{
+							title: '合计',
+							field: 'total'
+						},
+						{
+							title: '操作',
+							field: 'action',
+							formatter: function(v, r, i) {
+								console.log(r)
+								return '<a class="btn btn-xs btn-warning" onclick="delTable(' + r.id + ')">删除</a>';
+							}
+						}
+
+					]
+				});
+			}
+			//删除采购物资信息
+			function delTable(id) {
+				var table = $("#purchaseMaterielTable");
+				table.bootstrapTable('remove', {
+					field: 'id',
+					values: [id]
+				});
+			}
+			//添加采购物资信息
+			function addTable() {
+				var table = $("#purchaseMaterielTable");
+				var rowIndex = table.find('tbody tr').length;
+				table.bootstrapTable('append', [{
+					id: (rowIndex + 1),
+					name: '',
+					unit: '件',
+					size: '通码',
+					color: '通色',
+					stock: 0,
+					amount: 0,
+					total: 0
+				}]);
+			}
+
+			//初始化付款计划信息
+			function initPayment() {
+				var paymentTable = $("#paymentTableEvents");
+				paymentTable.bootstrapTable({
+					pagination: true, //分页
+					pageSize: 5, //每页多少条
+					data: [{
+						id: 1,
+						prepaymentAmount: '100',
+						paymentDate: '2017-3-29 14:42:40',
+						payer: '张三'
+					}],
+					columns: [{
+							field: "id",
+							title: "编号",
+						}, {
+							field: "prepaymentAmount",
+							title: "预付金额",
+							editable: {
+								emptytext: '请输入',
+								type: 'text',
+								title: '预付金额',
+								validate: function(v) {
+									if(!v) return '预付金额不能为空';
+								}
+							}
+						},
+						{
+							field: "paymentDate",
+							title: "付款日期",
+							editable: {
+								emptytext: '请输入',
+								type: 'text',
+								title: '付款日期',
+								validate: function(v) {
+									if(!v) return '付款日期不能为空';
+								}
+							}
+						},
+						{
+							field: "payer",
+							title: "付款人",
+							editable: {
+								emptytext: '请输入',
+								type: 'text',
+								title: '付款人',
+								validate: function(v) {
+									if(!v) return '付款人不能为空';
+								}
+							}
+						},
+						{
+							title: '操作',
+							field: 'action',
+							formatter: function(v, r, i) {
+								console.log(r)
+								return '<a class="btn btn-xs btn-warning" onclick="delPayment(' + r.id + ')">删除</a>';
+							}
+						}
+
+					]
+				});
+			}
+
+			//删除付款计划信息
+			function delPayment(id) {
+				var paymentTable = $("#paymentTableEvents");
+				paymentTable.bootstrapTable('remove', {
+					field: 'id',
+					values: [id]
+				});
+			}
+			//添加付款计划信息
+			function addPayment() {
+				var paymentTable = $("#paymentTableEvents");
+				var rowIndex = paymentTable.find('tbody tr').length;
+				paymentTable.bootstrapTable('append', [{
+					id: (rowIndex + 1),
+					prepaymentAmount: 0,
+					paymentDate: '',
+					payer: ''
+				}]);
+			}
+
+			function valid() {
+				var form = liger.get("signupForm");
+				alert(form.valid());
+			}
+
+			function getData() {
+				var form = liger.get("signupForm");
+				var data = form.getData();
+				alert(JSON.stringify(data));
+			}
+
+			function setData() {
+				$.ajax({
+					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/getUser',
+					data: {
+						id: $.getUrlParam('id')
+					},
+					success: function(res) {
+						res = $.parseJSON(res);
+						var form = new liger.get("signupForm");
+						form.setData(res);
+					}
+				})
+			}
+
+			function submitForm() {
+				getData()
+				var form = liger.get("signupForm");
+				if(!form.valid()) {
+					return;
+				}
+				var data = {};
+				$("input,select,textarea").each(function() {
+					var name = $(this).attr("name");
+					if(name && name.indexOf('ligerui') == -1) {
+						data[name] = this.value;
+					}
+				});
+				data.id = $.getUrlParam('id');
+               alert(JSON.stringify(data));
+				$.ajax({
+					type: 'post',
+					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/setUser',
+					data: data,
+					success: function(res) {
+						if(Number(res)) {
+							parent.table.bootstrapTable('refresh');
+							var index = parent.layer.getFrameIndex(window.name);
+							parent.layer.close(index);
+						}
+					}
+				})
+				/*
+				            parent.table.bootstrapTable('refresh');
+				            var index = parent.layer.getFrameIndex(window.name);
+				            parent.layer.close(index);*/
+			}
+		</script>
+	</body>
+
+</html>

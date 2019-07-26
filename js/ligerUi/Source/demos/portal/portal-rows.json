@@ -1,0 +1,51 @@
+﻿﻿﻿﻿[ 
+    {
+        columns: [{
+            width: 300,
+            panels: [{
+                title: '行1-列1-模块1',
+                width: '100%',
+                height: 100,
+                content: '内容。。。',
+                showClose:true
+            },
+            {
+                title: '行1-列1-模块2',
+                width: '100%',
+                height: 100,
+                content: '内容。。。'
+            }
+            ]
+        }, {
+            width: 300,
+            panels: [{}]
+        }, {
+            width: 300,
+            panels: [{
+                title: '行1-列3-模块1',
+                width: '100%',
+                height: 100,
+                content: '内容。。。'
+            }
+            ]
+        }]
+    },
+     {
+         columns: [{
+             width: 420,
+             panels: [{
+                 title: '行2-列1-模块1',
+                 width: '100%',
+                 height: 100,
+                 content: '内容。。。'
+             },
+             {
+                 title: '行2-列1-模块2',
+                 width: '100%',
+                 height: 100,
+                 content: '内容。。。'
+             }
+             ]
+         }]
+     }
+]

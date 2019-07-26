@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>供应商管理</title>
+		<meta name="keywords" content="供应商管理">
+		<meta name="description" content="供应商管理">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-editable/bootstrap-editable.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-editable/bootstrap-editable-select2.css" rel="stylesheet" type="text/css" />
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+		<link href="../../css/plugins/iCheck/custom.css" rel="stylesheet">
+		<link href="../../css/plugins/blueimp/css/blueimp-gallery.min.css" rel="stylesheet">
+
+		<style type="text/css">
+			.tabs-container .tabs-left>.nav-tabs,
+			.tabs-container .tabs-right>.nav-tabs {
+				width: 10%;
+			}
+			
+			.tabs-container .tabs-left .panel-body {
+				width: 90%;
+				margin-left: 10%;
+			}
+		</style>
+
+	</head>
+
+	<body class="pd15">
+		<div class="row">
+			<form class="form-horizontal m-t" id="signupForm">
+				<div class="col-sm-12">
+					<div class="tabs-container">
+						<ul class="nav nav-tabs" id="actionTab">
+							<li class="active">
+								<a data-toggle="tab" href="#tab-1" aria-expanded="true"> 基本信息</a>
+							</li>
+							<li class="">
+								<a data-toggle="tab" href="#tab-2" aria-expanded="false">联系方式</a>
+							</li>
+							<li class="">
+								<a data-toggle="tab" href="#tab-3" aria-expanded="false">银行账号</a>
+							</li>
+							<li class="isValidate">
+								<a data-toggle="tab" href="#tab-4" aria-expanded="false">经营品牌</a>
+							</li>
+							<li class="isValidate">
+								<a data-toggle="tab" href="#tab-5" aria-expanded="false">供应产品/物料</a>
+							</li>
+							<li class="isValidate">
+								<a data-toggle="tab" href="#tab-6" aria-expanded="false">其他</a>
+							</li>
+						</ul>
+						<div class="tab-content">
+							<div id="tab-1" class="tab-pane active">
+								<div class="panel-body">
+									<div class="form-group">
+										<label class="col-sm-2 control-label">代码<span class="required-symbol">*</span></label>
+										<div class="col-sm-3">
+											<input name="code" class="ui-textbox" type="text" ltype="text" value="HN-GZJT-001" validate="{required:true,minlength:1,maxlength:100}">
+										</div>
+										<label class="col-sm-2 control-label">供应商<span class="required-symbol">*</span></label>
+										<div class="col-sm-3">
+											<input name="supplier" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:100}" value="广州集团">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">类别<span class="required-symbol">*</span></label>
+										<div class="col-sm-3">
+											<select id="type" class="form-control" ltype="select" ligeruiid="type">
+												<option value="001">鼎骏</option>
+												<option value="002">优时尚品</option>
+												<option value="003">窗外</option>
+												<option value="004">TP</option>
+											</select>
+										</div>
+										<label class="col-sm-2 control-label">供应产品类型</label>
+										<div class="col-sm-3">
+											<select id="product_type" class="js-example-basic-single form-control" ltype="select" ligeruiid="product_type">
+												<option>成品</option>
+												<option>配件</option>
+												<option>挂牌</option>
+											</select>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">渠道</label>
+										<div class="col-sm-3">
+											<select id="channel" class="form-control" ltype="select" ligeruiid="channel">
+												<option value="000">总部</option>
+											</select>
+										</div>
+										<label class="col-sm-2 control-label">账期</label>
+										<div class="col-sm-3">
+											<div class="input-group">
+												<input name="account_period" type="text" class="ui-textbox" validate="{digits:true}"><span class="input-group-addon">天</span>
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">结算方式</label>
+										<div class="col-sm-3">
+											<select id="agencySales" class="form-control" ltype="select" ligeruiid="agencySales">
+												<option value="经销">经销</option>
+												<option value="代销">代销</option>
+											</select>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">额外费用</label>
+										<div class="col-sm-3">
+											<div class="checkbox i-checks">
+												<label style="padding-left:0 ;"><input name="additional_charges" type="checkbox"> <i></i></label>
+											</div>
+										</div>
+										<label class="col-sm-2 control-label">停止使用</label>
+										<div class="col-sm-3">
+											<div class="checkbox i-checks">
+												<label style="padding-left:0 ;"><input name="stopUsing" type="checkbox"> <i></i></label>
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">评价</label>
+										<div class="col-sm-10" style="padding: 1px 15px;">
+											<textarea name="desc" placeholder="请输入内容" class="layui-textarea" style="min-width:79.5%;min-height: 100px;height: auto;line-height: 20px;padding: 6px 10px;resize: vertical;border: 1px solid #e5e6e7;"></textarea>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div id="tab-2" class="tab-pane">
+								<div class="panel-body">
+									<div class="form-group" data-toggle="distpicker">
+										<label class="col-sm-2 control-label">省<span class="required-symbol">*</span></label>
+										<div class="col-sm-2" style="width: 14%;padding-right: 0;">
+											<select class="form-control" ltype="select" ligeruiid="province"></select>
+										</div>
+										<div class="col-sm-2" style="width: 14%;padding-right: 0;padding-left: 5px;">
+											<select class="form-control" ltype="select" ligeruiid="city"></select>
+										</div>
+										<div class="col-sm-2" style="width: 13.5%;padding-right: 0;padding-left: 5px;">
+											<select class="form-control" ltype="select" ligeruiid="county"></select>
+										</div>
+										<div class="col-sm-3">
+											<input name="address" class="ui-textbox" ltype="text" validate="{required:true,minlength:1,maxlength:100}" value="广州 ">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">联系人<span class="required-symbol">*</span></label>
+										<div class="col-sm-3">
+											<input name="contacts" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:100}" value="李小明">
+										</div>
+										<label class="col-sm-2 control-label">负责人<span class="required-symbol">*</span></label>
+										<div class="col-sm-3">
+											<input name="principal" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:100}" value="黄晓明">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">邮编</label>
+										<div class="col-sm-3">
+											<input name="zip_code" class="ui-textbox" type="text" ltype="text">
+										</div>
+										<label class="col-sm-2 control-label">电话</label>
+										<div class="col-sm-3">
+											<input name="phone" class="ui-textbox" type="text" ltype="text">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">手机<span class="required-symbol">*</span></label>
+										<div class="col-sm-3">
+											<input name="telephone" value="13113369041" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:100}">
+										</div>
+										<label class="col-sm-2 control-label">传真</label>
+										<div class="col-sm-3">
+											<input name="fax" class="ui-textbox" type="text">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">传呼</label>
+										<div class="col-sm-3">
+											<input name="paging" class="ui-textbox" type="text">
+										</div>
+										<label class="col-sm-2 control-label">电子邮箱</label>
+										<div class="col-sm-3">
+											<input name="email" class="ui-textbox" type="text">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">网址</label>
+										<div class="col-sm-3">
+											<input name="url" class="ui-textbox" type="text" value="www.baidu.com">
+										</div>
+									</div>
+								</div>
+							</div>
+							<div id="tab-3" class="tab-pane">
+								<div class="panel-body">
+									<div class="form-group">
+										<label class="col-sm-2 control-label">开户行<span class="required-symbol">*</span></label>
+										<div class="col-sm-3">
+											<input name="accountBank" value="北京市海定区xx街建设银行" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:100}">
+										</div>
+										<label class="col-sm-2 control-label">账号<span class="required-symbol">*</span></label>
+										<div class="col-sm-3">
+											<input name="accountNnumber" value="6160654654564654" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:100}">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">税号<span class="required-symbol">*</span></label>
+										<div class="col-sm-3">
+											<input name="taxID" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:100}" value="256589746548949">
+										</div>
+										<label class="col-sm-2 control-label">法人<span class="required-symbol">*</span></label>
+										<div class="col-sm-3">
+											<input name="legalPerson" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:100}" value="李女士">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">会计科目</label>
+										<div class="col-sm-3">
+											<input name="accounting" class="ui-textbox" type="text">
+										</div>
+									</div>
+								</div>
+							</div>
+							<div id="tab-4" class="tab-pane">
+								<div class="panel-body">
+									<div class="row form-group">
+										<div class="col-sm-12">
+											<div id="brandToolbar" style="margin-top: 10px;">
+												<div class="btn-group">
+													<button type="button" class="btn btn-outline btn-default" onclick="addBrands('添加','brands_list_add.html');">
+						                                <i class="glyphicon glyphicon-plus" aria-hidden="true"></i> 添加
+						                            </button>
+													<button type="button" class="btn btn-outline btn-default" onclick="delBrands();">
+						                                <i class="glyphicon glyphicon-trash" aria-hidden="true"></i> 删除
+						                            </button>
+												</div>
+											</div>
+											<table id="brandsTable"></table>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div id="tab-5" class="tab-pane">
+								<div class="panel-body">
+									<div class="tabs-left">
+										<ul class="nav nav-tabs">
+											<li class="active">
+												<a data-toggle="tab" href="#product-tab"> 成品</a>
+											</li>
+											<li class="">
+												<a data-toggle="tab" href="#material-tab"> 物料</a>
+											</li>
+										</ul>
+										<div class="tab-content ">
+											<div id="product-tab" class="tab-pane active">
+												<div class="panel-body">
+													<div class="row form-group clear">
+														<div class="col-sm-12">
+															<div id="productToolbar" style="margin-top: 10px;">
+																<div class="btn-group">
+																	<button type="button" class="btn btn-outline btn-default" onclick="addProducts('添加','../../template/common/products_list_add.html');">
+										                                <i class="glyphicon glyphicon-plus" aria-hidden="true"></i> 添加
+										                            </button>
+																	<button type="button" class="btn btn-outline btn-default" onclick="delProducts();">
+										                                <i class="glyphicon glyphicon-trash" aria-hidden="true"></i> 删除
+										                            </button>
+																</div>
+															</div>
+															<table id="productInfoTable"></table>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div id="material-tab" class="tab-pane">
+												<div class="panel-body">
+													<div class="row form-group clear">
+														<div class="col-sm-12">
+															<div id="materialToolbar " style="float: left;margin-top: 10px;">
+																<div class="btn-group">
+																	<button type="button" class="btn btn-outline btn-default" onclick="addProducts('添加','../../template/common/materials_list_add.html');">
+										                                <i class="glyphicon glyphicon-plus" aria-hidden="true"></i> 添加
+										                            </button>
+																	<button type="button" class="btn btn-outline btn-default" onclick="delMaterials();">
+										                                <i class="glyphicon glyphicon-trash" aria-hidden="true"></i> 删除
+										                            </button>
+																</div>
+															</div>
+															<table id="materialsInfoTable"></table>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div id="tab-6" class="tab-pane">
+								<div class="panel-body">
+									<div class="form-group">
+										<label class="col-sm-2 control-label">保证金</label>
+										<div class="col-sm-3">
+											<input name="margin" class="ui-textbox" type="text" ltype="text">
+										</div>
+										<label class="col-sm-2 control-label">定金百分比</label>
+										<div class="col-sm-3">
+											<div class="input-group">
+												<input name="deposit_percentage" type="text" class="ui-textbox" validate="{digits:true}"><span class="input-group-addon">%</span>
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">折扣</label>
+										<div class="col-sm-3">
+											<input name="discount" class="ui-textbox" type="text">
+										</div>
+										<label class="col-sm-2 control-label">价格设定</label>
+										<div class="col-sm-3">
+											<select id="price_setting" class="form-control" ltype="select" ligeruiid="price_setting">
+												<option value="采购价">采购价</option>
+											</select>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">进货单价进位处理</label>
+										<div class="col-sm-3">
+											<input name="handel" class="ui-textbox" type="text">
+										</div>
+										<label class="col-sm-2 control-label">最近结账日</label>
+										<div class="col-sm-3">
+											<input name="recent_settlement_date" class="ui-textbox" type="text">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">结算币种</label>
+										<div class="col-sm-3">
+											<select id="billing_currency" class="js-example-basic-single form-control" ltype="select" ligeruiid="billing_currency">
+												<option value="">请选择</option>
+												<option value="美元">美元（USD）</option>
+												<option value="德国马克">德国马克（DEM）</option>
+												<option value="日元">日元（JPY）</option>
+												<option value="瑞士法郎">瑞士法郎（CHF）</option>
+												<option value="法国法郎">法国法郎（FRF）</option>
+												<option value="意大利里拉">意大利里拉（ITL）</option>
+												<option value="荷兰盾">荷兰盾（NLG）</option>
+												<option value="比利时法郎">比利时法郎（BEU）</option>
+												<option value="丹麦克朗">丹麦克朗（DKR）</option>
+												<option value="瑞典克朗">瑞典克朗（SKR）</option>
+												<option value="挪威克朗">挪威克朗（NKR）</option>
+												<option value="奥地利先令">奥地利先令（ATS）</option>
+												<option value="港币">港币（HKD）</option>
+												<option value="加拿大元">加拿大元（CAD）</option>
+												<option value="澳大利亚元">澳大利亚元（AUD）</option>
+												<option value="新西兰元">新西兰元（NZD）</option>
+												<option value="新加坡元">新加坡元（SGD）</option>
+												<option value="欧元">欧元（EUR）</option>
+												<option value="英镑">英镑（GBP）</option>
+											</select>
+										</div>
+										<label class="col-sm-2 control-label">发票类型</label>
+										<div class="col-sm-3">
+											<select id="invoice_type" class="form-control" ltype="select" ligeruiid="invoice_type">
+												<option value="001">电子发票</option>
+											</select>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">核算对象</label>
+										<div class="col-sm-3">
+											<select id="accounting_object" class="form-control" ltype="select" ligeruiid="accounting_object">
+												<option value="001">自定义</option>
+											</select>
+										</div>
+										<label class="col-sm-2 control-label">建档日期</label>
+										<div class="col-sm-3">
+											<input name="filing_date" class="ui-textbox disabled-text" readonly="readonly" type="text" value="2015-4-1">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label">最近修改日期</label>
+										<div class="col-sm-3">
+											<input name="recently_modifiedDate" class="ui-textbox disabled-text" readonly="readonly" type="text" value="2017-8-1">
+										</div>
+										<label class="col-sm-2 control-label">最近修改人</label>
+										<div class="col-sm-3">
+											<input name="modified_person" value="系统管理员" class="ui-textbox disabled-text" readonly="readonly" type="text" ltype="text">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-12 text-right" style="margin-top: 10px;">
+					<button class="btn btn-primary" type="submit" onclick="submitForm();">提交</button>
+					<button class="btn btn-primary" type="submit" onclick="cancelLayer();">取消</button>
+				</div>
+			</form>
+		</div>
+
+		<!--图片预览层-->
+		<div id="blueimp-gallery" class="blueimp-gallery">
+			<div class="slides"></div>
+			<h3 class="title"></h3>
+			<a class="close">×</a>
+		</div>
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/bootstrap.min.js"></script>
+		<script src="../../js/plugins/layer/layer.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-editable.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-table-editable.js"></script>
+		<script src="../../js/js.js"></script>
+		<script src="../../js/ligerui.all.js"></script>
+		<script src="../../js/plugins/iCheck/icheck.min.js"></script>
+		<script src="../../js/plugins/validate/jquery.validate.min.js"></script>
+		<script src="../../js/plugins/validate/messages_zh.min.js"></script>
+		<script src="../../js/plugins/validate/jquery.metadata.js"></script>
+		<!--省市县插件-->
+		<script src="../../js/distpicker/distpicker.data.js"></script>
+		<script src="../../js/distpicker/distpicker.js"></script>
+		<!--图片预览层-->
+		<script src="../../js/plugins/blueimp/jquery.blueimp-gallery.min.js"></script>
+		<!--select2-->
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-editable-select2.full.min.js" type="text/javascript" charset="utf-8"></script>
+
+		<script>
+			$(document).ready(function() {
+				new formValidate({
+					formEle: '#signupForm'
+				});
+
+				$(".i-checks").iCheck({
+					checkboxClass: "icheckbox_square-green",
+					radioClass: "iradio_square-green",
+				});
+
+				$('#product_type').select2({
+					multiple: true
+				}).on('select2:select', function(event) {});
+
+				//选择供应商change事件
+				$('#billing_currency').select2().on('select2:select', function(event) {});
+				if($.getUrlParam('id')) { //setData();
+					var product_type = $("#product_type").select2().val(["成品", "配件", "挂牌"]).trigger("change"); //获取selectid
+					product_type.change();
+				} else {
+					$(".ui-textbox").val("");
+				}
+				initTable();
+				$(".btn-default").addClass("btn-outline");
+
+				diabledInput(1);
+
+				$('#actionTab a').click(function(e) {
+					e.preventDefault(); //阻止a链接的跳转行为
+					var form = liger.get("signupForm");
+					if(!form.valid()) {
+						return false;
+					} else {
+						$("form .l-text,.l-textarea").ligerHideTip();
+						var href = $(this).attr("href");
+						var linkIndex = href.substring(5);
+						$("#actionTab").find("li").eq(linkIndex - 1).addClass("isValidate");
+						diabledInput(linkIndex);
+						$(this).tab('show');
+					}
+				})
+			});
+
+			function diabledInput(liIndex) {
+				if(liIndex == 1) {
+					$(".ui-textbox").attr("disabled", "disabled");
+					$("#tab-1 .ui-textbox").removeAttr("disabled");
+					$("#tab-1").addClass()
+				} else if(liIndex == 2) {
+					$(".ui-textbox").attr("disabled", "disabled");
+					$("#tab-2 .ui-textbox").removeAttr("disabled");
+				} else if(liIndex == 3) {
+					$(".ui-textbox").attr("disabled", "disabled");
+					$("#tab-3 .ui-textbox").removeAttr("disabled");
+				} else if(liIndex == 4) {
+					$(".ui-textbox").attr("disabled", "disabled");
+					$("#tab-4 .ui-textbox").removeAttr("disabled");
+				} else if(liIndex == 5) {
+					$(".ui-textbox").attr("disabled", "disabled");
+					$("#tab-5 .ui-textbox").removeAttr("disabled");
+				} else {
+					$(".ui-textbox").attr("disabled", "disabled");
+					$("#tab-6 .ui-textbox").removeAttr("disabled");
+				}
+			}
+
+			var table = $("#brandsTable");
+			var productInfoTable = $("#productInfoTable");
+			var materialsInfoTable = $("#materialsInfoTable");
+
+			function initTable() {
+				table.bootstrapTable({
+					// url: USER_INFO.SITE_URL+'/tp5/public/index.php/Admin/Admin/noteListDemo', //服务端需要返回rows与total字段					
+					// pagination: true,
+					// pageSize: 5, //每页多少条
+					// method:'post',
+					// sidePagination: "server", //服务端处理分页
+					search: true,
+					showRefresh: true,
+					showColumns: true,
+					icons: {
+						refresh: "glyphicon-repeat",
+						columns: "glyphicon-list"
+					},
+					toolbar: "#brandToolbar",
+					columns: [{
+						align: 'center',
+						checkbox: true
+					}, {
+						title: '品牌名称',
+						field: 'brand'
+					}, {
+						title: '默认品牌',
+						field: 'default_brand',
+						formatter: function(value) {
+							var checkboxHtml = '<input name="default_brand" type="checkbox" value="' + value + '">';
+							if(value) {
+								checkboxHtml = '<input name="default_brand" type="checkbox" value="' + value + '" checked>';
+							}
+							return checkboxHtml;
+						}
+					}],
+					data: [{
+						brand: 'ODMDJ线上赠品配件',
+						default_brand: true
+					}]
+				});
+
+				productInfoTable.bootstrapTable({
+					// url: USER_INFO.SITE_URL+'/tp5/public/index.php/Admin/Admin/noteListDemo', //服务端需要返回rows与total字段
+					// method:'post',
+					// sidePagination: "server", //服务端处理分页
+					search: true,
+					showRefresh: true,
+					showColumns: true,
+					icons: {
+						refresh: "glyphicon-repeat",
+						columns: "glyphicon-list"
+					},
+					toolbar: "#productToolbar",
+					columns: [{
+						align: 'center',
+						checkbox: true
+					}, {
+						field: 'id',
+						title: '编号',
+						visible: false
+					}, {
+						field: 'code',
+						title: '商品代码',
+					}, {
+						field: 'name',
+						title: '商品名称'
+					}, {
+						field: 'mnemonic',
+						title: '助记符',
+						formatter: function(value, row, index) {
+							if(value == undefined || value == "") {
+								value = "";
+							}
+							return value;
+						}
+					}, {
+						field: 'specification',
+						title: '规格'
+					}, {
+						field: 'unit',
+						title: '单位'
+					}, {
+						field: 'size',
+						title: '尺码'
+					}, {
+						field: 'color',
+						title: '颜色'
+					}, {
+						field: 'image',
+						title: '图片',
+						formatter: function(value, row, index) {
+							var str = '';
+							str += '<a href="../../img/' + value + '.jpg" title="ͼƬ" data-gallery="" class="gallery-img"><img src="../../img/' + value + '.jpg"></a>';
+							return str;
+						}
+					}, {
+						field: 'recent_transaction_price',
+						title: '最近交易价格'
+					}],
+					data: [{
+						id: 1,
+						code: '0 MTP1329D5A', //商品代码
+						name: 'CASIO MTP-1329D-5A', //商品名称
+						mnemonic: ' ', //助记符
+						specification: '',
+						unit: '只',
+						size: '通码',
+						color: '通色',
+						image: 'watch1',
+						recent_transaction_price: 6.5
+					}]
+				});
+
+				materialsInfoTable.bootstrapTable({
+					// url: USER_INFO.SITE_URL+'/tp5/public/index.php/Admin/Admin/noteListDemo', //服务端需要返回rows与total字段
+					// method:'post',
+					// sidePagination: "server", //服务端处理分页
+					search: true,
+					showRefresh: true,
+					showColumns: true,
+					icons: {
+						refresh: "glyphicon-repeat",
+						columns: "glyphicon-list"
+					},
+					toolbar: "#materialToolbar",
+					columns: [{
+						align: 'center',
+						checkbox: true
+					}, {
+						field: 'id',
+						title: '编号',
+						visible: false
+					}, {
+						field: 'material_number',
+						title: '物料编号',
+					}, {
+						field: 'material_name',
+						title: '物料名称'
+					}, {
+						field: 'specification',
+						title: '规格'
+					}, {
+						field: 'weight',
+						title: '重量（g）'
+					}, {
+						field: 'unit',
+						title: '单位'
+					}, {
+						field: 'size',
+						title: '尺码'
+					}, {
+						field: 'color',
+						title: '颜色'
+					}, {
+						field: 'image',
+						title: '图片',
+						formatter: function(value, row, index) {
+							var str = '';
+							str += '<a href="../../img/' + value + '.jpg" title="ͼƬ" data-gallery="" class="gallery-img"><img src="../../img/' + value + '.jpg"></a>';
+							return str;
+						}
+					}, {
+						field: 'recent_transaction_price',
+						title: '最近交易价格'
+					}],
+					data: [{
+						id: 1,
+						material_number: '160M60LYXCL',
+						material_name: '机芯',
+						specification: '',
+						weight: 20,
+						unit: '件',
+						size: '通码',
+						color: '通色',
+						image: 'watch1',
+						recent_transaction_price: 8,
+						remark: ''
+					}, {
+						id: 2,
+						material_number: '002B38068M QQF-01',
+						material_name: '表盒',
+						specification: '',
+						weight: 20,
+						unit: '件',
+						size: '通码',
+						color: '通色',
+						image: 'watch1',
+						recent_transaction_price: 4.5,
+						remark: ''
+					}]
+				});
+			}
+
+			function valid() {
+				var form = liger.get("signupForm");
+				alert(form.valid());
+			}
+
+			function getData() {
+				var form = liger.get("signupForm");
+				var data = form.getData();
+				alert(JSON.stringify(data));
+			}
+
+			function setData() {
+				$.ajax({
+					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/getUser',
+					data: {
+						id: $.getUrlParam('id')
+					},
+					success: function(res) {
+						res = $.parseJSON(res);
+						var form = new liger.get("signupForm");
+						form.setData(res);
+					}
+				})
+			}
+
+			function submitForm() {
+				var form = liger.get("signupForm");
+				if(!form.valid()) {
+					return false;
+				} else {
+					//如果当前tab验证通过则在li添加isValidate class,isValidate用于判断是否同
+					var href = $("#actionTab").find("li.active").find("a").attr("href");
+					var liIndex = href.substring(5);
+					$("#actionTab").find("li").eq(liIndex - 1).addClass("isValidate");
+				}
+				var tip = "";
+				$("#actionTab li").each(function() {
+					if(!$(this).hasClass("isValidate")) {
+						tip += $(this).find("a").text() + "、";
+					}
+				});
+				if(tip != "") {
+					var msg = tip.substring(0, tip.lastIndexOf('、'));
+					alert(msg + "信息未填写完整！");
+					return false;
+				}
+				var data = {};
+				$("input,select,textarea").each(function() {
+					var name = $(this).attr("name");
+					if(name && name.indexOf('ligerui') == -1) {
+						data[name] = this.value;
+					}
+				});
+
+				//				$.ajax({
+				//					type: 'post',
+				//					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/setUser',
+				//					data: data,
+				//					success: function(res) {
+				//						if(Number(res)) {
+				//							parent.table.bootstrapTable('refresh');
+				//							var index = parent.layer.getFrameIndex(window.name);
+				//							parent.layer.close(index);
+				//						}
+				//					}
+				//				})
+			}
+
+			//添加品牌
+			function addBrands(title, url, id, w, h) {
+				layer.open({
+					type: 2,
+					maxmin: true,
+					close: true,
+					title: title,
+					area: ['80%', '80%'],
+					maxmin: true,
+					content: url
+				});
+			}
+
+			//删除品牌
+			function delBrands() {
+				var selects = $('#brandsTable').bootstrapTable('getSelections');
+				if(selects.length >= 1) {
+					parent.layer.confirm('确定要删除该数据吗？', {
+						btn: ['确定', '取消'],
+						yes: function(index) {
+							brand = $.map(selects, function(row) {
+								return row.brand;
+							});
+							$("#brandsTable").bootstrapTable('remove', {
+								field: 'brand',
+								values: brand
+							});
+							parent.layer.close(index);
+						}
+					});
+				} else {
+					parent.layer.alert('请选择要删除的行！');
+				}
+			}
+
+			//添加商品
+			function addProducts(title, url, id, w, h) {
+				layer.open({
+					type: 2,
+					maxmin: true,
+					close: true,
+					title: title,
+					area: ['90%', '90%'],
+					maxmin: true,
+					content: url
+				});
+			}
+
+			//删除商品
+			function delProducts() {
+				var selects = productInfoTable.bootstrapTable('getSelections');
+				if(selects.length >= 1) {
+					parent.layer.confirm('确定要删除该数据吗？', {
+						btn: ['确定', '取消'],
+						yes: function(index) {
+							id = $.map(selects, function(row) {
+								return row.id;
+							});
+							productInfoTable.bootstrapTable('remove', {
+								field: 'id',
+								values: id
+							});
+							parent.layer.close(index);
+						}
+					});
+				} else {
+					parent.layer.alert('请选择要删除的行！');
+				}
+			}
+
+			//添加物料
+			function addMaterials(title, url, id, w, h) {
+				layer.open({
+					type: 2,
+					maxmin: true,
+					close: true,
+					title: title,
+					area: ['80%', '80%'],
+					maxmin: true,
+					content: url
+				});
+			}
+
+			//删除物料
+			function delMaterials() {
+				var selects = materialsInfoTable.bootstrapTable('getSelections');
+				if(selects.length >= 1) {
+					parent.layer.confirm('确定要删除该数据吗？', {
+						btn: ['确定', '取消'],
+						yes: function(index) {
+							id = $.map(selects, function(row) {
+								return row.id;
+							});
+							materialsInfoTable.bootstrapTable('remove', {
+								field: 'id',
+								values: id
+							});
+							parent.layer.close(index);
+						}
+					});
+				} else {
+					parent.layer.alert('请选择要删除的行！');
+				}
+			}
+		</script>
+	</body>
+
+</html>

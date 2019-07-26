@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>品牌信息</title>
+		<meta name="keywords" content="品牌信息">
+		<meta name="description" content="品牌信息">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+
+	</head>
+
+	<body class="pd15">
+		<div class="row">
+			<div class="col-sm-12 form-group">
+				<table id="brandsList" style="border-left: 1px solid #e7eaec;"></table>
+			</div>
+			<div class="col-sm-12 text-right">
+				<button class="btn btn-primary" type="button" onclick="add();">添加品牌</button>
+				<button class="btn btn-primary" type="button" onclick="cancelLayer();">取消</button>
+			</div>
+		</div>
+
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/bootstrap.min.js"></script>
+		<script src="../../js/content.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+		<script src="../../js/js.js"></script>
+
+		<script>
+			var table = $("#brandsList");
+			$(document).ready(function() {
+				var pageSize; //总页数
+				var pageIndex; //当前第几页
+				table.bootstrapTable({
+					// url: USER_INFO.SITE_URL+'/tp5/public/index.php/Admin/Admin/noteListDemo', //服务端需要返回rows与total字段
+					// pagination: true,
+					// pageSize: 5, //每页多少条
+					// method:'post',
+					// sidePagination: "server", //服务端处理分页
+					search: true,
+					showRefresh: true,
+					showColumns: true,
+					icons: {
+						refresh: "glyphicon-repeat",
+						columns: "glyphicon-list"
+					},
+					columns: [{
+							align: 'center',
+							checkbox: true
+						},
+						{
+							title: '品牌名称',
+							field: 'brand'
+						},
+						{
+							title: '默认品牌',
+							field: 'default_brand',
+							formatter: function(value) {
+								var checkboxHtml = '<input name="default_brand" type="checkbox" value="' + value + '">';
+								if(value) {
+									checkboxHtml = '<input name="default_brand" type="checkbox" value="' + value + '" checked>';
+								}
+								return checkboxHtml;
+							}
+						}
+					],
+					data: [{
+							brand: 'ODMDJ配件',
+							default_brand: false
+						},
+						{
+							brand: 'ODMDJ线下赠品配件',
+							default_brand: false
+						},
+						{
+							brand: 'DJ赠品配件',
+							default_brand: false
+						}
+					]
+					/*,
+					            queryParams: function(params) {
+					                var form = liger.get("form");
+					                var data = form.getData();
+					                var temp = {
+					                    pageSize: params.limit,                         //页面大小
+					                    pageIndex: (params.offset / params.limit) + 1,   //页码
+					                    sort: params.sort,      //排序列名
+					                    sortOrder: params.order //排位命令（desc，asc）
+					                };
+					                mergeObj(temp,data); //合并对象
+					                pageSize = temp.pageSize;
+					                pageIndex = temp.pageIndex;
+					                return temp;
+					            }*/
+				});
+				$(".btn-default").addClass("btn-outline");
+			})
+
+			function add() {
+				var getSelectRows = table.bootstrapTable('getSelections');
+				if(getSelectRows.length >= 1) {
+					parent.$("#brandsTable").bootstrapTable('append', getSelectRows);
+
+					var index = parent.layer.getFrameIndex(window.name);
+					parent.layer.close(index); //再执行关闭   
+				} else {
+					parent.layer.alert('请选择物料信息！');
+				}
+			}
+		</script>
+
+	</body>
+
+</html>

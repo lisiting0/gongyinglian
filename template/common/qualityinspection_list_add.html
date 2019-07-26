@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>质检信息</title>
+		<meta name="keywords" content="质检信息">
+		<meta name="description" content="质检信息">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+		<link href="../../css/plugins/blueimp/css/blueimp-gallery.min.css" rel="stylesheet">
+
+	</head>
+
+	<body class="pd15">
+		<div class="row">
+			<div class="col-sm-12 form-group">
+				<table id="ordersTable" style="border-left: 1px solid #e7eaec;"></table>
+			</div>
+			<div class="col-sm-12 text-right">
+				<button class="btn btn-primary" type="button" onclick="add();">添加商品/物料</button>
+				<button class="btn btn-primary" type="button" onclick="cancelLayer();">取消</button>
+			</div>
+		</div>
+
+		<!--显示图片层-->
+		<div id="blueimp-gallery" class="blueimp-gallery">
+			<div class="slides"></div>
+			<h3 class="title"></h3>
+			<a class="close">×</a>
+		</div>
+
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/bootstrap.min.js"></script>
+		<script src="../../js/content.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+		<script src="../../js/js.js"></script>
+		<script src="../../js/plugins/blueimp/jquery.blueimp-gallery.min.js"></script>
+
+		<script>
+			var table = $("#ordersTable");
+			var pageSize; //总页数
+			var pageIndex; //当前第几页
+			var loadData = [{
+				id: 0015,
+				order_number: 'J2018A5001728',
+				deposit_yon: '是',
+				code: '0 160M60LYXCL',
+				name: '表针',
+				purchase_type: '鼎骏自购',
+				specification: '',
+				weight: 20,
+				unit: '件',
+				size: '通码',
+				color: '通色',
+				image: 'watch1',
+				total_quality_inspection: 500,
+				AAmount: 495,
+				CAmount: 5,
+				purchase_price: 4,
+				bad_goods_warehouse: '顺德总仓',
+				bad_goods_location: '收货QC不良品中转仓'
+			}, {
+				id: 0016,
+				order_number: 'J2018A5001728',
+				deposit_yon: '是',
+				code: '1 02B38068M QQF-01',
+				name: '表盘',
+				purchase_type: '工厂外购',
+				specification: 'HZTZ-DICKIES',
+				weight: 20,
+				unit: '件',
+				size: '通码',
+				color: '通色',
+				image: 'watch1',
+				total_quality_inspection: 600,
+				AAmount: 598,
+				CAmount: 2,
+				purchase_price: 6,
+				bad_goods_warehouse: '顺德总仓',
+				bad_goods_location: '收货QC不良品中转仓'
+			}, {
+				id: 0017,
+				order_number: 'J2018A5001728',
+				deposit_yon: '是',
+				code: '2 02B38068M QQF-01',
+				name: '表带',
+				purchase_type: '鼎骏自购',
+				specification: '',
+				weight: 20,
+				unit: '件',
+				size: '通码',
+				color: '通色',
+				image: 'watch1',
+				total_quality_inspection: 100,
+				AAmount: 99,
+				CAmount: 1,
+				purchase_price: 10.5,
+				bad_goods_warehouse: '顺德总仓',
+				bad_goods_location: '收货QC不良品中转仓'
+			}, {
+				id: 0018,
+				order_number: 'J2018A5001728',
+				deposit_yon: '是',
+				code: '3 02B38068M QQF-01',
+				name: '表壳',
+				purchase_type: '工厂外购',
+				specification: '',
+				weight: 20,
+				unit: '件',
+				size: '通码',
+				color: '通色',
+				image: 'watch1',
+				total_quality_inspection: 200,
+				AAmount: 190,
+				CAmount: 10,
+				purchase_price: 7,
+				bad_goods_warehouse: '世港总仓',
+				bad_goods_location: '收货QC不良品中转仓'
+			}, {
+				id: 0019,
+				order_number: 'J2018A5001722',
+				deposit_yon: '否',
+				code: '0 MTP1329D5A',
+				name: 'CASIO MTP-1329D-5A',
+				purchase_type: '鼎骏自购',
+				specification: '',
+				weight: 20,
+				unit: '件',
+				size: '通码',
+				color: '通色',
+				image: 'watch1',
+				total_quality_inspection: 350,
+				AAmount: 346,
+				CAmount: 4,
+				purchase_price: 9,
+				bad_goods_warehouse: '顺德总仓',
+				bad_goods_location: '收货QC不良品中转仓'
+			}, {
+				id: 0020,
+				order_number: 'J2018A5001725',
+				deposit_yon: '否',
+				code: '1 MTP1329D5A',
+				name: 'CASIO 石英表',
+				purchase_type: '鼎骏自购',
+				specification: '',
+				weight: 20,
+				unit: '件',
+				size: '通码',
+				color: '通色',
+				image: 'watch1',
+				total_quality_inspection: 500,
+				AAmount: 495,
+				CAmount: 5,
+				purchase_price: 1338,
+				bad_goods_warehouse: '世港总仓',
+				bad_goods_location: '收货QC不良品中转仓'
+			}];
+
+			$(document).ready(function() {
+				initTable();
+				$(".btn-default").addClass("btn-outline");
+				table.bootstrapTable('append', loadData);
+				//合并单元格
+				mergeCells(loadData, "order_number", null, "#ordersTable");
+			})
+
+			function initTable() {
+				table.bootstrapTable({
+					// url: USER_INFO.SITE_URL+'/tp5/public/index.php/Admin/Admin/noteListDemo', //服务端需要返回rows与total字段
+					// pagination: true,
+					// pageSize: 5, //每页多少条
+					// method:'post',
+					// sidePagination: "server", //服务端处理分页
+					search: true,
+					showRefresh: true,
+					showColumns: true,
+					icons: {
+						refresh: "glyphicon-repeat",
+						columns: "glyphicon-list"
+					},
+					columns: [{
+						align: 'center',
+						checkbox: true
+					}, {
+						field: "id",
+						title: "唯一编号",
+						visible: false
+					}, {
+						field: "order_number",
+						title: "订单编号"
+					}, {
+						field: "code",
+						title: "商品代码/物料型号"
+					}, {
+						field: "name",
+						title: "商品名称/物料名称"
+					}, {
+						field: "purchase_type",
+						title: "采购类型"
+					}, {
+						field: 'specification',
+						title: '规格',
+						visible: false
+					}, {
+						field: 'weight',
+						title: '重量（g）',
+						visible: false
+					}, {
+						field: 'unit',
+						title: '单位'
+					}, {
+						field: 'color',
+						title: '颜色'
+					}, {
+						field: 'size',
+						title: '尺码'
+					}, {
+						field: 'image',
+						title: '图片',
+						formatter: function(value, row, index) {
+							var str = '';
+							str += '<a href="../../img/' + value + '.jpg" title="ͼƬ" data-gallery="" class="gallery-img"><img src="../../img/' + value + '.jpg"></a>';
+							return str;
+						}
+					}, {
+						field: 'purchase_price',
+						title: '单价'
+					}, {
+						field: 'total_quality_inspection',
+						title: '质检总数量'
+					}, {
+						field: 'AAmount',
+						title: '良品数量'
+					}, {
+						field: 'CAmount',
+						title: '不良品数量'
+					}, {
+						field: 'bad_goods_warehouse',
+						title: '仓库'
+					}, {
+						field: 'bad_goods_location',
+						title: '库位'
+					}],
+
+					/*,
+					            queryParams: function(params) {
+					                var form = liger.get("form");
+					                var data = form.getData();
+					                var temp = {
+					                    pageSize: params.limit,                         //页面大小
+					                    pageIndex: (params.offset / params.limit) + 1,   //页码
+					                    sort: params.sort,      //排序列名
+					                    sortOrder: params.order //排位命令（desc，asc）
+					                };
+					                mergeObj(temp,data); //合并对象
+					                pageSize = temp.pageSize;
+					                pageIndex = temp.pageIndex;
+					                return temp;
+					            }*/
+				});
+			}
+
+			function add() {
+				var arr = [];
+				var bad_goods_warehouse = $.getUrlParam('warehouse');
+				var getSelectRows = table.bootstrapTable('getSelections');
+				if(getSelectRows.length >= 1) {
+					for(var i = 0; i < getSelectRows.length; i++) {
+						if(getSelectRows[i].bad_goods_warehouse == bad_goods_warehouse) {
+							arr.push(getSelectRows[i].bad_goods_warehouse);
+						}
+					}
+					if(arr.length == getSelectRows.length) {
+						parent.$("#receiptListTable").bootstrapTable('append', getSelectRows);
+						var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+						parent.layer.close(index); //再执行关闭   
+					} else {
+						parent.layer.alert('请选择仓库为' + bad_goods_warehouse + '的商品信息！');
+					}
+
+				} else {
+					parent.layer.alert('请选择至少一条数据！');
+				}
+			}
+		</script>
+
+	</body>
+
+</html>

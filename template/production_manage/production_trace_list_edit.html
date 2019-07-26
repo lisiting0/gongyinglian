@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生产情况跟踪</title>
+    <meta name="keywords" content="生产情况跟踪">
+    <meta name="description" content="生产情况跟踪">
+
+    <link rel="shortcut icon" href="favicon.ico"> <link href="../../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../../css/animate.min.css" rel="stylesheet">
+    <link href="../../css/style.min.css" rel="stylesheet">
+
+</head>
+
+<body class="pd15">
+
+    <form class="form-horizontal m-t" id="signupForm">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">名称</label>
+            <div class="col-sm-3">
+                <input id="textbox1" name="p_name" value="计划11" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}">
+            </div>
+            <label class="col-sm-2 control-label">开始时间</label>
+            <div class="col-sm-3">
+                <input id="textbox1" name="p_type" value="2018/3/5" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">结束时间</label>
+            <div class="col-sm-3">
+                <input id="textbox1" name="p_country" value="2018/4/0" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}">
+            </div>
+            <label class="col-sm-2 control-label">进度（百分比）</label>
+            <div class="col-sm-3">
+                <input id="textbox1" name="p_country" value="99%" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">进度备注</label>
+            <div class="col-sm-10" style="padding: 1px 15px;">
+            	<textarea name="desc" placeholder="请输入内容" class="layui-textarea" style="min-width:79.5%;min-height: 100px;height: auto;line-height: 20px;padding: 6px 10px;resize: vertical;border: 1px solid #e5e6e7;">进度还可以</textarea>
+            </div>
+        </div>
+	
+
+
+        <div class="form-group">
+            <div class="col-sm-8 col-sm-offset-2">
+                <button class="btn btn-primary" type="submit" onclick="submitForm();">提交</button>
+            </div>
+        </div>
+    </form>
+    <script src="../../js/jquery.min.js"></script>
+    <script src="../../js/bootstrap.min.js"></script>
+    <script src="../../js/js.js"></script>
+    <!-- <script src="../../js/content.min.js"></script> -->
+    <script src="../../js/ligerui.all.js"></script>
+    <script src="../../js/plugins/validate/jquery.validate.min.js"></script>
+    <script src="../../js/plugins/validate/messages_zh.min.js"></script>
+    <script src="../../js/plugins/validate/jquery.metadata.js"></script>
+    <!-- <script src="../../js/demo/form-validate-demo.min.js"></script> -->
+    <script>
+
+        $(function(){
+            if($.getUrlParam('id')){
+                //setData();
+            }else{
+
+            }
+            initSelect();
+
+           new formValidate({formEle:'#signupForm'});
+
+        });
+
+
+
+        function initSelect(){
+            $('input[name="country3"]').ligerComboBox({
+                url: '../../data/city.txt',
+                valueField : 'value',
+                textField: 'text'
+            });
+            $('input[name="country4"]').ligerComboBox({
+                url: '../../data/city.txt',
+                valueField : 'value',
+                textField: 'text',
+   　　isMultiSelect: true　　//是否支持多选
+            });
+
+            $('input[name="country2"]').ligerRadioList({
+                url: '../../data/city.txt',
+                valueField : 'value',
+                textField: 'text'
+            });
+            $('input[name="country"]').ligerCheckBoxList({
+                url: '../../data/city.txt',
+                valueField : 'value',
+                textField: 'text'
+            });
+        }
+
+
+
+        function valid()
+        {
+            var form = liger.get("signupForm");
+            alert(form.valid());
+        }
+        function getData()
+        {
+            var form = liger.get("signupForm");
+            var data = form.getData();
+            alert(JSON.stringify(data));
+        }
+        function setData()
+        {
+            $.ajax({
+                url:  USER_INFO.SITE_URL+'/tp5/public/index.php/Admin/Admin/getUser',
+                data: {id:$.getUrlParam('id')},
+                success: function (res) {
+                    res = $.parseJSON(res);
+                    var form = new liger.get("signupForm");
+                    form.setData(res);
+                }
+            })
+        }
+
+
+        function submitForm()
+        {
+
+            var form = liger.get("signupForm");
+            if(!form.valid()){
+                return;
+            }
+            var data = {};
+            $("input,select,textarea").each(function (){
+                var name = $(this).attr("name");
+                if (name && name.indexOf('ligerui') == -1){
+                    data[name] = this.value;
+                }
+            });
+            data.id = $.getUrlParam('id');
+
+            $.ajax({
+                type:'post',
+                url:  USER_INFO.SITE_URL+'/tp5/public/index.php/Admin/Admin/setUser',
+                data: data,
+                success: function (res) {
+                    if(Number(res)){
+                        parent.table.bootstrapTable('refresh');
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
+                    }
+                }
+            })
+/*
+            parent.table.bootstrapTable('refresh');
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);*/
+        }
+
+    </script>
+</body>
+
+</html>

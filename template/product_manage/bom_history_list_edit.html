@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta material_name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>历史记录</title>
+		<meta material_name="keywords" content="历史记录">
+		<meta material_name="description" content="历史记录">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-editable/bootstrap-editable.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="../../css/plugins/select2/select2.min.css" />
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+		<link href="../../css/plugins/blueimp/css/blueimp-gallery.min.css" rel="stylesheet">
+	</head>
+
+	<body class="pd15">
+
+		<form class="form-horizontal m-t" id="signupForm">
+			<div class="form-group">
+				<label class="col-sm-2 control-label">产品名称</label>
+				<div class="col-sm-3">
+					<select id="product_name_select" class="js-example-basic-single form-control" ltype="select" ligeruiid="product_name_select">
+						<option value="">请选择</option>
+						<option value="0 MTP1329D5A">CASIO MTP-1329D-5A</option>
+						<option value="1 MTP1329D5A">CASIO MTP-1889D-5B</option>
+						<option value="2 MTP1329D5A">CASIO MTP-1329D-5C</option>
+						<option value="3 MTP1329D5A">CASIO MTP-1889D-5D</option>
+						<option value="4 MTP1329D5A">CASIO MTP-1329D-5E</option>
+						<option value="5 MTP1329D5A">CASIO MTP-1889D-5F</option>
+					</select>
+				</div>
+				<label class="col-sm-2 control-label">供应商</label>
+				<div class="col-sm-3">
+					<select id="supplierSelect" class="js-example-basic-single form-control" ltype="select" ligeruiid="supplier">
+						<option value="">请选择</option>
+						<option value="HN-GZJT-001">广州集团</option>
+						<option value="HN-GZBJ-0011">广州宝玑集团</option>
+						<option value="HB-BJZH-003">北京钟华集团</option>
+						<option value="HB-BJZH-004">北京摇摇乐集团</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">历史版本物料清单</label>
+				<div class="col-sm-8">
+					<table id="historyInfoTable"></table>
+				</div>
+			</div>
+			<div class="form-group text-right">
+				<div class="col-sm-10">
+					<button class="btn btn-primary" type="button" onclick="submitForm();">保存</button>
+					<button class="btn btn-primary" type="button" onclick="cancelLayer();">取消</button>
+				</div>
+			</div>
+		</form>
+
+		<!--显示图片层-->
+		<div id="blueimp-gallery" class="blueimp-gallery">
+			<div class="slides"></div>
+			<h3 class="title"></h3>
+			<a class="close">×</a>
+		</div>
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/bootstrap.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-editable.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-table-editable.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-editable-select2.full.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/js.js"></script>
+		<script src="../../js/ligerui.all.js"></script>
+		<script src="../../js/plugins/layer/layer.min.js"></script>
+		<script src="../../js/plugins/validate/jquery.validate.min.js"></script>
+		<script src="../../js/plugins/validate/messages_zh.min.js"></script>
+		<script src="../../js/plugins/validate/jquery.metadata.js"></script>
+		<script src="../../js/plugins/blueimp/jquery.blueimp-gallery.min.js"></script>
+		<script src="../../js/plugins/tablesMergeCell/tablesMergeCell.js" type="text/javascript" charset="utf-8"></script>
+
+		<script>
+			var table = $("#historyInfoTable");
+			$(function() {
+				new formValidate({
+					formEle: '#signupForm'
+				});
+
+				initTable();
+				$(".btn-default").addClass("btn-outline");
+
+				//选择供应商change事件
+				$('#supplierSelect').select2().on('select2:select', function(event) {});
+
+				//选择商品名称change事件
+				$('#product_name_select').select2().on('select2:select', function(event) {});
+
+				//setData();
+				//编辑状态显示添加按钮，默认选择了供应商
+				$('.addBomBtn').removeClass('display-none');
+				var supplier_trigger = $("#supplierSelect").select2().val("HN-GZJT-001").trigger("change"); //获取selectid
+				supplier_trigger.change();
+				$("#supplierSelect").prop("disabled", true); //设置下拉框不可用
+
+				var product_trigger = $("#product_name_select").select2().val("0 MTP1329D5A").trigger("change"); //获取selectid
+				product_trigger.change();
+				$("#product_name_select").prop("disabled", true); //设置下拉框不可用
+
+				//合并单元格
+				table.tablesMergeCell({
+					cols: [0]
+				});
+				sum();
+			});
+
+			function valid() {
+				var form = liger.get("signupForm");
+				alert(form.valid());
+			}
+
+			function getData() {
+				var form = liger.get("signupForm");
+				var data = form.getData();
+				alert(JSON.stringify(data));
+			}
+
+			function setData() {
+				$.ajax({
+					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/getUser',
+					data: {
+						id: $.getUrlParam('id')
+					},
+					success: function(res) {
+						res = $.parseJSON(res);
+						var form = new liger.get("signupForm");
+						form.setData(res);
+					}
+				})
+			}
+
+			//最新版本
+			function initTable() {
+				table.bootstrapTable({
+					search: true,
+					showRefresh: true,
+					showColumns: true,
+					icons: {
+						refresh: "glyphicon-repeat",
+						columns: "glyphicon-list"
+					},
+					columns: [{
+							field: "version",
+							title: "版本号",
+						},
+						{
+							field: "material_number",
+							title: "物料型号"
+						},
+						{
+							field: "material_name",
+							title: "物料名称"
+						},
+						{
+							field: "purchase_type",
+							title: "采购类型"
+						},
+						{
+							field: 'specification',
+							title: '规格',
+							visible: false
+						},
+						{
+							field: 'unit',
+							title: '单位',
+							visible: false
+						},
+						{
+							field: 'weight',
+							title: '重量（g）',
+							visible: false
+						},
+						{
+							title: '尺码',
+							field: 'size',
+							visible: false
+						},
+						{
+							title: '颜色',
+							field: 'color',
+							visible: false
+						},
+						{
+							title: '图片',
+							field: 'image',
+							formatter: function(v) {
+								return '<a href="../../img/' + v + '.jpg" title="图片" data-gallery="" class="gallery-img"><img src="../../img/' + v + '.jpg"></a>';
+							}
+						},
+						{
+							title: '最近交易价格',
+							field: 'recent_transaction_price'
+						},
+						{
+							title: '采购价格',
+							field: 'purchase_price',
+							formatter: function(value, row, index) {
+								if(row.purchase_type == '工厂外购') {
+									return 0;
+								} else {
+									if(value == undefined) {
+										value = '';
+									}
+									return value;
+								}
+
+							}
+						},
+						{
+							title: '数量',
+							field: 'quantity',
+							class: 'quantity',
+							formatter: function(value, row, index) {
+								if(row.purchase_type == '工厂外购') {
+									return 0;
+								} else {
+									if(value == undefined) {
+										value = '';
+									}
+									return value;
+								}
+							}
+						},
+						{
+							title: '金额',
+							field: 'amount',
+							class: 'amount',
+							formatter: function(value, row, index) {
+								if(row.purchase_type == '工厂外购' || row.purchase_price == undefined || row.quantity == undefined) {
+									value = 0;
+								} else {
+									value = row.purchase_price * row.quantity;
+								}
+								return value;
+							}
+						},
+
+						{
+							field: 'operator',
+							title: '操作员',
+							visible: false
+						},
+						{
+							field: 'reviewer',
+							title: '审核人',
+							visible: false,
+							formatter: function(value, row, index) {
+								if(!value) {
+									value = "————";
+								} else {
+									value = value;
+								}
+								return value;
+							}
+						}, {
+							field: 'reviewer_date',
+							title: '审核时间',
+							visible: false,
+							formatter: function(value, row, index) {
+								if(!value) {
+									value = "————";
+								} else {
+									value = value;
+								}
+								return value;
+							}
+						},
+						{
+							field: 'state',
+							title: '状态'
+						},
+						{
+							title: '备注',
+							field: 'remark',
+							formatter: function(value, row, index) {
+								if(value == undefined) {
+									value = '';
+								}
+								return value;
+							}
+						}
+					],
+					data: [{
+						version: 1,
+						material_number: 'BIAOXIN-GC-001',
+						material_name: '表芯',
+						purchase_type: '鼎骏自购',
+						specification: '',
+						unit: '件',
+						weight: '',
+						size: '通码',
+						color: '通色',
+						image: 'watch1',
+						recent_transaction_price: 7,
+						purchase_price: 8,
+						quantity: 50,
+						amount: 400,
+						operator: '季童薇',
+						reviewer: '谭吉吉',
+						reviewer_date: '2018-01-02',
+						state: '已使用',
+						remark: ''
+					}, {
+						version: 1,
+						material_number: 'BIAODAI-GC-002',
+						material_name: '表带',
+						purchase_type: '鼎骏自购',
+						specification: '',
+						unit: '件',
+						weight: '',
+						size: '通码',
+						color: '通色',
+						image: 'watch1',
+						recent_transaction_price: 7,
+						purchase_price: 8,
+						quantity: 50,
+						amount: 400,
+						operator: '季童薇',
+						reviewer: '谭吉吉',
+						reviewer_date: '2018-01-02',
+						state: '已使用',
+						remark: ''
+					}, {
+						version: 2,
+						material_number: 'BIAOKE-DJ-003',
+						material_name: '表芯',
+						purchase_type: '鼎骏自购',
+						specification: '',
+						unit: '件',
+						weight: '',
+						size: '通码',
+						color: '通色',
+						image: 'watch1',
+						recent_transaction_price: 7,
+						purchase_price: 8,
+						quantity: 50,
+						amount: 400,
+						operator: '季童薇',
+						reviewer: '',
+						reviewer_date: '',
+						state: '待审核',
+						remark: ''
+					}, {
+						version: 2,
+						material_number: 'BIAOHE-WG-004',
+						material_name: '表带',
+						purchase_type: '鼎骏自购',
+						specification: '',
+						unit: '件',
+						weight: '',
+						size: '通码',
+						color: '通色',
+						image: 'watch1',
+						recent_transaction_price: 7,
+						purchase_price: 8,
+						quantity: 50,
+						amount: 400,
+						operator: '季童薇',
+						reviewer: '',
+						reviewer_date: '',
+						state: '待审核',
+						remark: ''
+					}],
+					onSearch: function() {
+						sum();
+					},
+					onColumnSwitch: function(field, checked) {
+						sum();
+					},
+					//得到查询的参数
+					queryParams: function(params) {
+						//						//这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+						//						var temp = {
+						//							rows: params.limit, //页面大小
+						//							page: (params.offset / params.limit) + 1, //页码
+						//							sort: params.sort, //排序列名  
+						//							sortOrder: params.order //排位命令（desc，asc） 
+						//						};
+						//						return temp;
+					},
+				});
+			}
+
+			function setValue(obj) {
+				//获得焦点时，如果值为默认值，则设置为空				
+				$(obj).attr("value", $(obj).val());
+			}
+
+			function sum() {
+				var sumQuantity = 0;
+				var sumAmount = 0;
+				
+				$("#historyInfoTable td[class='quantity']").each(function() {
+					sumQuantity += +$(this).text();
+				});
+				$("#historyInfoTable td[class='amount']").each(function() {
+					sumAmount += +$(this).text();
+				});
+				//先删除最后一行
+				if($("#historyInfoTable tr").hasClass('footer')) {
+					$("#historyInfoTable tr:last").remove();
+				}
+				var columns = $('#historyInfoTable thead tr').find('th').size();
+				var nextColumns = $('#historyInfoTable thead tr').find('th.amount').nextAll().size();
+				var colspan = parseInt(columns - nextColumns - 2);
+				var tr = '<tr class="footer"><td class="text-right" colspan="' + colspan + '">合计</td><td class="total_count">' + sumQuantity + '</td><td class="total_price" colspan="' + (nextColumns + 1) + '">' + sumAmount + '元</td></tr>';
+				$('#historyInfoTable').append(tr);
+			}
+
+			function submitForm() {
+				var form = liger.get("signupForm");
+				if(!form.valid()) {
+					return;
+				}
+				var data = {};
+				$("input,select,textarea").each(function() {
+					var name = $(this).attr("name");
+					if(name && name.indexOf('ligerui') == -1) {
+						data[name] = this.value;
+					}
+				});
+				data.id = $.getUrlParam('id');
+
+				$.ajax({
+					type: 'post',
+					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/setUser',
+					data: data,
+					success: function(res) {
+						if(Number(res)) {
+							parent.table.bootstrapTable('refresh');
+							var index = parent.layer.getFrameIndex(window.name);
+							parent.layer.close(index);
+						}
+					}
+				})
+				/*
+				            parent.table.bootstrapTable('refresh');
+				            var index = parent.layer.getFrameIndex(window.name);
+				            parent.layer.close(index);*/
+			}
+		</script>
+	</body>
+
+</html>

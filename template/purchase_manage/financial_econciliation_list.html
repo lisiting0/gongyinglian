@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>财务对账</title>
+		<meta name="keywords" content="财务对账">
+		<meta name="description" content="财务对账">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+
+	</head>
+
+	<body class="gray-bg pd15">
+		<div class="panel panel-default ibox float-e-margins border-bottom margin-bottom">
+			<div class="panel-heading">
+				<div class="row">
+					<div class="col-sm-4 mgt2">查询条件</div>
+					<div class="col-sm-8 text-right">
+						<a class="collapse-link">
+							<i class="fa fa-chevron-down"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+			<div class="panel-body d-serach ibox-content">
+				<form id="form" method="get" class="form-horizontal">
+					<div class="form-group">
+						<label class="col-sm control-label">通知单号</label>
+						<div class="col-sm-2">
+							<input type="text" class="ui-textbox" name="noticeNumber" />
+						</div>
+						<label class="col-sm control-label">单据编号</label>
+						<div class="col-sm-2">
+							<input type="text" class="ui-textbox" name="username" />
+						</div>
+						<label class="col-sm control-label">供应商</label>
+						<div class="col-sm-2">
+							<input type="text" class="ui-textbox" name="supplier" />
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm control-label">仓库名称</label>
+						<div class="col-sm-2">
+							<input type="text" class="ui-textbox" name="warehouseName" />
+						</div>
+						<label class="col-sm control-label">商品名称</label>
+						<div class="col-sm-2">
+							<input type="text" class="ui-textbox" name="productName" />
+						</div>
+						<label class="col-sm control-label">品牌名称</label>
+						<div class="col-sm-2">
+							<input type="text" class="ui-textbox" name="brandName" />
+						</div>
+					</div>
+					<div class="row">
+						<label class="col-sm control-label">验收日期</label>
+						<div class="col-sm-2">
+							<input name="acceptanceDate" id="acceptanceDate" class="laydate-icon form-control layer-date" type="text" autocomplete="off" ltype="text" validate="{required:true}" value="">
+						</div>
+						<label class="col-sm control-label">发货日期</label>
+						<div class="col-sm-2">
+							<input name="deliveryDate" id="deliveryDate" class="laydate-icon form-control layer-date" type="text" autocomplete="off" ltype="text" validate="{required:true}" value="">
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="panel-body">
+			<div class="row text-right">
+				<button class="btn btn-primary " type="button"><i class="fa fa-check"></i>&nbsp;查询</button>
+				<button class="btn btn-info " type="button" onclick="add('订货单','order_for_goods_edit.html')"><i class="fa fa-paste"></i>&nbsp;添加</button>
+				<button class="btn btn-success " type="button"><i class="fa fa-upload"></i>&nbsp;&nbsp;<span class="bold">导入</span></button>
+				<button class="btn btn-success " type="button"><i class="fa fa-download"></i>&nbsp;&nbsp;<span class="bold">导出</span></button>
+			</div>
+		</div>
+		<div class="content-style0">
+			<table id="exampleTableEvents"></table>
+		</div>
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/bootstrap.min.js"></script>
+		<script src="../../js/content.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+		<script src="../../js/plugins/layer/layer.min.js"></script>
+		<script src="../../js/plugins/layer/laydate/laydate.js"></script>
+		<script src="../../js/ligerui.all.js"></script>
+		<script src="../../js/js.js"></script>
+		<script>
+			$(document).ready(function() {
+				laydate({
+					elem: "#acceptanceDate",
+					format: "YYYY/MM/DD",
+					max: "2099-06-16",
+					istime: true,
+					istoday: false,
+					choose: function(datas) {
+						end.min = datas;
+						end.start = datas
+					}
+				});
+				laydate({
+					elem: "#deliveryDate",
+					format: "YYYY/MM/DD",
+					max: "2099-06-16",
+					istime: true,
+					istoday: false,
+					choose: function(datas) {
+						end.min = datas;
+						end.start = datas
+					}
+
+				});
+				$("#form").ligerForm({
+					inputWidth: '',
+					validate: true
+				});
+
+				initSelect();
+
+				var pageSize; //总页数
+				var pageIndex; //当前第几页
+				var table = $("#exampleTableEvents");
+				table.bootstrapTable({
+					//url: USER_INFO.SITE_URL+'/tp5/public/index.php/Admin/Admin/noteListDemo', //服务端需要返回rows与total字段
+					pagination: true, //分页		
+					data: [{
+						id: 1,
+						acceptanceDate: '2017-12-13', 						//验收日期
+						noticeNumber: 'JA2002336', 							//通知单号
+						documentNumber: 'JA3001728', 						//单据编号
+						deliveryDate: '12-6发 JA5001176', 					//发货日期
+						supplier: '深圳',									//供应商
+						warehouseName: '世港', 								//仓库名称
+						remark: 'DD152C-04*1 DD152C-01*1 DD156-02*3 DD156-03*7 DD156-04*1 DD155-04*2 DD156-01*1不良', 				//备注
+						productName: 'DD152C-01', 							//商品名称
+						brandName: 'ODM', 									//品牌名称
+						amount: 66, 										//数量
+						unitPrice: 187.64, 									//单价
+						actualAmount: 12384.24, 							//实际金额
+						po: 'OD000516',										//PO
+						unitPriceIncludingTax: 178.04, 						//成表单价含税（人民币）
+						amountsPayable: 11750.64, 							//应付金额
+						consumablePrice: 9.60, 								//耗材价格
+						totalSupplies: 633.6, 								//耗材合计
+						movement: '',									//机芯/客供
+						totalMovement: '' 					//机芯/客供合计
+
+					}],
+					detailView: true,
+					detailFormatter: function(index, row, element) {
+						//					var html='';
+						//					  $.each(row, function(key, val){
+						//                      html += "<td>" + key + ":" + val +  "</td>"
+						//                  });
+						//                  return html;
+
+						var str = '';
+						//表头部分
+						str += '<div class="bootstrap-table subforms"><div class="fixed-table-container"><div class="fixed-table-header"><table id="bomTable" class="table table-hover" data-height="450" data-mobile-responsive="true"><thead><tr class="subformsBgColor">';
+						str += '<td>物料代码</td>';
+						str += '<td>物料名称</td>';
+						str += '<td>单位</td>';
+						str += '<td>尺码</td>';
+						str += '<td>颜色</td>';
+						str += '<td>需求数量</td>';
+						str += '<td>创建人</td>';
+						str += '</tr></thead>';
+
+						//内容部分
+						str += '<tbody><tr>';
+						str += '<td>002B38068M SBB</td>';
+						str += '<td>表芯</td>';
+						str += '<td>件</td>';
+						str += '<td>通码</td>';
+						str += '<td>通色</td>';
+						str += '<td>24</td>';
+						str += '<td>倪妮</td>';
+						str += '</tr></tbody>';
+
+						str += '</table></div></div></div></div>';
+						return str;
+					},
+					onDblClickRow: function(row, $element, field) { //row点击行的
+						if(field != 'action') {
+							table.bootstrapTable('collapseAllRows');
+							table.bootstrapTable('expandRow', (row.id - 1));
+						}
+					},
+					onClickRow: function(row, $element, field) { //row点击行的
+						table.bootstrapTable('collapseAllRows');
+					},
+					pageSize: 5, //每页多少条
+					// method:'post',
+					// sidePagination: "server", //服务端处理分页
+					columns: [{
+							align: 'center',
+							checkbox: true
+						},
+						{
+							title: '验收日期',
+							field: 'acceptanceDate'
+						},
+						{
+							title: '通知单号',
+							field: 'noticeNumber'
+						},
+						{
+							title: '单据编号',
+							field: 'documentNumber'
+						},
+						{
+							title: '发货日期',
+							field: 'deliveryDate'
+						},
+						{
+							title: '供应商',
+							field: 'supplier'
+						},
+						{
+							title: '仓库名称',
+							field: 'warehouseName'
+						},
+						{
+							title: '备注',
+							field: 'remark'
+						},
+						{
+							title: '商品名称',
+							field: 'productName'
+						},
+						{
+							title: '品牌名称',
+							field: 'brandName'
+						},
+						{
+							title: '数量',
+							field: 'amount'
+						},
+						{
+							title: '单价',
+							field: 'unitPrice'
+						},
+						{
+							title: '实际金额',
+							field: 'actualAmount'
+						},
+						{
+							title: 'PO',
+							field: 'po'
+						},
+						{
+							title: '成表单价含税（人民币）',
+							field: 'unitPriceIncludingTax'
+						},
+						{
+							title: '应付金额',
+							field: 'amountsPayable'
+						},
+						{
+							title: '耗材价格',
+							field: 'consumablePrice'
+						},
+						{
+							title: '耗材合计',
+							field: 'totalSupplies'
+						},
+						{
+							title: '机芯/客供',
+							field: 'movement'
+						},
+						{
+							title: '机芯/客供合计',
+							field: 'totalMovement'
+						},
+						{
+							title: '操作',
+							width: '200',
+							formatter: function(value, row, index) {
+								var str = '';
+								str += '<a class="btn btn-white btn-xs" onclick="edit(\'编辑采购单\',\'order_for_goods_edit.html\',' + row.id + ')">编辑 </a> ';
+								str += '<a class="btn btn-white btn-xs" onclick="returns()">退货</a> ';
+								str += '<a class="btn btn-white btn-xs" onclick="del(' + row.id + ')">删除 </a>';
+								return str;
+							}
+						}
+					]
+					/*,
+					            queryParams: function(params) {
+					                var form = liger.get("form");
+					                var data = form.getData();
+					                var temp = {
+					                    pageSize: params.limit,                         //页面大小
+					                    pageIndex: (params.offset / params.limit) + 1,   //页码
+					                    sort: params.sort,      //排序列名
+					                    sortOrder: params.order //排位命令（desc，asc）
+					                };
+					                mergeObj(temp,data); //合并对象
+					                pageSize = temp.pageSize;
+					                pageIndex = temp.pageIndex;
+					                return temp;
+					            }*/
+				});
+			});
+
+			function initSelect() {
+				$('input[name="country"]').ligerComboBox({
+					url: '../../data/city.txt',
+					valueField: 'value',
+					textField: 'text'
+				});
+				$('input[name="country3"]').ligerComboBox({
+					url: '../../data/city.txt',
+					valueField: 'value',
+					textField: 'text'
+				});
+				$('input[name="country4"]').ligerComboBox({
+					url: '../../data/city.txt',
+					valueField: 'value',
+					textField: 'text'
+				});
+			}
+
+			function serach() {
+				table.bootstrapTable('refresh');
+			}
+
+			function add(title, url, id, w, h) {
+				var index = layer.open({
+					type: 2,
+					close: true,
+					shadeClose: true,
+					title: title,
+					area: ['80%', '95%'],
+					content: url
+				});
+			}
+
+			function edit(title, url, id, w, h) {
+				var index = layer.open({
+					type: 2,
+					close: true,
+					shadeClose: true,
+					title: title,
+					area: ['80%', '80%'],
+					content: url + '?id=' + id
+				});
+			}
+
+			function del(id) {
+				//询问框
+				layer.confirm('是否需要删除？', {
+					btn: ['确定', '取消'], //按钮
+					shade: false //不显示遮罩
+				}, function(index) {
+					$.ajax({
+						type: 'post',
+						url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/dels',
+						data: {
+							id: id
+						},
+						success: function(res) {
+							table.bootstrapTable('refresh');
+							layer.close(index);
+						}
+					})
+				}, function() {});
+			}
+		</script>
+
+	</body>
+
+</html>

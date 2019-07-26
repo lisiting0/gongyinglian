@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>订单跟踪</title>
+		<meta name="keywords" content="订单跟踪">
+		<meta name="description" content="订单跟踪">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+		<link href="../../css/plugins/datapicker/bootstrap-datetimepicker.css" rel="stylesheet">
+
+	</head>
+
+	<body class="pd15">
+
+		<form class="form-horizontal m-t" id="signupForm">
+			<div class="form-group">
+				<label class="col-sm-2 control-label">订单编号</label>
+				<div class="col-sm-3">
+					<input id="textbox1" name="orderNumber" value="JA3001728" class="ui-textbox disabled-text" type="text" ltype="text">
+				</div>
+				<label class="col-sm-2 control-label">供应商</label>
+				<div class="col-sm-3">
+					<input id="textbox1" name="supplier" value="深圳" class="ui-textbox disabled-text" type="text" ltype="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">订单分批</label>
+				<div class="col-sm-3">
+					<input id="textbox1" name="orderBatch" value="3" class="ui-textbox" type="text" ltype="text" validate="{required:true,digits:true}">
+				</div>
+				<label class="col-sm-2 control-label">订单首批到货日期</label>
+				<div class="col-sm-3">
+					<input name="firstArrivalDate" id="date2" class="laydate-icon form-control layer-date" type="text" autocomplete="off" ltype="text" validate="{required:true}" value="2017-03-01 16:53">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">下单日期</label>
+				<div class="col-sm-3">
+					<input name="orderDate" id="date" class="laydate-icon form-control layer-date" type="text" autocomplete="off" ltype="text" validate="{required:true,maxlength:17}" value="2017-03-01 16:53">
+				</div>
+				<label class="col-sm-2 control-label">下单天数</label>
+				<div class="col-sm-3">
+					<input id="textbox1" name="orderDays" value="60" class="ui-textbox disabled-text" type="text" ltype="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">订单总额</label>
+				<div class="col-sm-3">
+					<input id="textbox1" name="totalCost" value="100000" class="ui-textbox disabled-text" type="text" ltype="text">
+				</div>
+				<label class="col-sm-2 control-label">已付金额</label>
+				<div class="col-sm-3">
+					<input id="textbox1" name="paymentMoney" value="30000" class="ui-textbox" type="text" ltype="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">备注</label>
+				<div class="col-sm-10" style="padding: 1px 15px;">
+					<textarea name="desc" placeholder="请输入备注" class="layui-textarea" style="min-width:79.5%;min-height: 100px;height: auto;line-height: 20px;padding: 6px 10px;resize: vertical;border: 1px solid #e5e6e7;">可以</textarea>
+				</div>
+			</div>
+
+			<div class="form-group text-right">
+				<div class="col-sm-8 col-sm-offset-3">
+					<button class="btn btn-primary" type="submit" onclick="submitForm();">提交</button>
+					<button class="btn btn-primary" type="submit" onclick="cancelLayer()();">取消</button>
+				</div>
+			</div>
+		</form>
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/bootstrap.min.js"></script>
+		<script src="../../js/js.js"></script>
+		<!-- <script src="../../js/content.min.js"></script> -->
+		<script src="../../js/ligerui.all.js"></script>
+		<script src="../../js/plugins/validate/jquery.validate.min.js"></script>
+		<script src="../../js/plugins/validate/messages_zh.min.js"></script>
+		<script src="../../js/plugins/validate/jquery.metadata.js"></script>
+		<!-- <script src="../../js/demo/form-validate-demo.min.js"></script> -->
+		<script src="../../js/plugins/layer/laydate/laydate.js"></script>
+		<script>
+			$(function() {
+				if($.getUrlParam('id')) {
+					//setData();
+				} else {
+
+				}
+
+				new formValidate({
+					formEle: '#signupForm'
+				});
+
+				laydate({
+					elem: "#date",
+					format: "YYYY/MM/DD hh:mm",
+					min: laydate.now(),
+					max: "2099-06-16 23:59",
+					istime: true,
+					istoday: false,
+					choose: function(datas) {}
+				});
+				laydate({
+					elem: "#date2",
+					format: "YYYY/MM/DD hh:mm",
+					min: laydate.now(),
+					max: "2099-06-16 23:59",
+					istime: true,
+					istoday: false,
+					choose: function(datas) {}
+				});
+			});
+
+			function valid() {
+				var form = liger.get("signupForm");
+				alert(form.valid());
+			}
+
+			function getData() {
+				var form = liger.get("signupForm");
+				var data = form.getData();
+				alert(JSON.stringify(data));
+			}
+
+			function setData() {
+				$.ajax({
+					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/getUser',
+					data: {
+						id: $.getUrlParam('id')
+					},
+					success: function(res) {
+						res = $.parseJSON(res);
+						var form = new liger.get("signupForm");
+						form.setData(res);
+					}
+				})
+			}
+
+			function submitForm() {
+
+				var form = liger.get("signupForm");
+				if(!form.valid()) {
+					return;
+				}
+				var data = {};
+				$("input,select,textarea").each(function() {
+					var name = $(this).attr("name");
+					if(name && name.indexOf('ligerui') == -1) {
+						data[name] = this.value;
+					}
+				});
+				data.id = $.getUrlParam('id');
+
+				$.ajax({
+					type: 'post',
+					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/setUser',
+					data: data,
+					success: function(res) {
+						if(Number(res)) {
+							parent.table.bootstrapTable('refresh');
+							var index = parent.layer.getFrameIndex(window.name);
+							parent.layer.close(index);
+						}
+					}
+				})
+				/*
+				            parent.table.bootstrapTable('refresh');
+				            var index = parent.layer.getFrameIndex(window.name);
+				            parent.layer.close(index);*/
+			}
+		</script>
+	</body>
+
+</html>

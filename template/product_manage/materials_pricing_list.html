@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>物料定价管理</title>
+		<meta name="keywords" content="物料定价管理">
+		<meta name="description" content="物料定价管理">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+		<link href="../../css/plugins/blueimp/css/blueimp-gallery.min.css" rel="stylesheet">
+
+	</head>
+
+	<body class="gray-bg pd15">
+		<div class="panel panel-default ibox float-e-margins border-bottom margin-bottom">
+			<div class="panel-heading">
+				<div class="row">
+					<div class="col-sm-4 mgt2">查询条件</div>
+					<div class="col-sm-8 text-right">
+						<a class="collapse-link">
+							<i class="fa fa-chevron-down"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="panel-body d-serach ibox-content">
+				<form id="form">
+					<div class="row form-group">
+						<label class="col-sm control-label">定价单编号</label>
+						<div class="col-sm-2">
+							<input type="text" class="ui-textbox" name="price_list_number" />
+						</div>
+						<label class="col-sm control-label">操作员</label>
+						<div class="col-sm-2">
+							<input type="text" class="ui-textbox" name="founder" />
+						</div>
+						<label class="col-sm control-label">状态</label>
+						<div class="col-sm-2">
+							<select name="state">
+								<option value=" " selected="selected">所有</option>
+								<option value="待审核">待审核</option>
+								<option value="已审核">已审核</option>
+							</select>
+						</div>
+					</div>
+					<div class="row">
+						<label class="col-sm control-label">操作时间</label>
+						<div class="col-sm-2">
+							<input name="startDate" id="startDate" class="form-control layer-date date-width" placeholder="开始日期" autocomplete="off" value="">
+							<input name="endDate" id="endDate" class="form-control layer-date date-width" placeholder="结束日期" autocomplete="off" value="">
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="panel-body">
+			<div class="row text-right">
+				<button class="btn btn-primary " type="button"><i class="fa fa-check"></i>&nbsp;查询</button>
+				<button class="btn btn-info " type="button" onclick="add('添加','materials_pricing_list_edit.html')"><i class="fa fa-paste"></i>&nbsp;添加</button>
+				<button class="btn btn-success " type="button"><i class="fa fa-upload"></i>&nbsp;&nbsp;<span class="bold">导入</span></button>
+				<button class="btn btn-success " type="button"><i class="fa fa-download"></i>&nbsp;&nbsp;<span class="bold">导出</span></button>
+			</div>
+		</div>
+		<div class="content-style0">
+			<table id="materialsInfoTable"></table>
+		</div>
+		<div id="blueimp-gallery" class="blueimp-gallery">
+			<div class="slides"></div>
+			<h3 class="title"></h3>
+			<a class="close">×</a>
+		</div>
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/bootstrap.min.js"></script>
+		<script src="../../js/content.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+		<script src="../../js/plugins/layer/layer.min.js"></script>
+		<script src="../../js/ligerui.all.js"></script>
+		<script src="../../js/js.js"></script>
+		<script src="../../js/plugins/layer/laydate/laydate.js"></script>
+		<script src="../../js/plugins/blueimp/jquery.blueimp-gallery.min.js"></script>
+
+		<script>
+			$(document).ready(function() {
+				$("#form").ligerForm({
+					inputWidth: '',
+					validate: true
+				});
+				var startTime = {
+					elem: "#startDate",
+					format: "YYYY/MM/DD",
+					min: '1900-01-01', //最小日期
+					max: "2099-06-16",
+					istime: true,
+					istoday: false,
+					choose: function(datas) {
+						endTime.min = datas;
+					}
+				};
+				var endTime = {
+					elem: "#endDate",
+					format: "YYYY/MM/DD",
+					min: '1900-01-01', //最小日期
+					max: "2099-06-16",
+					istime: true,
+					istoday: false,
+					choose: function(datas) {}
+				};
+				laydate(startTime);
+				laydate(endTime);
+
+				initTable();
+			});
+			var pageSize; //总页数
+			var pageIndex; //当前第几页
+			var table = $("#materialsInfoTable");
+
+			function initTable() {
+				table.bootstrapTable({
+					// url: USER_INFO.SITE_URL+'/tp5/public/index.php/Admin/Admin/noteListDemo', //服务端需要返回rows与total字段
+					pagination: true, //分页
+					pageSize: 5, //每页多少条
+					// method:'post',
+					// sidePagination: "server", //服务端处理分页
+					columns: [{
+							align: 'center',
+							checkbox: true
+						},
+						{
+							title: '编号',
+							field: 'id',
+							visible: false
+						},
+						{
+							title: '定价单编号',
+							field: 'price_list_number'
+						},
+						{
+							title: '操作员',
+							field: 'founder'
+						},
+						{
+							title: '操作时间',
+							field: 'creation_time'
+						},
+						{
+							title: '状态',
+							field: 'state'
+						},
+						{
+							title: '备注',
+							field: 'remark',
+							formatter: function(value, row, index) {
+								if(value == undefined) {
+									value = '';
+								}
+								return value;
+							}
+						},
+						{
+							title: '操作',
+							width: '200',
+							formatter: function(value, row, index) {
+								var str = '';
+								if(row.state == '待审核') {
+									str += '<a class="btn btn-xs btn-info" onclick="edit(\'物料定价编辑\',\'materials_pricing_list_edit.html\',' + row.id + ',\'NOT_AUDIT\')">编辑 </a> ';
+									str += '<a class="btn btn-xs btn-success" onclick="edit(\'物料定价审核\',\'materials_pricing_list_edit.html\',' + row.id + ',\'AUDIT\')">审核 </a> ';
+								}
+								str += '<a class="btn btn-xs btn-warning" onclick="del(' + row.id + ')">删除 </a>';
+								return str;
+							}
+						}
+					],
+					data: [{
+							id: 1,
+							price_list_number: '2018000102',
+							state: '待审核',
+							founder: '季童薇',
+							creation_time: '2018/01/02'
+						},
+						{
+							id: 2,
+							price_list_number: '2018000103',
+							state: '已审核',
+							founder: '凌凌漆',
+							creation_time: '2018/01/03'
+						},
+						{
+							id: 3,
+							price_list_number: '2018000104',
+							state: '已审核',
+							founder: '灵灵九',
+							creation_time: '2018/01/04'
+						},
+						{
+							id: 4,
+							price_list_number: '2018000105',
+							state: '已审核',
+							founder: '季童薇',
+							creation_time: '2018/01/05'
+						},
+						{
+							id: 5,
+							price_list_number: '2018000106',
+							state: '已审核',
+							founder: '季童薇',
+							creation_time: '2018/01/06'
+						}
+					],
+					detailView: true,
+					onExpandRow: function(index, row, $detail) {
+						var childTable = $detail.html('<table id="childTable"></table>').find('table'); //创建子表
+						$(childTable).bootstrapTable({
+							columns: [{
+									title: 'id',
+									field: '编号',
+									visible: false
+								},
+								{
+									title: '物料型号',
+									field: 'materials_number'
+								},
+								{
+									title: '物料名称',
+									field: 'materials_name'
+								},
+								{
+									title: '单位',
+									field: 'unit'
+								},
+								{
+									field: 'gp',
+									title: 'GP考核'
+								},
+								{
+									field: 'image',
+									title: '图片',
+									formatter: function(value, row, index) {
+										var imageShow = '';
+										imageShow += '<a href="../../img/' + value + '.jpg" title="图片" data-gallery="" class="gallery-img"><img src="../../img/' + value + '.jpg"></a>';
+										return imageShow;
+									}
+								},
+								{
+									field: 'size',
+									title: '尺码'
+								},
+								{
+									field: 'color',
+									title: '颜色'
+								},
+								{
+									title: '助记符',
+									field: 'mnemonic'
+								},
+								{
+									title: '采购价',
+									field: 'purchase_price'
+								}
+							],
+							data: [{
+									id: 1,
+									materials_number: '104173U525498415616',
+									materials_name: 'DICKIES 173U90LBB28BK05',
+									unit: '件',
+									gp: '考核',
+									image: 'watch1',
+									size: '通码',
+									color: '通色',
+									mnemonic: 'D17-8546',
+									purchase_price: '45'
+								},
+								{
+									id: 2,
+									materials_number: '8465473U90LBB28BK05',
+									materials_name: 'DICKIES 173U90LBB28BK05',
+									unit: '件',
+									gp: '考核',
+									image: 'watch1',
+									size: '通码',
+									color: '通色',
+									mnemonic: 'D17-1331',
+									purchase_price: '20'
+								},
+								{
+									id: 3,
+									materials_number: '124643U90LBB28BK05',
+									materials_name: 'DICKIES 173U90LBB28BK05',
+									unit: '件',
+									gp: '考核',
+									image: 'watch1',
+									size: '通码',
+									color: '通色',
+									mnemonic: 'D17-C031',
+									purchase_price: '45'
+								},
+								{
+									id: 4,
+									materials_number: '106433U90LBB28BK05',
+									materials_name: 'DICKIES 173U90LBB28BK05',
+									unit: '件',
+									gp: '考核',
+									image: 'watch1',
+									size: '通码',
+									color: '通色',
+									mnemonic: 'D32-C031',
+									purchase_price: '45'
+								}
+							],
+						});
+					},
+					onDblClickRow: function(row, $element, field) { //row点击行的
+						if(field != 'action') {
+							table.bootstrapTable('collapseAllRows');
+							table.bootstrapTable('expandRow', (row.id - 1));
+						}
+					},
+					onClickRow: function(row, $element, field) { //row点击行的
+						table.bootstrapTable('collapseRow', (row.id - 1));
+					},
+					/*
+					            queryParams: function(params) {
+					                var form = liger.get("form");
+					                var data = form.getData();
+					                var temp = {
+					                    pageSize: params.limit,                         //页面大小
+					                    pageIndex: (params.offset / params.limit) + 1,   //页码
+					                    sort: params.sort,      //排序列名
+					                    sortOrder: params.order //排位命令（desc，asc）
+					                };
+					                mergeObj(temp,data); //合并对象
+					                pageSize = temp.pageSize;
+					                pageIndex = temp.pageIndex;
+					                return temp;
+					            }*/
+				});
+			}
+
+			function serach() {
+				table.bootstrapTable('refresh');
+			}
+
+			function add(title, url, id, w, h) {
+				var index = layer.open({
+					type: 2,
+					close: true,
+					maxmin: true,
+					title: title,
+					area: ['80%', '80%'],
+					content: url
+				});
+			}
+
+			function edit(title, url, id, state, w, h) {
+				var index = layer.open({
+					type: 2,
+					close: true,
+					maxmin: true,
+					title: title,
+					area: ['80%', '80%'],
+					content: url + '?id=' + id + '&state=' + state
+				});
+			}
+
+			function del(id) {
+				//询问框
+				layer.confirm('是否需要删除？', {
+					btn: ['确定', '取消'], //按钮
+					shade: false //不显示遮罩
+				}, function(index) {
+					//					$.ajax({
+					//						type: 'post',
+					//						url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/dels',
+					//						data: {
+					//							id: id
+					//						},
+					//						success: function(res) {
+					//							table.bootstrapTable('refresh');
+					//							layer.close(index);
+					//						}
+					//					})
+					table.bootstrapTable('remove', {
+						field: 'id',
+						values: [id]
+					});
+					layer.close(index);
+				}, function() {});
+			}
+		</script>
+
+	</body>
+
+</html>

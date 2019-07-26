@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>品牌权限分配</title>
+		<meta name="keywords" content="品牌权限分配">
+		<meta name="description" content="品牌权限分配">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+		<link href="../../js/zTree_v3-master/css/zTreeStyle/zTreeStyle.css" rel="stylesheet">
+
+	</head>
+
+	<body class="pd15">
+		<div class="row">
+			<div class="col-sm-12 form-group">
+				<ul id="tree" class="ztree"></ul>
+			</div>
+			<div class="col-sm-12 text-right">
+				<button class="btn btn-primary" type="submit" onclick="save();">保存</button>
+				<button class="btn btn-primary" type="button" onclick="cancelLayer();">取消</button>
+			</div>
+		</div>
+
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/bootstrap.min.js"></script>
+		<script src="../../js/content.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+		<script src="../../js/js.js"></script>
+		<script src="../../js/zTree_v3-master/js/jquery.ztree.core.js"></script>
+		<script src="../../js/zTree_v3-master/js/jquery.ztree.excheck.js"></script>
+		<style type="text/css">
+			.ztree li {
+				padding: 5px 0;
+			}
+			
+			.ztree li a {
+				padding: 2px 5px 0px 0px;
+			}
+		</style>
+		<script>
+			$(document).ready(function() {
+				//初始化品牌列表
+				$.fn.zTree.init($("#tree"), setting, zNodes);
+			})
+			//初始化品牌列表
+			var setting = {
+				check: {
+					enable: true
+				},
+				data: {
+					simpleData: {
+						enable: true
+					}
+				}
+			};
+			var zNodes = [{
+				id: 1,
+				name: "品牌列表",
+				icon: "../../js/zTree_v3-master/css/zTreeStyle/img/diy/3.png",
+				open: true,
+				children: [{
+						icon: "../../js/zTree_v3-master/css/zTreeStyle/img/diy/5.png",
+						id: 1,
+						name: "ODMDJ线上赠品配件"
+					},
+					{
+						icon: "../../js/zTree_v3-master/css/zTreeStyle/img/diy/5.png",
+						id: 2,
+						name: "ODMDJ配件"
+					},
+					{
+						icon: "../../js/zTree_v3-master/css/zTreeStyle/img/diy/5.png",
+						id: 3,
+						name: "ODMDJ线下赠品配件"
+					},
+					{
+						icon: "../../js/zTree_v3-master/css/zTreeStyle/img/diy/5.png",
+						id: 4,
+						name: "DJ赠品配件"
+					}
+				]
+			}];
+
+			function save() {
+				var treeObj = $.fn.zTree.getZTreeObj("tree"),
+					nodes = treeObj.getNodes()[0].children, //获取第一个根节点的子节点
+					v = '';
+				for(var i = 0; i < nodes.length; i++) {
+					v += nodes[i].id + ",";
+					alert('您选择了：' + nodes[i].name); //获取选中节点的值
+				}
+				var index = parent.layer.getFrameIndex(window.name);
+				parent.layer.close(index); //再执行关闭   
+			}
+		</script>
+
+	</body>
+
+</html>

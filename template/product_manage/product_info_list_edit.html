@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>产品基础信息</title>
+		<meta name="keywords" content="产品基础信息">
+		<meta name="description" content="产品基础信息">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="../../css/plugins/datapicker/bootstrap-datetimepicker.css"/>
+		<link href="../../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-editable/bootstrap-editable.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-editable/bootstrap-editable-select2.css" rel="stylesheet" type="text/css" />
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+		<link href="../../css/plugins/iCheck/custom.css" rel="stylesheet">
+		<link href="../../css/plugins/blueimp/css/blueimp-gallery.min.css" rel="stylesheet">
+
+		<style type="text/css">
+			.form-control[readonly] {
+				background-color: #FFFFFF;
+			}
+		</style>
+	</head>
+
+	<body class="pd15">
+		<form class="form-horizontal m-t" id="signupForm">
+			<div class="col-sm-12">
+				<div class="tabs-container">
+					<ul class="nav nav-tabs">
+						<li class="active">
+							<a data-toggle="tab" href="#tab-1" aria-expanded="true">基本属性</a>
+						</li>
+						<li class="">
+							<a data-toggle="tab" href="#tab-2" aria-expanded="false">产品参数</a>
+						</li>
+						<li class="">
+							<a data-toggle="tab" href="#tab-3" aria-expanded="false">商品价格</a>
+						</li>
+						<li class="">
+							<a data-toggle="tab" href="#tab-4" aria-expanded="false">条形码</a>
+						</li>
+						<li class="">
+							<a data-toggle="tab" href="#tab-5" aria-expanded="false">其他</a>
+						</li>
+					</ul>
+					<div class="tab-content">
+						<div id="tab-1" class="tab-pane active">
+							<div class="panel-body">
+								<div class="form-group">
+									<div class="col-sm-1"></div>
+									<div class="col-sm-3">
+										<div class="cropbox-container">
+											<div class="imageBox">
+												<div class="thumbBox"></div>
+												<div class="spinner" style="display: none">Loading...</div>
+											</div>
+											<div class="action">
+												<div class="new-contentarea tc">
+													<a href="javascript:void(0)" class="upload-img">
+														<label for="upload-file">上传图像</label>
+													</a>
+													<input type="file" class="" name="upload-file" id="upload-file" />
+												</div>
+												<input type="button" id="btnCrop" class="Btnsty_peyton" value="裁切">
+												<input type="button" id="btnZoomIn" class="Btnsty_peyton" value="+">
+												<input type="button" id="btnZoomOut" class="Btnsty_peyton" value="-">
+											</div>
+										</div>
+									</div>
+									<div class="col-sm-1">
+										<div class="cropped"></div>
+									</div>
+								</div>
+								<div class="form-group" style="margin-top: -310px;">
+									<label class="col-sm-2 control-label">商品代码<span class="required-symbol">*</span></label>
+									<div class="col-sm-3">
+										<input name="product_code" class="ui-textbox" type="text" ltype="text" value="0 MTP1329D5A">
+									</div>
+								</div>
+								<div class="form-group" style="margin-top: -258px;">
+									<label class="col-sm-2 control-label">商品名称<span class="required-symbol">*</span></label>
+									<div class="col-sm-3">
+										<input name="product_name" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:100}" value="CASIO MTP-1329D-5A">
+									</div>
+								</div>
+								<div class="form-group" style="margin-top: -204px;">
+									<label class="col-sm-2 control-label ">尺码<span class="required-symbol">*</span></label>
+									<div class="col-sm-3">
+										<select id="size" class="form-control" ltype="select" ligeruiid="size">
+											<option value="000" selected="selected">通码</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group" style="margin-top: -149px;">
+									<label class="col-sm-2 control-label ">颜色<span class="required-symbol">*</span></label>
+									<div class="col-sm-3">
+										<select id="color" class="form-control" ltype="select" ligeruiid="color">
+											<option value="000" selected="selected">通色</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group" style="margin-top: -93px;">
+									<label class="col-sm-2 control-label">助记符</label>
+									<div class="col-sm-3">
+										<input name="mnemonics" class="ui-textbox" type="text" ltype="text" value="FLL38-777">
+									</div>
+								</div>
+								<div class="form-group" style="margin-top: -40px;">
+									<label class="col-sm-2 control-label">单位名称</label>
+									<div class="col-sm-3">
+										<input name="unit" class="ui-textbox" type="text" ltype="text" value="件">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">规格分配</label>
+									<div class="col-sm-3">
+										<input name="specification_distribution" class="ui-textbox" type="text" ltype="text" value="96">
+									</div>
+									<label class="col-sm-2 control-label">可换货商品</label>
+									<div class="col-sm-3">
+										<input name="convertible_goods" class="ui-textbox" type="text" ltype="text" value="FILA FLL38-777-004">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">换货期内换货折</label>
+									<div class="col-sm-3">
+										<input name="exchange_goods_during_period" class="ui-textbox" type="text" ltype="text" value="">
+									</div>
+									<label class="col-sm-2 control-label">换货期外换货折</label>
+									<div class="col-sm-3">
+										<input name="exchange_goods_replacement_period" class="ui-textbox" type="text" ltype="text" value="96">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">停止使用</label>
+									<div class="col-sm-1">
+										<div class="checkbox i-checks">
+											<label style="padding-left:0 ;"><input name="stop_using" type="checkbox"> <i></i></label>
+										</div>
+									</div>
+									<label class="col-sm-2 control-label">停止订货</label>
+									<div class="col-sm-1">
+										<div class="checkbox i-checks">
+											<label style="padding-left:0 ;"><input name="stop_ordering" type="checkbox"> <i></i></label>
+										</div>
+									</div>
+									<label class="col-sm-2 control-label">特价商品</label>
+									<div class="col-sm-1">
+										<div class="checkbox i-checks">
+											<label style="padding-left:0 ;"><input name="special_offer" type="checkbox"> <i></i></label>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">明细异价</label>
+									<div class="col-sm-1">
+										<div class="checkbox i-checks">
+											<label style="padding-left:0 ;"><input name="detail_price" type="checkbox"> <i></i></label>
+										</div>
+									</div>
+									<label class="col-sm-2 control-label">线上商品</label>
+									<div class="col-sm-1">
+										<div class="checkbox i-checks">
+											<label style="padding-left:0 ;"><input name="online_product" type="checkbox"> <i></i></label>
+										</div>
+									</div>
+									<label class="col-sm-2 control-label">整包</label>
+									<div class="col-sm-1">
+										<div class="checkbox i-checks">
+											<label style="padding-left:0 ;"><input name="whole_package" type="checkbox"> <i></i></label>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">收银备注提示</label>
+									<div class="col-sm-3">
+										<div class="checkbox i-checks">
+											<label style="padding-left:0 ;"><input name="cashier_notes" type="checkbox"> <i></i></label>
+										</div>
+									</div>
+									<label class="col-sm-2 control-label">客户商品名称</label>
+									<div class="col-sm-3">
+										<input name="customer_product_name" class="ui-textbox" type="text" value="">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">备注</label>
+									<div class="col-sm-10" style="padding: 1px 15px;">
+										<textarea name="desc" placeholder="请输入内容" class="layui-textarea" style="min-width:79.5%;min-height: 100px;height: auto;line-height: 20px;padding: 6px 10px;resize: vertical;border: 1px solid #e5e6e7;"></textarea>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div id="tab-2" class="tab-pane">
+							<div class="panel-body">
+								<div class="form-group">
+									<label class="col-sm-2 control-label ">年份</label>
+									<div class="col-sm-3">
+										<input id="year" name="year" type="text" class="form-control" readonly>
+									</div>
+									<label class="col-sm-2 control-label ">大类</label>
+									<div class="col-sm-3">
+										<select id="big_class" class="form-control" ltype="select" ligeruiid="big_class">
+											<option value=" ">请选择</option>
+											<option value="001">家居用品</option>
+											<option value="002">工具</option>
+											<option value="003">费用</option>
+											<option value="004">食品</option>
+											<option value="005">道具</option>
+											<option value="006">眼镜</option>
+											<option value="007">手表</option>
+											<option value="008">手表零配件</option>
+											<option value="009">赠品</option>
+											<option value="010">箱包</option>
+											<option value="011">鞋帽服饰</option>
+											<option value="012">饰品</option>
+											<option value="013">包材</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">季节</label>
+									<div class="col-sm-3">
+										<select id="season" class="form-control" ltype="select" ligeruiid="season">
+											<option value=" ">请选择</option>
+											<option value="春季">春季</option>
+											<option value="夏季">夏季</option>
+											<option value="秋季">秋季</option>
+											<option value="冬季">冬季</option>
+										</select>
+									</div>
+									<label class="col-sm-2 control-label">品牌</label>
+									<div class="col-sm-3">
+										<select id="brand" class="form-control" ltype="select" ligeruiid="brand">
+											<option value=" ">请选择</option>
+											<option value="002">Berze</option>
+											<option value="006">CITIZEN</option>
+											<option value="007">CK</option>
+											<option value="008">DISNEY</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">供货商</label>
+									<div class="col-sm-3">
+										<select id="supplierSelect" class="js-example-basic-single form-control" ltype="select" ligeruiid="supplierSelect">
+											<option value="">所有</option>
+											<option value="HN-GZJT-001">广州集团</option>
+											<option value="HN-GZBJ-0011">广州宝玑集团</option>
+											<option value="HB-BJZH-003">北京钟华集团</option>
+											<option value="HB-BJZH-004">北京摇摇乐集团</option>
+										</select>
+									</div>
+									<label class="col-sm-2 control-label ">GP考核</label>
+									<div class="col-sm-3">
+										<select name="gp" class="form-control" ltype="select" ligeruiid="gp">
+											<option value=" ">请选择</option>
+											<option value="0001">考核</option>
+											<option value="0002">非考核</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">商品款式</label>
+									<div class="col-sm-3">
+										<select id="product_style" class="form-control" ltype="select" ligeruiid="product_style">
+											<option value=" ">请选择</option>
+											<option value="001">普通三针表</option>
+											<option value="002">多功能表</option>
+											<option value="003">计时表</option>
+											<option value="004">机械表</option>
+											<option value="005">运动表</option>
+											<option value="006">二针表</option>
+										</select>
+									</div>
+									<label class="col-sm-2 control-label">适用性别</label>
+									<div class="col-sm-3">
+										<select name="gender" class="form-control" ltype="select" ligeruiid="gender">
+											<option value=" ">请选择</option>
+											<option value="男 ">男</option>
+											<option value="女 ">女</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group ">
+									<label class="col-sm-2 control-label ">表壳材质与其他商品材质</label>
+									<div class="col-sm-3">
+										<select id="case_material" class="form-control" ltype="select" ligeruiid="case_material">
+											<option value=" ">请选择</option>
+											<option value="0001">手表钢壳</option>
+											<option value="0002">手表铜壳</option>
+											<option value="0003">手表合金壳</option>
+											<option value="0004">手表塑胶壳</option>
+											<option value="0005">手表铝壳</option>
+											<option value="0006">手表钛壳</option>
+										</select>
+									</div>
+									<label class="col-sm-2 control-label ">表壳颜色</label>
+									<div class="col-sm-3">
+										<select id="movement" class="form-control" ltype="select" ligeruiid="movement">
+											<option value=" ">请选择</option>
+											<option value="0001">表壳银色</option>
+											<option value="0002">表壳黑色</option>
+											<option value="0003">表壳金色</option>
+											<option value="0004">表壳玫瑰金</option>
+											<option value="0005">表壳红色</option>
+											<option value="0006">表壳黄色</option>
+											<option value="0007">表壳蓝色</option>
+											<option value="0008">表壳绿色</option>
+											<option value="0009">表壳花色</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label ">表带材质</label>
+									<div class="col-sm-3">
+										<select id="strap_material" class="form-control" ltype="select" ligeruiid="strap_material">
+											<option value=" ">请选择</option>
+											<option value="0001">手表皮革带</option>
+											<option value="0002">手表钢带</option>
+											<option value="0003">手表编织钢带</option>
+											<option value="0004">手表尼龙带</option>
+											<option value="0005">手表塑胶带</option>
+											<option value="0006">手表牛仔布带</option>
+											<option value="0007">手表合金带</option>
+										</select>
+									</div>
+									<label class="col-sm-2 control-label ">表带颜色</label>
+									<div class="col-sm-3">
+										<select id="movement" class="form-control" ltype="select" ligeruiid="movement">
+											<option value=" ">请选择</option>
+											<option value="0001">表带银色</option>
+											<option value="0002">表带黑色</option>
+											<option value="0003">表带金色</option>
+											<option value="0004">表带玫瑰金</option>
+											<option value="0005">表带红色</option>
+											<option value="0006">表带黄色</option>
+											<option value="0007">表带蓝色</option>
+											<option value="0008">表带绿色</option>
+											<option value="0009">表带花色</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group ">
+									<label class="col-sm-2 control-label ">机芯</label>
+									<div class="col-sm-3">
+										<select id="movement" class="form-control" ltype="select" ligeruiid="movement">
+											<option value=" ">请选择</option>
+											<option value="0001">机械</option>
+											<option value="0002">石英</option>
+											<option value="0003">电子</option>
+										</select>
+									</div>
+									<label class="col-sm-2 control-label ">定制选项</label>
+									<div class="col-sm-3">
+										<select id="custom_options" class="form-control" ltype="select" ligeruiid="custom_options">
+											<option value=" ">请选择</option>
+											<option value="0001">买断订制款</option>
+											<option value="0002">买断非订制款</option>
+											<option value="0003">代销订制款</option>
+											<option value="0004">代销非订制款</option>
+											<option value="0005">特价款</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group ">
+									<label class="col-sm-2 control-label ">销售渠道</label>
+									<div class="col-sm-3">
+										<select id="sales_channels" class="form-control" ltype="select" ligeruiid="sales_channels">
+											<option value=" ">请选择</option>
+											<option value="0001">大陆线上</option>
+											<option value="0002">大陆线下</option>
+											<option value="0003">国际款</option>
+											<option value="0004">海外</option>
+											<option value="0005">跨境</option>
+											<option value="0006">境内</option>
+										</select>
+									</div>
+									<label class="col-sm-2 control-label ">销售热度</label>
+									<div class="col-sm-3">
+										<select id="sales_hot" class="form-control" ltype="select" ligeruiid="sales_hot">
+											<option value=" ">请选择</option>
+											<option value="0001">热销</option>
+											<option value="0002">正常(平销)</option>
+											<option value="0003">清货</option>
+											<option value="0004">次热销</option>
+											<option value="0005">售完停产</option>
+											<option value="0006">新品</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group ">
+									<label class="col-sm-2 control-label ">商品属性12名称</label>
+									<div class="col-sm-3">
+										<input name="supplier" class="ui-textbox" type="text" ltype="text" value="">
+									</div>
+									<label class="col-sm-2 control-label ">商品属性13名称</label>
+									<div class="col-sm-3">
+										<input name="code" class="ui-textbox" type="text" ltype="text" value="">
+									</div>
+								</div>
+								<div class="form-group ">
+									<label class="col-sm-2 control-label ">商品属性14名称</label>
+									<div class="col-sm-3">
+										<input name="supplier" class="ui-textbox" type="text" ltype="text" value="">
+									</div>
+									<label class="col-sm-2 control-label ">商品属性15名称</label>
+									<div class="col-sm-3">
+										<input name="code" class="ui-textbox" type="text" ltype="text" value="">
+									</div>
+								</div>
+								<div class="form-group ">
+									<label class="col-sm-2 control-label ">商品属性16名称</label>
+									<div class="col-sm-3">
+										<input name="supplier" class="ui-textbox" type="text" ltype="text" value="">
+									</div>
+								</div>
+							</div>
+						</div>
+						<div id="tab-3" class="tab-pane ">
+							<div class="panel-body ">
+								<div class="form-group ">
+									<label class="col-sm-2 control-label ">采购参考价</label>
+									<div class="col-sm-3">
+										<input name="supplier" class="ui-textbox disabled-text" type="text" ltype="text" value="52.613">
+									</div>
+									<label class="col-sm-2 control-label ">成品价</label>
+									<div class="col-sm-3">
+										<input name="code" class="ui-textbox disabled-text" type="text" ltype="text" value="47.2661">
+									</div>
+								</div>
+								<div class="form-group ">
+									<label class="col-sm-2 control-label ">吊牌价</label>
+									<div class="col-sm-3">
+										<input name="supplier" class="ui-textbox disabled-text" type="text" ltype="text" value="498">
+									</div>
+									<label class="col-sm-2 control-label ">网指价</label>
+									<div class="col-sm-3">
+										<input name="code" class="ui-textbox disabled-text" type="text" ltype="text" value="139">
+									</div>
+								</div>
+								<div class="form-group ">
+									<label class="col-sm-2 control-label ">京东供货价</label>
+									<div class="col-sm-3">
+										<input name="supplier" class="ui-textbox disabled-text" type="text" ltype="text" value="96">
+									</div>
+									<label class="col-sm-2 control-label ">最低价</label>
+									<div class="col-sm-3">
+										<input name="code" class="ui-textbox disabled-text" type="text" ltype="text" value="99">
+									</div>
+								</div>
+								<div class="form-group ">
+									<label class="col-sm-2 control-label ">分销价</label>
+									<div class="col-sm-3">
+										<input name="supplier" class="ui-textbox disabled-text" type="text" ltype="text" value="70">
+									</div>
+									<label class="col-sm-2 control-label ">尺码档</label>
+									<div class="col-sm-3">
+										<input name="code" class="ui-textbox" type="text" ltype="text" value="139 ">
+									</div>
+								</div>
+								<div class="form-group ">
+									<label class="col-sm-2 control-label ">备用1</label>
+									<div class="col-sm-3">
+										<input name="code" class="ui-textbox disabled-text" type="text" ltype="text" value="">
+									</div>
+									<label class="col-sm-2 control-label ">备用2</label>
+									<div class="col-sm-3">
+										<input name="supplier" class="ui-textbox disabled-text" type="text" ltype="text" value="">
+									</div>
+								</div>
+							</div>
+						</div>
+						<div id="tab-4" class="tab-pane ">
+							<div class="panel-body ">
+								<div class="form-group ">
+									<label class="col-sm-2 control-label ">条码对照码</label>
+									<div class="col-sm-3">
+										<input name="supplier" class="ui-textbox" type="text" ltype="text" value="">
+									</div>
+									<label class="col-sm-2 control-label ">条码打印次数</label>
+									<div class="col-sm-3">
+										<input name="code" class="ui-textbox" type="text" ltype="text" value="">
+									</div>
+								</div>
+								<div class="form-group ">
+									<label class="col-sm-2 control-label ">国标码</label>
+									<div class="col-sm-3">
+										<input name="code" class="ui-textbox" type="text" ltype="text" value="">
+									</div>
+									<label class="col-sm-2 control-label ">国标码序号</label>
+									<div class="col-sm-3">
+										<input name="supplier" class="ui-textbox" type="text" ltype="text" value="">
+									</div>
+								</div>
+								<div class="form-group ">
+									<label class="col-sm-2 control-label ">条码打印信息一</label>
+									<div class="col-sm-3">
+										<input name="supplier" class="ui-textbox" type="text" ltype="text" value="">
+									</div>
+									<label class="col-sm-2 control-label ">条码打印信息二</label>
+									<div class="col-sm-3">
+										<input name="code" class="ui-textbox" type="text" ltype="text" value=" ">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">规格1代码</label>
+									<div class="col-sm-3">
+										<input name="specification_1_code" class="ui-textbox" type="text" ltype="text">
+									</div>
+									<label class="col-sm-2 control-label ">规格1名称</label>
+									<div class="col-sm-3">
+										<input name="code" class="ui-textbox" type="text" ltype="text" value=" ">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">规格2代码</label>
+									<div class="col-sm-3">
+										<input name="specification_1_code" class="ui-textbox" type="text" ltype="text">
+									</div>
+									<label class="col-sm-2 control-label ">规格2名称</label>
+									<div class="col-sm-3">
+										<input name="specification_2_code" class="ui-textbox" type="text" ltype="text" value="">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label ">条码打印时间</label>
+									<div class="col-sm-3">
+										<input name="print_date" id="print_date" class="laydate-icon form-control layer-date" type="text" autocomplete="off" ltype="text" validate="{required:true,maxlength:10}" value="2017-3-9">
+									</div>
+								</div>
+							</div>
+						</div>
+						<div id="tab-5" class="tab-pane ">
+							<div class="panel-body ">
+								<div class="form-group ">
+									<label class="col-sm-2 control-label ">建档人</label>
+									<div class="col-sm-3">
+										<input name="filer" class="ui-textbox" type="text" ltype="text" value="系统管理员 ">
+									</div>
+									<label class="col-sm-2 control-label ">建档日期</label>
+									<div class="col-sm-3">
+										<input name="filer_date" class="ui-textbox" type="text" ltype="text" value="2017-04-15">
+									</div>
+								</div>
+								<div class="form-group ">
+									<label class="col-sm-2 control-label ">修改人</label>
+									<div class="col-sm-3">
+										<input name="modifier" class="ui-textbox" type="text" ltype="text" value="谭淑贤 ">
+									</div>
+									<label class="col-sm-2 control-label ">修改日期</label>
+									<div class="col-sm-3">
+										<input name="modified_date" class="ui-textbox disabled-text" type="text" ltype="text" value="2018-01-12 15:06:03">
+									</div>
+								</div>
+								<div class="form-group ">
+									<label class="col-sm-2 control-label ">启用批次</label>
+									<div class="col-sm-3">
+										<input name="enable_batch" class="ui-textbox" type="text" ltype="text" value="未定义 ">
+									</div>
+									<label class="col-sm-2 control-label ">均色均码</label>
+									<div class="col-sm-3">
+										<input name="average_color_code" class="ui-textbox" type="text" ltype="text" value="未定义 ">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-12 text-right m-b-lg " style="margin-top: 10px; ">
+				<button class="btn btn-primary " type="submit " onclick="submitForm(); ">提交</button>
+				<button class="btn btn-primary " type="submit " onclick="cancelLayer() ">取消</button>
+			</div>
+		</form>
+		<script src="../../js/jquery.min.js "></script>
+		<script src="../../js/bootstrap.min.js "></script>
+		<script src="../../js/plugins/layer/layer.min.js "></script>
+		<script src="../../js/plugins/datapicker/bootstrap-datepicker.js " type="text/javascript " charset="utf-8 "></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table.min.js "></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js "></script>
+		<script src="../../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js "></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-editable.js "></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-table-editable.js "></script>
+
+		<script src="../../js/js.js "></script>
+		<script src="../../js/ligerui.all.js "></script>
+		<script src="../../js/plugins/iCheck/icheck.min.js "></script>
+		<script src="../../js/plugins/layer/laydate/laydate.js"></script>
+		<script src="../../js/plugins/validate/jquery.validate.min.js "></script>
+		<script src="../../js/plugins/validate/messages_zh.min.js "></script>
+		<script src="../../js/plugins/validate/jquery.metadata.js "></script>
+		<script src="../../js/plugins/blueimp/jquery.blueimp-gallery.min.js "></script>
+		<script src="../../js/cropbox.js "></script>
+		<!--select2-->
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-editable-select2.full.min.js" type="text/javascript" charset="utf-8"></script>
+
+		<script>
+			$(document).ready(function() {
+				new formValidate({
+					formEle: '#signupForm'
+				});
+
+				$(".i-checks ").iCheck({
+					checkboxClass: "icheckbox_square-green ",
+					radioClass: "iradio_square-green ",
+				})
+
+				$('#year').datetimepicker({
+					startView: 'decade',
+					minView: 'decade',
+					format: 'yyyy',
+					maxViewMode: 2,
+					minViewMode: 2,
+					autoclose: true
+				});
+
+				laydate({
+					elem: "#print_date",
+					format: "YYYY/MM/DD",
+					min: laydate.now(),
+					max: "2099-06-16",
+					istime: true,
+					istoday: false,
+					choose: function(datas) {}
+				});
+				$('#brand').select2({}).on('select2:select', function(event) {});
+				$('#supplierSelect').select2().on('select2:select', function(event) {});
+				if($.getUrlParam('id')) {
+					//setData();
+					initEditTable();
+				} else {
+					//清除所有内容
+					$('.ui-textbox').val('');
+					$('textarea').val('');
+					initTable();
+				}
+
+			});
+
+			function initTable() {
+				$("#bomTable ").bootstrapTable({
+					pagination: true, //分页
+					pageSize: 5, //每页多少条
+					data: [],
+					columns: [{
+						field: "id ",
+						title: "编号 ",
+						visible: false
+					}, {
+						field: "materialNumber ",
+						title: "物料代码 ",
+						editable: {
+							type: 'select',
+							emptytext: '请选择',
+							title: '物料代码',
+							source: [{
+								value: "1 ",
+								text: "002B38168M SBB "
+							}, {
+								value: "2 ",
+								text: "002B38269M SBB "
+							}, {
+								value: "3 ",
+								text: "002B68468M SBB "
+							}],
+							//								source: function() {
+							//									var result = [];
+							//									$.ajax({
+							//										url: '/Editable/GetDepartments',
+							//										async: false,
+							//										type: "get ",
+							//										data: {},
+							//										success: function(data) {
+							//											$.each(data, function(key, value) {
+							//												result.push({
+							//													value: value.ID,
+							//													text: value.Name
+							//												});
+							//											});
+							//										}
+							//									});
+							//									return data;
+							//								}
+						}
+					}, {
+						field: "materialName ",
+						title: "物料名称 "
+					}, {
+						title: '尺码',
+						field: 'size'
+					}, {
+						title: '颜色',
+						field: 'color'
+					}, {
+						title: '图片',
+						field: 'image'
+					}, {
+						title: '最近交易价格',
+						field: 'recentPrice'
+					}, {
+						title: '采购价格',
+						field: 'purchasePrice'
+					}, {
+						title: '数量',
+						field: 'amount',
+						editable: {
+							emptytext: '请输入',
+							type: 'text',
+							title: '数量',
+							validate: function(v) {
+								if(!v) return '数量不能为空';
+							}
+						}
+					}, {
+						title: '操作',
+						field: 'action',
+						formatter: function(v, r, i) {
+							console.log(r)
+							return '<a class="btn btn-xs btn-warning " onclick="delTable( ' + r.id + ') ">删除</a>';
+						}
+					}]
+				});
+			}
+
+			function initEditTable() {
+				$("#bomTable ").bootstrapTable({
+					pagination: true, //分页
+					pageSize: 5, //每页多少条
+					data: [{
+						id: 1,
+						materialNumber: '002B38068M SBB',
+						materialName: '表芯',
+						size: '通码',
+						color: '通色',
+						image: '<a href="../../img/p_big3.jpg " title="图片 " data-gallery=" " class="gallery-img "><img src="../../img/p3.jpg "></a>',
+						recentPrice: '100',
+						purchasePrice: '88',
+						amount: 10
+					}],
+					columns: [{
+						field: "id ",
+						title: "编号 ",
+						visible: false
+					}, {
+						field: "materialNumber ",
+						title: "物料代码 ",
+						editable: {
+							type: 'select',
+							emptytext: '请选择',
+							title: '物料代码',
+							source: [{
+								value: "1 ",
+								text: "002B38168M SBB "
+							}, {
+								value: "2 ",
+								text: "002B38269M SBB "
+							}, {
+								value: "3 ",
+								text: "002B68468M SBB "
+							}],
+							//								source: function() {
+							//									var result = [];
+							//									$.ajax({
+							//										url: '/Editable/GetDepartments',
+							//										async: false,
+							//										type: "get ",
+							//										data: {},
+							//										success: function(data) {
+							//											$.each(data, function(key, value) {
+							//												result.push({
+							//													value: value.ID,
+							//													text: value.Name
+							//												});
+							//											});
+							//										}
+							//									});
+							//									return data;
+							//								}
+						}
+					}, {
+						field: "materialName ",
+						title: "物料名称 "
+					}, {
+						title: '尺码',
+						field: 'size'
+					}, {
+						title: '颜色',
+						field: 'color'
+					}, {
+						title: '图片',
+						field: 'image'
+					}, {
+						title: '最近交易价格',
+						field: 'recentPrice'
+					}, {
+						title: '采购价格',
+						field: 'purchasePrice'
+					}, {
+						title: '数量',
+						field: 'amount',
+						editable: {
+							emptytext: '请输入',
+							type: 'text',
+							title: '数量',
+							validate: function(v) {
+								if(!v) return '数量不能为空';
+							}
+						}
+					}, {
+						title: '操作',
+						field: 'action',
+						formatter: function(v, r, i) {
+							console.log(r)
+							return '<a class="btn btn-xs btn-warning " onclick="delTable( ' + r.id + ') ">删除</a>';
+						}
+					}]
+				});
+			}
+
+			function delTable(id) {
+				$("#bomTable ").bootstrapTable('remove', {
+					field: 'id',
+					values: [id]
+				});
+			}
+
+			function addTable() {
+				var rowIndex = $("#bomTable ").find('tbody tr').length;
+				$("#bomTable ").bootstrapTable('append', [{
+					id: (rowIndex + 1),
+					amount: '',
+					size: '通码',
+					color: '通色',
+					recentPrice: '100',
+					purchasePrice: '88'
+				}]);
+			}
+
+			function valid() {
+				var form = liger.get("signupForm ");
+				alert(form.valid());
+			}
+
+			function getData() {
+				var form = liger.get("signupForm ");
+				var data = form.getData();
+				alert(JSON.stringify(data));
+			}
+
+			function setData() {
+				$.ajax({
+					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/getUser',
+					data: {
+						id: $.getUrlParam('id')
+					},
+					success: function(res) {
+						res = $.parseJSON(res);
+						var form = new liger.get("signupForm ");
+						form.setData(res);
+					}
+				})
+			}
+
+			function submitForm() {
+				var form = liger.get("signupForm ");
+				if(!form.valid()) {
+					return;
+				}
+				var data = {};
+				$("input,select,textarea ").each(function() {
+					var name = $(this).attr("name ");
+					if(name && name.indexOf('ligerui') == -1) {
+						data[name] = this.value;
+					}
+				});
+				data.id = $.getUrlParam('id');
+				data.datas = $("#exampleTableEvents ").bootstrapTable('getData');
+				$.ajax({
+						type: 'post',
+						url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/setUser',
+						data: data,
+						success: function(res) {
+							if(Number(res)) {
+								parent.table.bootstrapTable('refresh');
+								var index = parent.layer.getFrameIndex(window.name);
+								parent.layer.close(index);
+							}
+						},
+						error: function() {}
+					})
+					/*
+					            parent.table.bootstrapTable('refresh');
+					            var index = parent.layer.getFrameIndex(window.name);
+					            parent.layer.close(index);*/
+			}
+
+			$(window).load(function() {
+
+				var img = '../../img/p_big1.jpg';
+				displayCroppedPic(img);
+
+				function initCropbox() {
+					var options = {
+						thumbBox: '.thumbBox',
+						spinner: '.spinner'
+					}
+					var ddd = $('.imageBox');
+					var cropper = $('.imageBox').cropbox(options);
+					$('#upload-file').on('change', function() {
+
+						var reader = new FileReader();
+						reader.onload = function(e) {
+							options.imgSrc = e.target.result;
+							cropper = $('.imageBox').cropbox(options);
+						}
+						reader.readAsDataURL(this.files[0]);
+						this.files = [];
+					})
+					$('#btnCrop').on('click', function() {
+						var img = cropper.getDataURL();
+						displayCroppedPic(img);
+					})
+					$('#btnZoomIn').on('click', function() {
+						cropper.zoomIn();
+					})
+					$('#btnZoomOut').on('click', function() {
+						cropper.zoomOut();
+					})
+				}
+				initCropbox();
+				//剪切后照片展示方法
+				function displayCroppedPic(img) {
+					$('.cropped').html('');
+					$('.cropped').append('<div><img src=" ' + img + ' " align="absmiddle " style="width:70%;margin-top:4px;border-radius:40px;box-shadow:0px 0px 12px #7E7E7E; " ><p>图片1</p></div>');
+					$('.cropped').append('<div><img src=" ' + img + ' " align="absmiddle " style="width:80%;margin-top:4px;border-radius:64px;box-shadow:0px 0px 12px #7E7E7E; "><p>图片2</p></div>');
+					$('.cropped').append('<div><img src=" ' + img + ' " align="absmiddle " style="width:90%;margin-top:4px;border-radius:80px;box-shadow:0px 0px 12px #7E7E7E; "><p>图片3</p></div>');
+				}
+
+				$(function() {
+					var $divWidth1 = $('.cropped img:eq(0)').width();
+					$('.cropped img:eq(0)').css({
+						'height': $divWidth1
+					});
+					var $divWidth2 = $('.cropped img:eq(1)').width();
+					$('.cropped img:eq(1)').css({
+						'height': $divWidth2
+					});
+					var $divWidth3 = $('.cropped img:eq(2)').width();
+					$('.cropped img:eq(2)').css({
+						'height': $divWidth3
+					});
+				})
+
+			});
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>供应商管理</title>
+		<meta name="keywords" content="供应商管理">
+		<meta name="description" content="供应商管理">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="../../css/plugins/bootstrap-editable/bootstrap-editable-select2.css" />
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+		<link href="../../css/plugins/blueimp/css/blueimp-gallery.min.css" rel="stylesheet">
+
+		<style type="text/css">
+			.select2-container--default .select2-selection--multiple .select2-selection__choice {
+				margin-right: 3px;
+				padding: 0px 3px;
+			}
+		</style>
+
+	</head>
+
+	<body class="gray-bg pd15">
+		<div class="panel panel-default ibox float-e-margins border-bottom margin-bottom">
+			<div class="panel-heading">
+				<div class="row">
+					<div class="col-sm-4 mgt2">查询条件</div>
+					<div class="col-sm-8 text-right">
+						<a class="collapse-link">
+							<i class="fa fa-chevron-down"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="panel-body d-serach ibox-content">
+				<form id="form" class="form-horizontal">
+					<div class="row form-group">
+						<label class="col-sm control-label">代码</label>
+						<div class="col-sm-2">
+							<input type="text" class="ui-textbox" name="code" />
+						</div>
+						<label class="col-sm control-label">供应商</label>
+						<div class="col-sm-2">
+							<input type="text" class="ui-textbox" name="supplier" />
+						</div>
+						<label class="col-sm control-label">供应产品类型</label>
+						<div class="col-sm-2">
+							<select id="product_type" class="js-example-basic-single form-control" ltype="select" ligeruiid="product_type">
+								<option>成品</option>
+								<option>配件</option>
+								<option>挂牌</option>
+							</select>
+						</div>
+					</div>
+					<div class="row">
+						<label class="col-sm control-label">地址</label>
+						<div class="col-sm-2">
+							<input type="text" class="ui-textbox" name="address" />
+						</div>
+						<label class="col-sm control-label">联系人</label>
+						<div class="col-sm-2">
+							<input type="text" class="ui-textbox" name="contacts" />
+						</div>
+						<label class="col-sm control-label">电话</label>
+						<div class="col-sm-2">
+							<input type="text" class="ui-textbox" name="phone" />
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="panel-body">
+			<div class="row text-right">
+				<button class="btn btn-primary " type="button"><i class="fa fa-check"></i>&nbsp;查询</button>
+				<button class="btn btn-info " type="button" onclick="add('添加','supplier_info_list_edit.html')"><i class="fa fa-paste"></i>&nbsp;添加</button>
+				<button class="btn btn-success " type="button"><i class="fa fa-upload"></i>&nbsp;&nbsp;<span class="bold">导入</span></button>
+				<button class="btn btn-success " type="button"><i class="fa fa-download"></i>&nbsp;&nbsp;<span class="bold">导出</span></button>
+			</div>
+		</div>
+		<div class="content-style0">
+			<table id="exampleTableEvents"></table>
+		</div>
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/bootstrap.min.js"></script>
+		<script src="../../js/content.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+		<script src="../../js/plugins/layer/layer.min.js"></script>
+		<script src="../../js/ligerui.all.js"></script>
+		<script src="../../js/js.js"></script>
+		<script src="../../js/plugins/blueimp/jquery.blueimp-gallery.min.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-editable-select2.full.min.js" type="text/javascript" charset="utf-8"></script>
+
+		<!--显示图片层-->
+		<div id="blueimp-gallery" class="blueimp-gallery">
+			<div class="slides"></div>
+			<h3 class="title"></h3>
+			<a class="close">×</a>
+		</div>
+
+		<script>
+			var pageSize; //总页数
+			var pageIndex; //当前第几页
+			var table = $("#exampleTableEvents");
+			$(function() {
+				$("#form").ligerForm({
+					inputWidth: '',
+					validate: true
+				});
+
+				$('#product_type').select2({
+					multiple: true
+				}).on('select2:select', function(event) {});
+
+				var product_type = $("#product_type").select2().val(["成品", "配件", "挂牌"]).trigger("change"); //获取selectid
+				product_type.change();
+
+				table.bootstrapTable({
+					// url: USER_INFO.SITE_URL+'/tp5/public/index.php/Admin/Admin/noteListDemo', //服务端需要返回rows与total字段
+					pagination: true,
+					pageSize: 5, //每页多少条
+					// method:'post',
+					// sidePagination: "server", //服务端处理分页
+
+					columns: [{
+						align: 'center',
+						checkbox: true
+					}, {
+						title: '代码',
+						field: 'code'
+					}, {
+						title: '供应商',
+						field: 'supplier',
+						formatter: function(value, row, index) {
+							var a = '<a onclick="edit(\'详情\',\'../../template/supplier_manage/supplier_info_list_edit.html\',' + row.id + ')">' + row.supplier + ' </a> ';
+							return a;
+						}
+					}, {
+						title: '供应产品类型',
+						field: 'product_type'
+					}, {
+						title: '渠道',
+						field: 'channel'
+					}, {
+						title: '停止使用',
+						field: 'stop_using'
+					}, {
+						title: '供应商地址',
+						field: 'address'
+					}, {
+						title: '联系人',
+						field: 'contacts'
+					}, {
+						title: '负责人',
+						field: 'principal'
+					}, {
+						title: '邮编',
+						field: 'zip_code'
+					}, {
+						title: '电话',
+						field: 'phone'
+					}, {
+						title: '手机',
+						field: 'telephone'
+					}, {
+						title: '定金百分比',
+						field: 'deposit_percentage'
+					}, {
+						title: '评分',
+						field: 'score'
+					}, {
+						title: '评价',
+						field: 'evaluation'
+					}, {
+						title: '操作',
+						field: 'action',
+						width: '200',
+						formatter: function(value, row, index) {
+							var str = '';
+							str += '<a class="btn btn-xs btn-info" onclick="edit(\'编辑\',\'supplier_info_list_edit.html\',' + row.id + ')">编辑 </a> ';
+							str += '<a class="btn btn-warning btn-xs btn-warning" onclick="del(' + row.id + ')">删除 </a>';
+							return str;
+						}
+					}],
+					data: [{
+						id: 1,
+						code: 'HN-GZJT-001',
+						supplier: '广州集团',
+						product_type: '成品、配件',
+						channel: '总部',
+						stop_using: '否',
+						address: '北京市海定区xx街xx路xx号',
+						contacts: '王先森',
+						principal: '黄晓明',
+						zip_code: '',
+						phone: '010-2689588',
+						telephone: '15356548546',
+						deposit_percentage: '5%',
+						score: '',
+						evaluation: ''
+					}, {
+						id: 2,
+						code: 'HN-GZBJ-001',
+						supplier: '广州宝玑集团',
+						product_type: '配件、配件',
+						channel: '总部',
+						stop_using: '否',
+						address: '北京市海定区xx街xx路xx号',
+						contacts: '王先森',
+						principal: '黄晓明',
+						zip_code: '',
+						phone: '010-2689588',
+						telephone: '15356548546',
+						deposit_percentage: '20%',
+						score: '',
+						evaluation: ''
+					}, {
+						id: 3,
+						code: 'HB-BJZH-003',
+						supplier: '北京钟华集团',
+						product_type: '配件、挂牌',
+						channel: '总部',
+						principal: '黄晓明',
+						stop_using: '否',
+						address: '北京市海定区xx街xx路xx号',
+						contacts: '钟小米',
+						principal: '黄晓明',
+						zip_code: '',
+						phone: '010-2689588',
+						telephone: '15356548546',
+						deposit_percentage: '10%',
+						score: '',
+						evaluation: ''
+
+					}, {
+						id: 4,
+						code: 'HB-BJYYL-004',
+						supplier: '北京摇摇乐集团',
+						product_type: '成品、配件、挂牌',
+						channel: '总部',
+						principal: '黄晓明',
+						stop_using: '否',
+						address: '北京市海定区xx街xx路xx号',
+						contacts: '钟小米',
+						principal: '黄晓明',
+						zip_code: '',
+						phone: '010-2689588',
+						telephone: '15356548546',
+						deposit_percentage: '10%',
+						score: '',
+						evaluation: ''
+					}, {
+						id: 5,
+						code: 'HB-BJHD-005',
+						supplier: '北京华迪集团',
+						product_type: '配件',
+						channel: '总部',
+						principal: '黄晓明',
+						stop_using: '否',
+						address: '北京市海定区xx街xx路xx号',
+						contacts: '钟小米',
+						principal: '黄晓明',
+						zip_code: '',
+						phone: '010-2689588',
+						telephone: '15356548546',
+						deposit_percentage: '10%',
+						score: '',
+						evaluation: ''
+					}],
+					/*,
+					            queryParams: function(params) {
+					                var form = liger.get("form");
+					                var data = form.getData();
+					                var temp = {
+					                    pageSize: params.limit,                         //页面大小
+					                    pageIndex: (params.offset / params.limit) + 1,   //页码
+					                    sort: params.sort,      //排序列名
+					                    sortOrder: params.order //排位命令（desc，asc）
+					                };
+					                mergeObj(temp,data); //合并对象
+					                pageSize = temp.pageSize;
+					                pageIndex = temp.pageIndex;
+					                return temp;
+					            }*/
+				});
+			});
+
+			function serach() {
+				table.bootstrapTable('refresh');
+			}
+
+			function add(title, url, id, w, h) {
+				var index = layer.open({
+					type: 2,
+					maxmin: true,
+					close: true,
+					title: title,
+					area: ['80%', '80%'],
+					maxmin: true,
+					content: url
+				});
+			}
+
+			function edit(title, url, id, w, h) {
+				var index = layer.open({
+					type: 2,
+					maxmin: true,
+					close: true,
+					title: title,
+					area: ['80%', '80%'],
+					maxmin: true,
+					content: url + '?id=' + id
+				});
+			}
+
+			function del(id) {
+				//询问框
+				layer.confirm('是否需要删除？', {
+					btn: ['确定', '取消'], //按钮
+					shade: false //不显示遮罩
+				}, function(index) {
+					$.ajax({
+						type: 'post',
+						url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/dels',
+						data: {
+							id: id
+						},
+						success: function(res) {
+							table.bootstrapTable('refresh');
+							layer.close(index);
+						}
+					})
+				}, function() {});
+			}
+		</script>
+
+	</body>
+
+</html>

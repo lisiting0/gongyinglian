@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>新增收货通知单</title>
+		<meta name="keywords" content="新增收货通知单">
+		<meta name="description" content="新增收货通知单">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-editable/bootstrap-editable.css" rel="stylesheet">
+		<link href="../../css/plugins/select2/select2.min.css" rel="stylesheet" type="text/css" />
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+		<link href="../../css/plugins/iCheck/custom.css" rel="stylesheet">
+		<link href="../../css/plugins/blueimp/css/blueimp-gallery.min.css" rel="stylesheet">
+	</head>
+
+	<body class="pd15">
+
+		<form class="form-horizontal m-t" id="signupForm">
+			<div class="form-group">
+				<label class="col-sm-2 control-label">到货单号</label>
+				<div class="col-sm-3">
+					<input name="arrival_order_number" class="ui-textbox disabled-text" type="text" ltype="text" value="J2018A5251728">
+				</div>
+				<label class="col-sm-2 control-label">送货单位</label>
+				<div class="col-sm-3">
+					<input name="supplier" class="ui-textbox" type="text" ltype="text" value="广州宝玑集团">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">入库依据</label>
+				<div class="col-sm-3">
+					<input name="according_storage" class="ui-textbox" type="text" ltype="text" value="进货订单">
+				</div>
+				<label class="col-sm-2 control-label">批次</label>
+				<div class="col-sm-3">
+					<input name="batch" class="ui-textbox" type="text" ltype="text" value="1">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">送货件数</label>
+				<div class="col-sm-3">
+					<input name="delivery_quantity" class="ui-textbox" type="text" ltype="text" value="3">
+				</div>
+				<label class="col-sm-2 control-label">送货人电话</label>
+				<div class="col-sm-3">
+					<input name="deliverer_phone" class="ui-textbox" type="text" ltype="text" value="12345678956">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">送货时间</label>
+				<div class="col-sm-3">
+					<input name="deliverer_date" class="ui-textbox" type="text" ltype="text" value="2017-3-9">
+				</div>
+				<label class="col-sm-2 control-label">预计到货时间</label>
+				<div class="col-sm-3">
+					<input name="estimated_arrival" class="ui-textbox" type="text" ltype="text" value="2017-3-9">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">是否含有定金</label>
+				<div class="col-sm-3">
+					<div class="radio i-checks">
+						<label><input type="radio" value="是" name="deposit_yon" disabled></label>是
+						<label><input type="radio" value="否" name="deposit_yon" checked="" disabled></label>否
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">收货清单</label>
+				<div class="col-sm-8">
+					<table id="ordersInfoTable"></table>
+				</div>
+			</div>
+			<div class="form-group text-right">
+				<div class="col-sm-8 col-sm-offset-2">
+					<button class="btn btn-primary" type="submit" onclick="cancelLayer();">取消</button>
+				</div>
+			</div>
+		</form>
+		<div id="blueimp-gallery" class="blueimp-gallery">
+			<div class="slides"></div>
+			<h3 class="title"></h3>
+			<a class="close">×</a>
+		</div>
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/bootstrap.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-editable.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-table-editable.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-editable-select2.full.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/js.js"></script>
+		<script src="../../js/plugins/iCheck/icheck.min.js"></script>
+		<script src="../../js/ligerui.all.js"></script>
+		<script src="../../js/plugins/layer/layer.min.js"></script>
+		<script src="../../js/plugins/validate/jquery.validate.min.js"></script>
+		<script src="../../js/plugins/validate/messages_zh.min.js"></script>
+		<script src="../../js/plugins/validate/jquery.metadata.js"></script>
+		<script src="../../js/plugins/layer/laydate/laydate.js"></script>
+		<script src="../../js/plugins/tablesMergeCell/tablesMergeCell.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/plugins/blueimp/jquery.blueimp-gallery.min.js"></script>
+
+		<script>
+			var table = $("#ordersInfoTable");
+			var loadData = [{
+					order_number: 'J2018A5001728',
+					code: '0 160M60LYXCL',
+					name: '表针',
+					purchase_type: '鼎骏自购',
+					specification: '',
+					weight: 20,
+					unit: '件',
+					size: '通码',
+					color: '通色',
+					image: 'watch1',
+					purchase_quantity: 1000,
+					arrival_quantity: 800
+				},
+				{
+					order_number: 'J2018A5001728',
+					code: '1 02B38068M QQF-01',
+					name: '表盘',
+					purchase_type: '工厂外购',
+					specification: '',
+					weight: 20,
+					unit: '件',
+					size: '通码',
+					color: '通色',
+					image: 'watch1',
+					purchase_quantity: 500,
+					arrival_quantity: 300
+				},
+				{
+					order_number: 'J2018A5001728',
+					code: '2 02B38068M QQF-01',
+					name: '表带',
+					purchase_type: '鼎骏自购',
+					specification: '',
+					weight: 20,
+					unit: '件',
+					size: '通码',
+					color: '通色',
+					image: 'watch1',
+					purchase_quantity: 500,
+					arrival_quantity: 500
+				},
+				{
+					order_number: 'J2018A5001728',
+					code: '3 02B38068M QQF-01',
+					name: '表壳',
+					purchase_type: '工厂外购',
+					specification: '',
+					weight: 20,
+					unit: '件',
+					size: '通码',
+					color: '通色',
+					image: 'watch1',
+					purchase_quantity: 100,
+					arrival_quantity: 100
+				},
+				{
+					order_number: 'J2018A5001722',
+					code: '0 MTP1329D5A',
+					name: 'CASIO MTP-1329D-5A',
+					purchase_type: '鼎骏自购',
+					specification: '',
+					weight: 20,
+					unit: '件',
+					size: '通码',
+					color: '通色',
+					image: 'watch1',
+					purchase_quantity: 1000,
+					arrival_quantity: 1000
+				},
+				{
+					order_number: 'J2018A5001725',
+					code: '1 MTP1329D5A',
+					name: 'CASIO 石英表',
+					purchase_type: '鼎骏自购',
+					specification: '',
+					weight: 20,
+					unit: '件',
+					size: '通码',
+					color: '通色',
+					image: 'watch1',
+					purchase_quantity: 2000,
+					arrival_quantity: 1000
+				},
+				{
+					order_number: 'J2018A5001725',
+					code: '1 MTP1329D5A',
+					name: 'CASIO M750',
+					purchase_type: '鼎骏自购',
+					specification: '',
+					weight: 20,
+					unit: '件',
+					size: '通码',
+					color: '通色',
+					image: 'watch1',
+					purchase_quantity: 300,
+					arrival_quantity: 100
+				}
+			];
+
+			$(function() {
+
+				initTable();
+				$(".btn-default").addClass("btn-outline");
+
+				if($.getUrlParam('id')) {
+
+					table.bootstrapTable('append', loadData);
+					//合并单元格					
+					mergeCells(loadData, "order_number", null, "#ordersInfoTable");
+
+				} else {
+
+				}
+
+				new formValidate({
+					formEle: '#signupForm'
+				});
+
+				//选择供应商change事件
+				$('#supplierSelect').select2().on('select2:select', function(event) {});
+
+				$(".i-checks").iCheck({
+					checkboxClass: "icheckbox_square-green",
+					radioClass: "iradio_square-green",
+				})
+			});
+
+			setFormSee({
+				formEle: '#signupForm'
+			});
+			function initTable() {
+				table.bootstrapTable({
+					search: true,
+					showRefresh: true,
+					showColumns: true,
+					icons: {
+						refresh: "glyphicon-repeat",
+						columns: "glyphicon-list"
+					},
+					toolbar: "#toolbar",
+					columns: [
+						{
+							field: "id",
+							title: "唯一编号",
+							visible: false
+						},
+						{
+							field: "order_number",
+							title: "订单编号"
+						},
+						{
+							field: "code",
+							title: "商品代码/物料型号"
+						},
+						{
+							field: "name",
+							title: "商品/物料名称"
+						},
+						{
+							field: "unit",
+							title: "单位"
+						},
+						{
+							field: "size",
+							title: "尺码"
+						},
+						{
+							field: "color",
+							title: "颜色"
+						},
+						{
+							field: "image",
+							title: "图片",
+							formatter: function(v) {
+								return '<a href="../../img/' + v + '.jpg" title="图片" data-gallery="" class="gallery-img"><img src="../../img/' + v + '.jpg"></a>';
+							}
+						},
+						{
+							title: '采购数量',
+							field: 'purchase_quantity'
+						},
+						{
+							title: '到货数量',
+							field: 'arrival_quantity'
+						},
+						{
+							title: '备注',
+							field: 'remark'
+						}
+					],
+					onSearch: function() {
+						//合并单元格
+						mergeCell();
+					},
+					onColumnSwitch: function(field, checked) {
+						//合并单元格
+						mergeCell();
+					},
+				});
+			}
+
+			function addInfo(title, url, id, w, h) {
+				//判断是否有选择某个商品
+				if(!$("#supplierSelect").select2().val()) {
+					alert('请选择送货单位');
+					return;
+				}
+				var form = liger.get("signupForm");
+				focus();
+				if(!form.valid()) {
+					return;
+				}
+
+				var deposit_yon = $("input[name='deposit_yon']:checked").val();
+				layer.open({
+					type: 2,
+					maxmin: true,
+					close: true,
+					title: title,
+					area: ['80%', '80%'],
+					content: url + '?deposit=' + deposit_yon,
+					end: function() {
+						//合并单元格
+						mergeCell();
+					}
+				});
+			}
+
+			function mergeCell() {
+				table.tablesMergeCell({
+					cols: [1]
+				});
+			}
+
+			function delInfo() {
+				debugger
+				var getSelectRows = $.map(table.bootstrapTable('getSelections'), function(row) {
+					return row.id;
+				});
+				if(getSelectRows.length >= 1) {
+					layer.confirm('您真的确定要删除吗?', {
+						icon: 3,
+						btn: ['确定', '取消'] //按钮
+					}, function(index) {
+						for(var i = 0; i < getSelectRows.length; i++) {
+							table.bootstrapTable('remove', {
+								field: 'id',
+								values: [parseInt(getSelectRows[i].id)]
+							});
+						}
+						//合并单元格
+						//						table.tablesMergeCell({
+						//							cols: [1]
+						//						});
+						layer.close(index);
+					}, function(index) {
+						layer.close(index);
+					});
+				} else {
+					layer.alert("请选择一行删除!");
+					return;
+				}
+			}
+
+			function getData() {
+				var form = liger.get("signupForm");
+				var data = form.getData();
+				alert(JSON.stringify(data));
+			}
+
+			function setData() {
+				$.ajax({
+					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/getUser',
+					data: {
+						id: $.getUrlParam('id')
+					},
+					success: function(res) {
+						res = $.parseJSON(res);
+						var form = new liger.get("signupForm");
+						form.setData(res);
+					}
+				})
+			}
+
+			function focus() {
+				$("input[name=purchase_quantity]").focus();
+				$("input[name=arrival_quantity]").focus();
+			}
+
+			function submitForm() {
+				var form = liger.get("signupForm");
+				focus();
+				if(!form.valid()) {
+					return;
+				}
+				var data = {};
+				$("input,select,textarea").each(function() {
+					var name = $(this).attr("name");
+					if(name && name.indexOf('ligerui') == -1) {
+						data[name] = this.value;
+					}
+				});
+				data.id = $.getUrlParam('id');
+
+				$.ajax({
+					type: 'post',
+					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/setUser',
+					data: data,
+					success: function(res) {
+						if(Number(res)) {
+							parent.table.bootstrapTable('refresh');
+							var index = parent.layer.getFrameIndex(window.name);
+							parent.layer.close(index);
+						}
+					}
+				})
+				/*
+				            parent.table.bootstrapTable('refresh');
+				            var index = parent.layer.getFrameIndex(window.name);
+				            parent.layer.close(index);*/
+			}
+		</script>
+	</body>
+
+</html>

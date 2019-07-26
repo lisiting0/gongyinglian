@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>供应商订单执行情况</title>
+		<meta name="keywords" content="供应商订单执行情况">
+		<meta name="description" content="供应商订单执行情况">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="../../css/plugins/select2/select2.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/plugins/bootstrap-editable/bootstrap-editable-select2.css" />
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+		<link href="../../css/plugins/blueimp/css/blueimp-gallery.min.css" rel="stylesheet">
+
+	</head>
+
+	<body class="gray-bg pd15">
+		<div class="panel panel-default ibox float-e-margins border-bottom margin-bottom">
+			<div class="panel-heading">
+				<div class="row">
+					<div class="col-sm-4 mgt2">查询条件</div>
+					<div class="col-sm-8 text-right">
+						<a class="collapse-link">
+							<i class="fa fa-chevron-down"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="panel-body d-serach ibox-content">
+				<form id="form">
+					<div class="row form-group">
+						<label class="col-sm control-label">供应商</label>
+						<div class="col-sm-2">
+							<select id="supplierSelect" class="js-example-basic-single form-control" ltype="select" ligeruiid="supplierSelect">
+								<option value="">所有</option>
+								<option value="HN-GZJT-001">广州集团</option>
+								<option value="HN-GZBJ-0011">广州宝玑集团</option>
+								<option value="HB-BJZH-003">北京钟华集团</option>
+								<option value="HB-BJZH-004">北京摇摇乐集团</option>
+							</select>
+						</div>
+						<label class="col-sm control-label">订单编号</label>
+						<div class="col-sm-2">
+							<input type="text" class="ui-textbox" name="order_number" />
+						</div>
+						<label class="col-sm control-label">最近下单日期</label>
+						<div class="col-sm-2">
+							<input name="orderDateStart" id="orderDateStart" class="form-control layer-date date-width" placeholder="开始日期" autocomplete="off" value="">
+							<input name="orderDateEnd" id="orderDateEnd" class="form-control layer-date date-width" placeholder="结束日期" autocomplete="off" value="">
+						</div>
+					</div>
+					<div class="row ">
+						<label class="col-sm control-label">最近交货日期</label>
+						<div class="col-sm-2">
+							<input name="arrivalDateStart" id="arrivalDateStart" class="form-control layer-date date-width" placeholder="开始日期" autocomplete="off" value="">
+							<input name="arrivalDateEnd" id="arrivalDateEnd" class="form-control layer-date date-width" placeholder="结束日期" autocomplete="off" value="">
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="panel-body">
+			<div class="row text-right">
+				<button class="btn btn-primary " type="button"><i class="fa fa-check"></i>&nbsp;查询</button>
+				<button class="btn btn-success " type="button"><i class="fa fa-download"></i>&nbsp;&nbsp;<span class="bold">导出</span></button>
+			</div>
+		</div>
+		<div class="content-style0">
+			<table id="exampleTableEvents"></table>
+		</div>
+
+		<!--显示图片层-->
+		<div id="blueimp-gallery" class="blueimp-gallery">
+			<div class="slides"></div>
+			<h3 class="title"></h3>
+			<a class="close">×</a>
+		</div>
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/bootstrap.min.js"></script>
+		<script src="../../js/content.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-editable.js "></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-table-editable.js "></script>
+		<script src="../../js/plugins/layer/layer.min.js"></script>
+		<script src="../../js/ligerui.all.js"></script>
+		<script src="../../js/js.js"></script>
+		<script src="../../js/plugins/iCheck/icheck.min.js"></script>
+		<script src="../../js/plugins/layer/laydate/laydate.js "></script>
+		<script src="../../js/plugins/blueimp/jquery.blueimp-gallery.min.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-editable-select2.full.min.js" type="text/javascript" charset="utf-8"></script>
+		<script>
+			$(document).ready(function() {
+				$(".i-checks").iCheck({
+					checkboxClass: "icheckbox_square-green",
+					radioClass: "iradio_square-green",
+				})
+
+				$("#form").ligerForm({
+					inputWidth: '',
+					validate: true
+				});
+
+				var orderDateStart = {
+					elem: "#orderDateStart",
+					format: "YYYY/MM/DD ",
+					min: '1900-01-01', //最小日期
+					max: "2099-06-16 ",
+					istime: true,
+					istoday: false,
+					choose: function(datas) {
+						orderDateEnd.min = datas;
+					}
+				};
+				var orderDateEnd = {
+					elem: "#orderDateEnd",
+					format: "YYYY/MM/DD",
+					min: $("#orderDateStart").val(), //最小日期
+					max: "2099-06-16",
+					istime: true,
+					istoday: false,
+					choose: function(datas) {}
+				};
+
+				var arrivalDateStart = {
+					elem: "#arrivalDateStart",
+					format: "YYYY/MM/DD",
+					min: '1900-01-01', //最小日期
+					max: "2099-06-16",
+					istime: true,
+					istoday: false,
+					choose: function(datas) {
+						arrivalDateEnd.min = datas;
+					}
+				};
+				var arrivalDateEnd = {
+					elem: "#arrivalDateEnd",
+					format: "YYYY/MM/DD",
+					min: '1900-01-01', //最小日期
+					max: "2099-06-16 23:59 ",
+					istime: true,
+					istoday: false,
+					choose: function(datas) {}
+				};
+				laydate(orderDateStart);
+				laydate(orderDateEnd);
+				laydate(arrivalDateStart);
+				laydate(arrivalDateEnd);				
+				
+				//选择供应商change事件
+				$('#supplierSelect').select2().on('select2:select', function(event) {});
+
+				var pageSize; //总页数
+				var pageIndex; //当前第几页
+				var table = $("#exampleTableEvents");
+				table.bootstrapTable({
+					//url: USER_INFO.SITE_URL+'/tp5/public/index.php/Admin/Admin/noteListDemo', //服务端需要返回rows与total字段
+					pagination: true, //分页
+					pageSize: 5, //每页多少条
+					//method:'post',
+					//sidePagination: "server", //服务端处理分页
+					columns: [{
+							align: 'center',
+							checkbox: true
+						},
+						{
+							title: '编号',
+							field: 'id',
+							visible: false
+						},
+						{
+							title: '供应商',
+							field: 'supplier',
+							formatter: function(value, row, index) {
+								var a = '<a onclick="edit(\'详情\',\'supplier_info_list_edit.html\',' + row.id + ')">' + row.supplier + ' </a> ';
+								return a;
+							}
+						},
+						{
+							title: '最近下单日期',
+							field: 'order_date'
+						},
+						{
+							title: '最近交货日期',
+							field: 'delivery_date'
+						},
+						{
+							title: '结算币种',
+							field: 'billing_currency'
+						},
+						{
+							title: '订单总金额',
+							field: 'total_cost'
+						},
+						{
+							title: '已付款金额',
+							field: 'amount_paid'
+						},
+						{
+							title: '未付款金额',
+							field: 'unpaid_amount'
+						},
+						{
+							title: '跟踪状态',
+							field: 'tracking_status'
+						},
+						{
+							title: '采购数量',
+							field: 'purchase_quantity'
+						},
+						{
+							title: '收货数量',
+							field: 'receipt_quantity'
+						},
+						{
+							title: '制单人',
+							field: 'prepared_by'
+						},
+						{
+							title: '备注',
+							field: 'remark'
+						}
+					],
+					data: [{
+							id: 1,
+							supplier: '北京华迪集团',
+							order_number: 'SF12349845',
+							order_date: '2017-2-13', //订单计划完成时间	
+							delivery_date: '2017-2-28',
+							billing_currency: '人民币',
+							total_cost: '3350',
+							amount_paid: '1000', //已付金额
+							unpaid_amount: '2350', //未付金额
+							tracking_status: '进行中',
+							purchase_quantity: 1500,
+							receipt_quantity: 700,
+							prepared_by: '倪妮', //制单人
+							remark: ''
+						},
+						{
+							id: 2,
+							supplier: '广州欧美集团',
+							order_number: 'SF8946513',
+							order_date: '2017-2-13', //订单计划完成时间	
+							delivery_date: '2017-2-28', //订单计划完成时间
+							billing_currency: '人民币',
+							total_cost: '3350',
+							amount_paid: '1000', //已付金额
+							unpaid_amount: '2350', //未付金额
+							tracking_status: '已逾期',
+							purchase_quantity: 1500,
+							receipt_quantity: 700,
+							prepared_by: '倪妮', //制单人
+							remark: '运输中'
+						},
+						{
+							id: 3,
+							supplier: '上海帝师集团',
+							order_number: 'SF128642545',
+							order_date: '2017-2-13', //订单计划完成时间	
+							delivery_date: '2017-2-28', //订单计划完成时间
+							billing_currency: '人民币',
+							total_cost: '3350',
+							amount_paid: '1000', //已付金额
+							unpaid_amount: '$2350', //未付金额
+							purchase_quantity: 1500,
+							receipt_quantity: 700,
+							prepared_by: '倪妮', //制单人
+							tracking_status: '已逾期',
+							remark: ''
+						}
+					],
+					detailView: true,
+					onExpandRow: function(index, row, $detail) {
+						InitSubTable(index, row, $detail);
+					},
+					onDblClickRow: function(row, $element, field) { //row点击行的
+						table.bootstrapTable('collapseAllRows');
+						table.bootstrapTable('expandRow', (row.id - 1));
+					},
+					onClickRow: function(row, $element, field) { //row点击行的
+						if(field != 'action') {
+							table.bootstrapTable('collapseRow', (row.id - 1));
+						}
+					},
+					/*,
+	            queryParams: function(params) {
+	                var form = liger.get("form");
+	                var data = form.getData();
+	                var temp = {
+	                    pageSize: params.limit,                         //页面大小
+	                    pageIndex: (params.offset / params.limit) + 1,   //页码
+	                    sort: params.sort,      //排序列名
+	                    sortOrder: params.order //排位命令（desc，asc）
+	                };
+	                mergeObj(temp,data); //合并对象
+	                pageSize = temp.pageSize;
+	                pageIndex = temp.pageIndex;
+	                return temp;
+	            }*/
+				});
+			});
+
+			function InitSubTable(index, row, $detail) {
+				var childTable = $detail.html('<table id="childTable' + index + '"></table>').find('table'); //创建子表
+				$(childTable).bootstrapTable({
+					columns: [{
+							field: 'id',
+							title: '编号',
+							visible: false
+						}, {
+							field: 'order_number',
+							title: '订单编号',
+							formatter: function(value, row, index) {
+								var a = '<a onclick="edit(\'详情\',\'../../template/common/order_list_see.html\',' + row.id + ')">' + value + ' </a> ';
+								return a;
+							}
+						},
+						{
+							field: 'product_number',
+							title: '产品型号'
+						}, {
+							field: 'product_name',
+							title: '产品名称'
+						}, {
+							field: 'image',
+							title: '图片',
+							formatter: function(v) {
+								return '<a href="../../img/' + v + '.jpg" data-gallery="" class="gallery-img"><img src="../../img/' + v + '.jpg"></a>'
+							}
+						},
+						{
+							field: 'product_unit',
+							title: '单位'
+						}, {
+							field: 'total_batch',
+							title: '总批次'
+						}, {
+							field: 'batch',
+							title: '批次'
+						},
+						{
+							field: 'order_quantity',
+							title: '订单数量'
+						}, {
+							field: 'receipt_quantity',
+							title: '收货数量'
+						}, {
+							field: 'remaining_amount',
+							title: '剩余数量'
+						}, {
+							field: 'order_follow_peron',
+							title: '订单跟进人'
+						}
+					],
+					data: [{
+						id: 1,
+						order_number: 'J2018A5001725',
+						product_number: '002B38068M SBB',
+						product_name: 'CASIO 表芯',
+						image: 'watch1',
+						product_unit: '只',
+						total_batch: 3,
+						batch: 1,
+						order_quantity: 1000,
+						receipt_quantity: 500,
+						remaining_amount: 500,
+						order_follow_peron: '谭校'
+					}, {
+						id: 2,
+						order_number: 'J2018A5001725',
+						product_number: '002B32068M SBB',
+						product_name: 'CASIO 表带',
+						image: 'watch1',
+						product_unit: '只',
+						total_batch: 3,
+						batch: 1,
+						order_quantity: 500,
+						receipt_quantity: 200,
+						remaining_amount: 300,
+						order_follow_peron: '谭校'
+					}]
+				});
+				mergeCell("#childTable" + index);
+			};
+
+			function serach() {
+				table.bootstrapTable('refresh');
+			}
+
+			function add(title, url, id, w, h) {
+				var index = layer.open({
+					type: 2,
+					close: true,
+					maxmin: true,
+					title: title,
+					area: ['80%', '80%'],
+					content: url
+				});
+			}
+
+			function edit(title, url, id, w, h) {
+				var index = layer.open({
+					type: 2,
+					close: true,
+					maxmin: true,
+					title: title,
+					area: ['80%', '80%'],
+					content: url + '?id=' + id
+				});
+			}
+
+			function del(id) {
+				//询问框
+				layer.confirm('是否需要删除？', {
+					btn: ['确定', '取消'], //按钮
+					shade: false //不显示遮罩
+				}, function(index) {
+					$.ajax({
+						type: 'post',
+						url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/dels',
+						data: {
+							id: id
+						},
+						success: function(res) {
+							table.bootstrapTable('refresh');
+							layer.close(index);
+						}
+					})
+				}, function() {});
+			}
+
+			//子表格动态合并单元格
+			function mergeCell(obj) {
+				var data = $(obj).bootstrapTable('getData', true);
+				//合并单元格
+				mergeCells(data, "order_number", null, obj);
+			}
+		</script>
+
+	</body>
+
+</html>

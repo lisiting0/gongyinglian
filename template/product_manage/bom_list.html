@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>Bom管理</title>
+		<meta name="keywords" content="Bom管理">
+		<meta name="description" content="Bom管理">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="../../css/plugins/select2/select2.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/plugins/bootstrap-editable/bootstrap-editable-select2.css" />
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+		<link href="../../css/plugins/blueimp/css/blueimp-gallery.min.css" rel="stylesheet">
+
+	</head>
+
+	<body class="gray-bg pd15">
+		<div class="panel panel-default border-bottom">
+			<div class="panel-heading">
+				<div class="row">
+					<div class="col-sm-4 mgt2">查询条件</div>
+					<div class="col-sm-8 text-right">
+						<a class="collapse-link"><i class="fa fa-chevron-down"></i></a>
+					</div>
+				</div>
+			</div>
+
+			<div class="panel-body d-serach">
+				<form id="form">
+					<div class="row form-group">
+						<label class="col-sm control-label">Bom号</label>
+						<div class="col-sm-2">
+							<input type="text" class="ui-textbox" name="bomNumber" />
+						</div>
+						<label class="col-sm control-label">sku</label>
+						<div class="col-sm-2">
+							<input type="text" class="ui-textbox" name="sku" />
+						</div>
+						<label class="col-sm control-label">款号</label>
+						<div class="col-sm-2">
+							<input type="text" class="ui-textbox" name="sectionNumber" />
+						</div>
+					</div>
+					<div class="row form-group">
+						<label class="col-sm control-label">物料代码</label>
+						<div class="col-sm-2">
+							<input type="text" class="ui-textbox" name="bomCode" />
+						</div>
+						<label class="col-sm control-label">物料名称</label>
+						<div class="col-sm-2">
+							<input type="text" class="ui-textbox" name="bomName" />
+						</div>
+						<label class="col-sm control-label">物料类型</label>
+						<div class="col-sm-2">
+							<select name="bomType">
+								<option value=" " selected="selected">所有</option>
+								<option value="鼎骏自购">鼎骏自购</option>
+								<option value="工厂外购">工厂外购</option>
+							</select>
+						</div>
+					</div>
+					<div class="row">
+						<label class="col-sm control-label">供应商</label>
+						<div class="col-sm-2">
+							<select id="supplierSelect" class="js-example-basic-single form-control" ltype="select" ligeruiid="supplierSelect">
+								<option value="">所有</option>
+								<option value="HN-GZJT-001">广州集团</option>
+								<option value="HN-GZBJ-0011">广州宝玑集团</option>
+								<option value="HB-BJZH-003">北京钟华集团</option>
+								<option value="HB-BJZH-004">北京摇摇乐集团</option>
+							</select>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="panel-body">
+			<div class="row text-right">
+				<button class="btn btn-primary " type="button"><i class="fa fa-check"></i>&nbsp;查询</button>
+				<button class="btn btn-info " type="button" onclick="add('新增','bom_list_edit.html')"><i class="fa fa-paste"></i>&nbsp;新增</button>
+				<button class="btn btn-success " type="button" onclick="importFile('导入','product_info_list_import.html')"><i class="fa fa-upload"></i>&nbsp;&nbsp;<span class="bold">导入</span></button>
+				<button class="btn btn-success " type="button"><i class="fa fa-download"></i>&nbsp;&nbsp;<span class="bold">导出</span></button>
+			</div>
+		</div>
+		<div class="content-style0">
+			<table id="exampleTableEvents"></table>
+		</div>
+		<div id="blueimp-gallery" class="blueimp-gallery">
+			<div class="slides"></div>
+			<h3 class="title"></h3>
+			<a class="close">×</a>
+		</div>
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/bootstrap.min.js"></script>
+		<script src="../../js/content.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+		<script src="../../js/plugins/layer/layer.min.js"></script>
+		<script src="../../js/ligerui.all.js"></script>
+		<script src="../../js/js.js"></script>
+		<script src="../../js/plugins/blueimp/jquery.blueimp-gallery.min.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-editable-select2.full.min.js" type="text/javascript" charset="utf-8"></script>
+
+		<script>
+			$(function() {
+				$("#form").ligerForm({
+					inputWidth: '',
+					validate: true
+				});
+
+				//选择供应商change事件
+				$('#supplierSelect').select2().on('select2:select', function(event) {});
+
+				initTable();
+			});
+
+			var pageSize; //总页数
+			var pageIndex; //当前第几页
+			var table = $("#exampleTableEvents");
+
+			function initTable() {
+				table.bootstrapTable({
+					// url: USER_INFO.SITE_URL+'/tp5/public/index.php/Admin/Admin/noteListDemo', //服务端需要返回rows与total字段
+					pagination: true, //分页
+					pageSize: 3, //每页多少条				
+					// method:'post',
+					// sidePagination: "server", //服务端处理分页
+					columns: [{
+							align: 'center',
+							checkbox: true
+						},
+						{
+							title: '版本号',
+							field: 'versionNumber'
+						},
+						{
+							title: 'Bom号',
+							field: 'bomNumber'
+						},
+						{
+							title: '产品月份',
+							field: 'productMonth'
+						},
+						{
+							title: 'sku',
+							field: 'sku'
+						},
+						{
+							title: '款号',
+							field: 'sectionNumber'
+						},
+						{
+							title: '款名',
+							field: 'name'
+						},
+						{
+							title: '规格',
+							field: 'specification'
+						},
+						{
+							title: '颜色',
+							field: 'color'
+						},
+						{
+							title: '品牌',
+							field: 'brand'
+						},
+						{
+							title: '大类',
+							field: 'bigClass'
+						},
+						{
+							title: '小类',
+							field: 'smallClass'
+						},
+						{
+							title: '款型',
+							field: 'style'
+						},
+						{
+							title: '人工费',
+							field: 'laborCosts'
+						},
+						{
+							title: '其他费',
+							field: 'otherFees'
+						},
+						{
+							title: '预估成本',
+							field: 'estimatedCost'
+						},
+						{
+							title: '标准成本',
+							field: 'standardCost'
+						},
+						{
+							title: '标准价',
+							field: 'standardPrice'
+						},
+						{
+							title: '采购价',
+							field: 'purchasePrice'
+						}, {
+							field: 'auditByName',
+							title: '审核人'
+						},
+						{
+							field: 'auditTime',
+							title: '审核时间'
+						}, {
+							field: 'state',
+							title: '状态'
+						},
+						{
+							title: '操作',
+							width: '200',
+							formatter: function(value, row, index) {
+								var str = '';
+								if(row.stateId == 0) {
+									str += '<a class="btn btn-xs btn-info" style="margin-right:5px;" title="编辑" onclick="action(\'编辑\',\'bom_list_edit.html\',\'' + row.id + '\')">编辑</a>';
+									str += '<a class="btn btn-xs btn-success" style="margin-right:5px;" title="审核bom信息" onclick="action(\'审核bom信息\',\'bom_list_audit.html\',\'' + row.id + '\')">审核</a>';
+									str += '<a class="btn btn-xs btn-warning" onclick="del(' + row.id + ')">删除</a>';
+								} else if(row.stateId == 1) {
+									str += '<a class="btn btn-xs btn-info" style="margin-right:5px;" title="编辑" onclick="action(\'编辑\',\'bom_list_edit.html\',\'' + row.id + '\')">编辑</a>';
+									str += '<a class="btn btn-xs btn-warning" onclick="del(' + row.id + ')">删除</a>';
+								} else if(row.stateId == 2) {
+									str += '<a class="btn btn-xs btn-info" style="margin-right:5px;" onclick="copy(\'复制版本\',\'bom_list_edit.html\',\'' + row.id + '\',\'COPY\'\)">复制版本</a>';
+								}
+								return str;
+							}
+						}
+					],
+					data: [{
+						id: 1,
+						versionNumber: '4', //版本号
+						bomNumber: '20170917001', //Bom号
+						productMonth: '', //产品月份
+						sku: '5019855', //sku
+						sectionNumber: 'DD168-01', //款号
+						name: '定制', //款名
+						specification: '52*47.8*13.7', //规格
+						color: '通色', //颜色
+						brand: '', //品牌
+						bigClass: '', //大类
+						smallClass: '', //小类
+						style: '', //款型
+						laborCosts: '', //人工费
+						otherFees: '', //其他费
+						estimatedCost: '', //预估成本
+						standardCost: '', //标准成本
+						standardPrice: '', //标准价
+						purchasePrice: '', //采购价
+						auditByName: '——', //审核人
+						auditTime: '——', //审核日期
+						stateId: '0', //状态ID
+						state: '待审核' //状态名称
+					}, {
+						id: 2,
+						versionNumber: '3', //版本号
+						bomNumber: '20180117001', //Bom号
+						productMonth: '', //产品月份
+						sku: '5019856', //sku
+						sectionNumber: 'DD168-01', //款号
+						name: '定制', //款名
+						specification: '52*47.8*13.7', //规格
+						color: '通色', //颜色
+						brand: '', //品牌
+						bigClass: '', //大类
+						smallClass: '', //小类
+						style: '', //款型
+						laborCosts: '', //人工费
+						otherFees: '', //其他费
+						estimatedCost: '', //预估成本
+						standardCost: '', //标准成本
+						standardPrice: '', //标准价
+						purchasePrice: '', //采购价
+						auditByName: '季童薇', //审核人
+						auditTime: '2018-04-17', //审核日期
+						stateId: '1', //状态ID
+						state: '待使用' //状态名称
+					}, {
+						id: 3,
+						versionNumber: '2', //版本号
+						bomNumber: '20180117001', //Bom号
+						productMonth: '', //产品月份
+						sku: '5019856', //sku
+						sectionNumber: 'DD168-01', //款号
+						name: '定制', //款名
+						specification: '52*47.8*13.7', //规格
+						color: '通色', //颜色
+						brand: '', //品牌
+						bigClass: '', //大类
+						smallClass: '', //小类
+						style: '', //款型
+						laborCosts: '', //人工费
+						otherFees: '', //其他费
+						estimatedCost: '', //预估成本
+						standardCost: '', //标准成本
+						standardPrice: '', //标准价
+						purchasePrice: '', //采购价
+						auditByName: '季童薇', //审核人
+						auditTime: '2018-02-05', //审核日期
+						stateId: '2', //状态ID
+						state: '已使用' //状态名称
+					}, {
+						id: 4,
+						versionNumber: '201800001', //版本号
+						bomNumber: 'A170912001', //Bom号
+						productMonth: '', //产品月份
+						sku: 'DD168-01', //sku
+						sectionNumber: 'DD168-01', //款号
+						name: '定制', //款名
+						specification: '52*47.8*13.7', //规格
+						color: '通色', //颜色
+						brand: '', //品牌
+						bigClass: '', //大类
+						smallClass: '', //小类
+						style: '', //款型
+						laborCosts: '', //人工费
+						otherFees: '', //其他费
+						estimatedCost: '', //预估成本
+						standardCost: '', //标准成本
+						standardPrice: '', //标准价
+						purchasePrice: '', //采购价
+						auditByName: '季童薇', //审核人
+						auditTime: '2018-01-05', //审核日期
+						stateId: '2', //状态ID
+						state: '已使用' //状态名称
+					}, {
+						id: 5,
+						versionNumber: '201700001', //版本号
+						bomNumber: 'A170912001', //Bom号
+						productMonth: '', //产品月份
+						sku: 'DD168-01', //sku
+						sectionNumber: 'DD168-01', //款号
+						name: '定制', //款名
+						specification: '52*47.8*13.7', //规格
+						color: '通色', //颜色
+						brand: '', //品牌
+						bigClass: '', //大类
+						smallClass: '', //小类
+						style: '', //款型
+						laborCosts: '', //人工费
+						otherFees: '', //其他费
+						estimatedCost: '', //预估成本
+						standardCost: '', //标准成本
+						standardPrice: '', //标准价
+						purchasePrice: '', //采购价
+						auditByName: '季童薇', //审核人
+						auditTime: '2017-11-25', //审核日期
+						stateId: '2', //状态ID
+						state: '已使用' //状态名称
+					}],
+					detailView: true,
+					onExpandRow: function(index, row, $detail) {
+						var childTable = $detail.html('<table id="childTable"></table>').find('table'); //创建子表
+						$(childTable).bootstrapTable({
+							columns: [{
+									field: 'id',
+									title: '编号',
+									visible: false
+								},
+								{
+									field: 'bomNumber',
+									title: '物料型号',
+								}, {
+									field: 'bomName',
+									title: '物料名称'
+								}, {
+									field: 'image',
+									title: '图片',
+									formatter: function(value, row, index) {
+										var str = '';
+										str += '<a href="../../img/' + value + '.jpg" title="图片" data-gallery="" class="gallery-img"><img src="../../img/' + value + '.jpg"></a>';
+										return str;
+									}
+								}, {
+									field: 'weight',
+									title: '重量（g）'
+								}, {
+									field: 'size',
+									title: '尺码'
+								}, {
+									field: 'color',
+									title: '颜色'
+								}, {
+									field: 'unitPrice',
+									title: '单价'
+								}, {
+									field: 'count',
+									title: '数量'
+								}, {
+									field: 'amount',
+									title: '金额'
+								}, {
+									field: 'property',
+									title: '属性'
+								}, {
+									field: 'supplier',
+									title: '来源（供应商）'
+								}, {
+									field: 'remark',
+									title: '物料介绍（备注）'
+								}
+							],
+							data: [{
+									id: 1,
+									bomNumber: '160M60LYXCL',
+									bomName: '机芯',
+									image: 'watch1',
+									weight: 20,
+									size: '通码',
+									color: '通色',
+									unitPrice: '120',
+									count: 1000,
+									amount: 120000,
+									property: '鼎骏自购',
+									supplier: '高雅钟表有限公司',
+									remark: ''
+								},
+								{
+									id: 1,
+									bomNumber: '002B38068M QQF-01',
+									bomName: '表盒',
+									image: 'watch1',
+									weight: 20,
+									size: '通码',
+									color: '通色',
+									unitPrice: '120',
+									count: 1000,
+									amount: 120000,
+									property: '鼎骏自购',
+									supplier: '高雅钟表有限公司',
+									remark: ''
+								}
+							]
+						});
+					},
+					onDblClickRow: function(row, $element, field) { //row点击行的
+						if(field != 'action') {
+							table.bootstrapTable('collapseAllRows');
+							table.bootstrapTable('expandRow', (row.id - 1));
+						}
+					},
+					onClickRow: function(row, $element, field) { //row点击行的
+						table.bootstrapTable('collapseRow', (row.id - 1));
+					},
+					/*,
+					            queryParams: function(params) {
+					                var form = liger.get("form");
+					                var data = form.getData();
+					                var temp = {
+					                    pageSize: params.limit,                         //页面大小
+					                    pageIndex: (params.offset / params.limit) + 1,   //页码
+					                    sort: params.sort,      //排序列名
+					                    sortOrder: params.order //排位命令（desc，asc）
+					                };
+					                mergeObj(temp,data); //合并对象
+					                pageSize = temp.pageSize;
+					                pageIndex = temp.pageIndex;
+					                return temp;
+					            }*/
+				});
+			}
+
+			function addOrder() {
+				layer.confirm('是否加入货单?', {
+					btn: ['加入', '取消'] //按钮
+				}, function() {
+					layer.msg('加入成功!', {
+						icon: 1
+					});
+				}, function() {});
+			}
+
+			function serach() {
+				table.bootstrapTable('refresh');
+			}
+
+			function add(title, url, id, w, h) {
+				var index = layer.open({
+					type: 2,
+					close: true,
+					maxmin: true,
+					title: title,
+					area: ['90%', '90%'],
+					content: url
+				});
+			}
+
+			function action(title, url, id, w, h) {
+				var index = layer.open({
+					type: 2,
+					close: true,
+					maxmin: true,
+					title: title,
+					area: ['90%', '90%'],
+					content: url + '?id=' + id
+				});
+			}
+
+			//复制版本
+			function copy(title, url, id, action, w, h) {
+				layer.open({
+					type: 2,
+					close: true,
+					maxmin: true,
+					title: title,
+					area: ['90%', '90%'],
+					content: url + '?id=' + id + '&action=' + action
+				});
+			}
+
+			function del(id) {
+				//询问框
+				layer.confirm('是否需要删除？', {
+					btn: ['确定', '取消'], //按钮
+					shade: false //不显示遮罩
+				}, function(index) {
+					//					$.ajax({
+					//						type: 'post',
+					//						url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/dels',
+					//						data: {
+					//							id: id
+					//						},
+					//						success: function(res) {
+					//							table.bootstrapTable('refresh');
+					//							layer.close(index);
+					//						}
+					//					})
+					table.bootstrapTable('remove', {
+						field: 'id',
+						values: [id]
+					});
+					layer.close(index);
+				}, function() {});
+			}
+		</script>
+
+	</body>
+
+</html>

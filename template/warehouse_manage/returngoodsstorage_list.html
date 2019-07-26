@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>入库管理</title>
+		<meta name="keywords" content="入库管理">
+		<meta name="description" content="入库管理">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="../../css/plugins/select2/select2.min.css" />
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+
+	</head>
+
+	<body class="gray-bg pd15">
+		<div class="panel panel-default ibox float-e-margins border-bottom margin-bottom">
+			<div class="panel-heading">
+				<div class="row">
+					<div class="col-sm-4 mgt6">查询条件</div>
+					<div class="col-sm-8 text-right">
+						<a class="collapse-link">
+							<i class="fa fa-chevron-down"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="panel-body d-serach ibox-content">
+				<form id="form">
+					<div class="row form-group">
+						<label class="col-sm control-label">入库单号</label>
+						<div class="col-sm-2">
+							<input type="text" class="ui-textbox" name="product_code" />
+						</div>
+						<label class="col-sm control-label">订单编号</label>
+						<div class="col-sm-2">
+							<input type="text" class="ui-textbox" name="order_number" />
+						</div>
+						<label class="col-sm control-label">商品代码/商品名称</label>
+						<div class="col-sm-2">
+							<input type="text" class="ui-textbox" name="product" />
+						</div>
+					</div>
+					<div class="row form-group">
+						<label class="col-sm control-label">送货单位</label>
+						<div class="col-sm-2">
+							<select id="supplierSelect" class="js-example-basic-single form-control" ltype="select" ligeruiid="supplierSelect">
+								<option value=" ">所有</option>
+								<option value="HN-GZJT-001">广州集团</option>
+								<option value="HN-GZBJ-0011">广州宝玑集团</option>
+								<option value="HB-BJZH-003">北京钟华集团</option>
+								<option value="HB-BJZH-004">北京摇摇乐集团</option>
+							</select>
+						</div>
+						<label class="col-sm control-label">入库类型</label>
+						<div class="col-sm-2">
+							<select name="state">
+								<option value=" ">所有</option>
+								<option value="质检入库">质检入库</option>
+								<option value="人工入库">人工入库</option>
+							</select>
+						</div>
+						<label class="col-sm control-label">操作员</label>
+						<div class="col-sm-2">
+							<input type="text" class="ui-textbox" name="operator" />
+						</div>
+					</div>
+					<div class="row">
+						<label class="col-sm control-label">入库日期</label>
+						<div class="col-sm-2">
+							<input name="incoming_date" id="incomingDateStart" class="form-control layer-date date-width" placeholder="开始日期" autocomplete="off" value="">
+							<input name="incoming_date" id="incomingDateEnd" class="form-control layer-date date-width" placeholder="结束日期" autocomplete="off" value="">
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="panel-body">
+			<div class="row text-right">
+				<button class="btn btn-primary " type="button"><i class="fa fa-check"></i>&nbsp;查询</button>
+				<button class="btn btn-info " type="button" onclick="add('添加','returngoodsstorage_list_edit.html')"><i class="fa fa-paste"></i>&nbsp;添加</button>
+				<button class="btn btn-success " type="button"><i class="fa fa-download"></i>&nbsp;&nbsp;<span class="bold">导出</span></button>
+			</div>
+		</div>
+		<div class="content-style0">
+			<table id="exampleTableEvents"></table>
+		</div>
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/bootstrap.min.js"></script>
+		<script src="../../js/content.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-editable-select2.full.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/plugins/layer/layer.min.js"></script>
+		<script src="../../js/ligerui.all.js"></script>
+		<script src="../../js/js.js"></script>
+		<script src="../../js/plugins/layer/laydate/laydate.js "></script>
+		<script>
+			$(function() {
+				$("#form").ligerForm({
+					inputWidth: '',
+					validate: true
+				});
+
+				//选择供应商change事件
+				$('#supplierSelect').select2().on('select2:select', function(event) {});
+
+				var incomingDateStart = {
+					elem: "#incomingDateStart",
+					format: "YYYY/MM/DD",
+					min: '1900-01-01', //最小日期
+					max: "2099-06-16",
+					istime: true,
+					istoday: false,
+					choose: function(datas) {
+						incomingDateEnd.min = datas;
+					}
+				};
+				var incomingDateEnd = {
+					elem: "#incomingDateEnd",
+					format: "YYYY/MM/DD",
+					min: '1900-01-01', //最小日期
+					max: "2099-06-16",
+					istime: true,
+					istoday: false,
+					choose: function(datas) {}
+				};
+				laydate(incomingDateStart);
+				laydate(incomingDateEnd);
+
+				initTable();
+			})
+
+			var pageSize; //总页数
+			var pageIndex; //当前第几页
+			var table = $("#exampleTableEvents");
+
+			function initTable() {
+				table.bootstrapTable({
+					//url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/noteListDemo', //服务端需要返回rows与total字段
+					pagination: true, //分页
+					pageSize: 5, //每页多少条
+					//method: 'post',
+					//sidePagination: "server", //服务端处理分页
+					columns: [{
+						align: 'center',
+						checkbox: true
+					}, {
+						field: 'id',
+						title: '编号',
+						visible: false
+					}, {
+						title: '入库单号',
+						field: 'receipt_number'
+					}, {
+						title: '送货单位',
+						field: 'supplier',
+						formatter: function(value, row, index) {
+							var a = '<a onclick="edit(\'详情\',\'../../template/supplier_manage/supplier_info_list_edit.html\',' + row.id + ')">' + row.supplier + ' </a> ';
+							return a;
+						}
+					}, {
+						title: '批次代码',
+						field: 'batch_code'
+					}, {
+						title: '批次名称',
+						field: 'batch_name'
+					}, {
+						title: '入库类型',
+						field: 'storage_type'
+					}, {
+						title: '入库日期',
+						field: 'incoming_date'
+					}, {
+						title: '操作员',
+						field: 'operator'
+					}, {
+						title: '状态',
+						field: 'state'
+					}, {
+						title: '备注',
+						field: 'remark'
+					}, {
+						title: '操作',
+						width: '200',
+						formatter: function(value, row, index) {
+							var str = '<a class="btn btn-xs btn-primary" onclick="printOrder(\'商品入库单\',\'print_order.html\',' + row.order_number + ')">打印单据</a>  ';
+							return str;
+						}
+					}],
+					data: [{
+						id: 1,
+						receipt_number: 2018000203,
+						supplier: '广州集团',
+						batch_code: 'GZJT-ODM-1',
+						batch_name: '批次1',
+						storage_type: '人工入库',
+						incoming_date: '2018-02-05',
+						operator: '季童薇',
+						state: '已入库',
+						remark: ''
+					}, {
+						id: 2,
+						receipt_number: 2018000204,
+						supplier: '广州几何集团',
+						batch_code: 'JHJT-ODM-2',
+						batch_name: '批次2',
+						storage_type: '人工入库',
+						incoming_date: '2018-02-09',
+						operator: '季童薇',
+						state: '已入库',
+						remark: ''
+					}, {
+						id: 3,
+						receipt_number: 2018000205,
+						supplier: '北京钟华集团',
+						batch_code: 'BJZHJT-ODM-1',
+						batch_name: '批次1',
+						storage_type: '质检入库',
+						incoming_date: '2018-02-08',
+						operator: '季童薇',
+						state: '已入库',
+						remark: ''
+					}],
+					detailView: true,
+					onExpandRow: function(index, row, $detail) {
+						if(row.state == '待质检') {
+							$detail.html('<div class="alert alert-info">该订单未质检，未找到匹配的信息。</div>').find('table');
+						} else {
+							var childTable = $detail.html('<table id="childTable' + index + '"></table>').find('table'); //创建子表
+							$(childTable).bootstrapTable({
+								columns: [{
+									title: '订单编号',
+									field: 'order_number',
+									formatter: function(value, row, index) {
+										var a = '<a onclick="edit(\'详情\',\'../../template/common/order_list_see.html\',' + row.order_number + ')">' + row.order_number + ' </a> ';
+										return a;
+									}
+								}, {
+									field: 'code',
+									title: '商品/物料型号',
+								}, {
+									field: 'name',
+									title: '商品/物料名称'
+								}, {
+									field: 'unit',
+									title: '单位'
+								}, {
+									field: 'size',
+									title: '尺码'
+								}, {
+									field: 'color',
+									title: '颜色'
+								}, {
+									field: 'image',
+									title: '图片',
+									formatter: function(value, row, index) {
+										var str = '';
+										str += '<a href="../../img/' + value + '.jpg" title="图片" data-gallery="" class="gallery-img"><img src="../../img/' + value + '.jpg"></a>';
+										return str;
+									}
+								}, {
+									field: 'AAmount',
+									title: '良品数量'
+								}, {
+									field: 'warehouse',
+									title: '仓库'
+								}, {
+									field: 'location',
+									title: '库位'
+								}, {
+									field: 'CAmount',
+									title: '不良品数量'
+								}, {
+									field: 'defective_goods_warehouse',
+									title: '不良品仓库'
+								}, {
+									field: 'remark',
+									title: '备注'
+								}],
+								data: [{
+									order_number: 'J2018A5001728',
+									supplier: 'Seewoo',
+									code: '160M60LYXCL',
+									name: '表芯',
+									unit: '件',
+									GP: '考核',
+									image: 'watch1',
+									size: '通码',
+									color: '通色',
+									AAmount: 49,
+									warehouse: '世港总仓',
+									location: '普通库位',
+									CAmount: 1,
+									defective_goods_warehouse: '不良品仓',
+									remark: ''
+								}, {
+									order_number: 'J2018A5001728',
+									code: '002B38068M QQF-01',
+									name: '表带',
+									unit: '件',
+									GP: '考核',
+									image: 'watch1',
+									size: '通码',
+									color: '通色',
+									AAmount: 46,
+									warehouse: '世港总仓',
+									location: '普通库位',
+									CAmount: 4,
+									defective_goods_warehouse: '不良品仓',
+									remark: ''
+								}]
+							});
+						}
+						mergeCell("#childTable" + index);
+					},
+					onDblClickRow: function(row, $element, field) { //row点击行的
+						table.bootstrapTable('collapseAllRows');
+						table.bootstrapTable('expandRow', (row.id - 1));
+					},
+					onClickRow: function(row, $element, field) { //row点击行的
+						table.bootstrapTable('collapseRow', (row.id - 1));
+					},
+					//				queryParams: function(params) {
+					//					var form = liger.get("form");
+					//					var data = form.getData();
+					//					var temp = {
+					//						pageSize: params.limit, //页面大小
+					//						pageIndex: (params.offset / params.limit) + 1, //页码
+					//						sort: params.sort, //排序列名
+					//						sortOrder: params.order //排位命令（desc，asc）
+					//					};
+					//					mergeObj(temp, data); //合并对象
+					//					pageSize = temp.pageSize;
+					//					pageIndex = temp.pageIndex;
+					//					return temp;
+					//				}
+				});
+
+			}
+
+			function add(title, url, id, w, h) {
+				var index = layer.open({
+					type: 2,
+					close: true,
+					maxmin: true,
+					title: title,
+					area: ['90%', '90%'],
+					content: url + '?id=' + id
+				});
+			}
+
+			function serach() {
+				table.bootstrapTable('refresh');
+			}
+
+			//子表格动态合并单元格
+			function mergeCell(obj) {
+				var data = $(obj).bootstrapTable('getData', true);
+				//合并单元格
+				mergeCells(data, "order_number", null, obj);
+			}
+
+			function printOrder(title, url, id, w, h) {
+				//receipts打印收货单  qualityInspection打印质检单 receipt打印入库单
+				var index = layer.open({
+					type: 2,
+					close: true,
+					maxmin: true,
+					title: title,
+					area: ['90%', '90%'],
+					content: url + '?id=' + id + '&title=' + title + '&print=receipt'
+				});
+			}
+		</script>
+
+	</body>
+
+</html>

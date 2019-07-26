@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>入库商品/物料的信息</title>
+		<meta name="keywords" content="入库商品/物料的信息">
+		<meta name="description" content="入库商品/物料的信息">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+		<link href="../../css/plugins/blueimp/css/blueimp-gallery.min.css" rel="stylesheet">
+	</head>
+
+	<body class="pd15">
+		<div class="row">
+			<div class="col-sm-12 form-group">
+				<table id="warehouseInfoList" style="border-left: 1px solid #e7eaec;"></table>
+			</div>
+			<div class="col-sm-12 text-right">
+				<button class="btn btn-primary" type="button" onclick="add();">添加商品/物料</button>
+				<button class="btn btn-primary" type="button" onclick="cancelLayer();">取消</button>
+			</div>
+		</div>
+
+		<!--显示图片层-->
+		<div id="blueimp-gallery" class="blueimp-gallery">
+			<div class="slides"></div>
+			<h3 class="title"></h3>
+			<a class="close">×</a>
+		</div>
+
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/bootstrap.min.js"></script>
+		<script src="../../js/content.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+		<script src="../../js/js.js"></script>
+		<script src="../../js/plugins/blueimp/jquery.blueimp-gallery.min.js"></script>
+
+		<script>
+			var table = $("#warehouseInfoList");
+			var pageSize; //总页数
+			var pageIndex; //当前第几页
+			$(document).ready(function() {
+				initTable();
+				$(".btn-default").addClass("btn-outline");
+			})
+
+			function initTable() {
+				var visible = $.getUrlParam('return');
+				table.bootstrapTable({
+					// url: USER_INFO.SITE_URL+'/tp5/public/index.php/Admin/Admin/noteListDemo', //服务端需要返回rows与total字段
+					// pagination: true,
+					// pageSize: 5, //每页多少条
+					// method:'post',
+					// sidePagination: "server", //服务端处理分页
+					search: true,
+					showRefresh: true,
+					showColumns: true,
+					icons: {
+						refresh: "glyphicon-repeat",
+						columns: "glyphicon-list"
+					},
+					columns: [{
+						align: 'center',
+						checkbox: true
+					}, {
+						field: 'id',
+						title: '唯一编号',
+						visible: false
+					}, {
+						field: 'code',
+						title: '商品代码/物料型号',
+					}, {
+						field: 'name',
+						title: '商品名称/物料名称'
+					}, {
+						field: 'mnemonic',
+						title: '助记符',
+						visible: false
+					}, {
+						field: 'specification',
+						title: '规格',
+						visible: false
+					}, {
+						field: 'unit',
+						title: '单位',
+						visible: false
+					}, {
+						field: 'size',
+						title: '尺码',
+						visible: false
+					}, {
+						field: 'color',
+						title: '颜色',
+						visible: false
+					}, {
+						field: 'image',
+						title: '图片',
+						formatter: function(value, row, index) {
+							var str = '';
+							str += '<a href="../../img/' + value + '.jpg" title="ͼƬ" data-gallery="" class="gallery-img"><img src="../../img/' + value + '.jpg"></a>';
+							return str;
+						}
+					}, {
+						field: 'purchase_price',
+						title: '单价',
+						visible: visible ? true : false
+					}, {
+						field: 'purchase_quantity',
+						title: '购买数量',
+						visible: visible ? true : false
+					}, {
+						field: 'stock_quantity',
+						title: '剩余库存',
+						visible: visible ? true : false
+					}, {
+						field: 'move_into_warehouse',
+						title: '仓库'
+					}, {
+						field: 'move_into_location',
+						title: '库位'
+					}],
+					data: [{
+						id: 10015,
+						code: '1 MTP1329D5A', //商品代码
+						name: 'CASIO MTP-1329D-5A', //商品名称
+						mnemonic: ' ', //助记符
+						specification: '',
+						unit: '只',
+						size: '通码',
+						color: '通色',
+						image: 'watch1',
+						purchase_price: 7,
+						purchase_quantity: 300,
+						stock_quantity: 250,
+						move_into_warehouse: '世港总仓',
+						move_into_location: '良品仓'
+					}, {
+						id: 10016,
+						code: '2 MTP1329D5A', //商品代码
+						name: 'CASIO MTP-1889D-5B', //商品名称
+						mnemonic: ' ', //助记符
+						specification: '',
+						unit: '只',
+						size: '通码',
+						color: '通色',
+						image: 'watch1',
+						purchase_price: 7,
+						purchase_quantity: 300,
+						stock_quantity: 250,
+						move_into_warehouse: '顺德总仓',
+						move_into_location: '良品仓'
+					}, {
+						id: 10017,
+						code: '3 MTP1329D5A', //商品代码
+						name: 'CASIO MTP-1359D-5A', //商品名称
+						mnemonic: ' ', //助记符
+						specification: '',
+						unit: '只',
+						size: '通码',
+						color: '通色',
+						image: 'watch1',
+						purchase_price: 9,
+						purchase_quantity: 500,
+						stock_quantity: 400,
+						move_into_warehouse: '世港总仓',
+						move_into_location: '良品仓'
+					}, {
+						id: 10018,
+						code: '4 MTP1329D5A', //商品代码
+						name: 'CASIO MTP-1239D-5A', //商品名称
+						mnemonic: ' ', //助记符
+						specification: '',
+						unit: '只',
+						size: '通码',
+						color: '通色',
+						image: 'watch1',
+						purchase_price: 6,
+						purchase_quantity: 1000,
+						stock_quantity: 800,
+						move_into_warehouse: '世港总仓',
+						move_into_location: '良品仓'
+					}]
+				});
+			}
+
+			function add() {
+				var arr = [];
+				var move_into_warehouse = $.getUrlParam('warehouse');
+				var getSelectRows = table.bootstrapTable('getSelections');
+				if(getSelectRows.length >= 1) {
+					for(var i = 0; i < getSelectRows.length; i++) {
+						if(getSelectRows[i].move_into_warehouse == move_into_warehouse) {
+							arr.push(getSelectRows[i].move_into_warehouse);
+						}
+					}
+					if(arr.length == getSelectRows.length) {
+						parent.$("#warehouseInfoTable").bootstrapTable('append', getSelectRows);
+						var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+						parent.layer.close(index); //再执行关闭   
+					} else {
+						parent.layer.alert('请选择仓库为' + move_into_warehouse + '的商品信息！');
+					}
+				} else {
+					parent.layer.alert('请选择至少一条数据！');
+				}
+			}
+		</script>
+
+	</body>
+
+</html>

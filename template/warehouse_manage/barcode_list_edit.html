@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>条形码管理</title>
+		<meta name="keywords" content="条形码管理">
+		<meta name="description" content="条形码管理">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+
+	</head>
+
+	<body class="pd15">
+
+		<form class="form-horizontal m-t" id="signupForm">
+			<div class="form-group">
+				<label class="col-sm-2 control-label">条码</label>
+				<div class="col-sm-3">
+					<input name="barcode" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:50}" value="016LSF">
+				</div>
+				<label class="col-sm-2 control-label">商品代码</label>
+				<div class="col-sm-3">
+					<input name="product_code" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:50}" value="016LSF">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">商品名称</label>
+				<div class="col-sm-3">
+					<input name="product_name" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}" value="ODM 利是封">
+				</div>
+				<label class="col-sm-2 control-label">规格1代码</label>
+				<div class="col-sm-3">
+					<input name="specification_1_code" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}" value="000">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">规格1名称</label>
+				<div class="col-sm-3">
+					<input name="specification_2_code" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}" value="000">
+				</div>
+				<label class="col-sm-2 control-label">规格2代码</label>
+				<div class="col-sm-3">
+					<input name="specification_2_code" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}" value="000">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">规格2名称</label>
+				<div class="col-sm-3">
+					<input name="specification_2_name" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}" value="通码">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">操作员</label>
+				<div class="col-sm-3">
+					<input name="originator" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}" value="季童薇"> 
+				</div>
+			</div>
+
+			<div class="form-group text-right">
+				<div class="col-sm-8 col-sm-offset-2">
+					<button class="btn btn-primary" type="submit" onclick="submitForm();">提交</button>
+					<button class="btn btn-primary" type="submit" onclick="cancelLayer();">取消</button>
+				</div>
+			</div>
+		</form>
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/bootstrap.min.js"></script>
+		<script src="../../js/js.js"></script>
+		<script src="../../js/ligerui.all.js"></script>
+		<script src="../../js/plugins/validate/jquery.validate.min.js"></script>
+		<script src="../../js/plugins/validate/messages_zh.min.js"></script>
+		<script src="../../js/plugins/validate/jquery.metadata.js"></script>
+		<script src="../../js/plugins/layer/laydate/laydate.js"></script>
+		<script>
+			$(function() {
+				if($.getUrlParam('id')) {
+					//setData();
+				} else {
+
+				}
+
+				new formValidate({
+					formEle: '#signupForm'
+				});
+
+                laydate({
+                    elem: "#arrival_date",
+                    format: "YYYY/MM/DD hh:mm",
+                    min: laydate.now(),
+                    max: "2099-06-16 23:59",
+                    istime: true,
+                    istoday: false,
+                    choose: function(datas) {}
+                });
+                
+                laydate({
+                    elem: "#storage_date",
+                    format: "YYYY/MM/DD hh:mm",
+                    min: laydate.now(),
+                    max: "2099-06-16 23:59",
+                    istime: true,
+                    istoday: false,
+                    choose: function(datas) {}
+                });
+			});
+
+			function valid() {
+				var form = liger.get("signupForm");
+				alert(form.valid());
+			}
+
+			function getData() {
+				var form = liger.get("signupForm");
+				var data = form.getData();
+				alert(JSON.stringify(data));
+			}
+
+			function setData() {
+				$.ajax({
+					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/getUser',
+					data: {
+						id: $.getUrlParam('id')
+					},
+					success: function(res) {
+						res = $.parseJSON(res);
+						var form = new liger.get("signupForm");
+						form.setData(res);
+					}
+				})
+			}
+
+			function submitForm() {
+				var form = liger.get("signupForm");
+				if(!form.valid()) {
+					return;
+				}
+				var data = {};
+				$("input,select,textarea").each(function() {
+					var name = $(this).attr("name");
+					if(name && name.indexOf('ligerui') == -1) {
+						data[name] = this.value;
+					}
+				});
+				data.id = $.getUrlParam('id');
+
+				$.ajax({
+					type: 'post',
+					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/setUser',
+					data: data,
+					success: function(res) {
+						if(Number(res)) {
+							parent.table.bootstrapTable('refresh');
+							var index = parent.layer.getFrameIndex(window.name);
+							parent.layer.close(index);
+						}
+					}
+				})
+				/*
+				            parent.table.bootstrapTable('refresh');
+				            var index = parent.layer.getFrameIndex(window.name);
+				            parent.layer.close(index);*/
+			}
+		</script>
+	</body>
+
+</html>

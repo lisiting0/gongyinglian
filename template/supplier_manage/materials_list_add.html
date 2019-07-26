@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>添加物料信息</title>
+		<meta name="keywords" content="添加物料信息">
+		<meta name="description" content="添加物料信息">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+		<link href="../../css/plugins/blueimp/css/blueimp-gallery.min.css" rel="stylesheet">
+
+	</head>
+
+	<body class="pd15">
+		<div class="row">
+			<div class="col-sm-12 form-group">
+				<table id="materialsList" style="border-left: 1px solid #e7eaec;"></table>
+			</div>
+			<div class="col-sm-12 text-right">
+				<button class="btn btn-primary" type="button" onclick="add();">添加物料</button>
+				<button class="btn btn-primary" type="button" onclick="cancelLayer();">取消</button>
+			</div>
+		</div>
+
+		<!--显示图片层-->
+		<div id="blueimp-gallery" class="blueimp-gallery">
+			<div class="slides"></div>
+			<h3 class="title"></h3>
+			<a class="close">×</a>
+		</div>
+
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/bootstrap.min.js"></script>
+		<script src="../../js/content.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+		<script src="../../js/js.js"></script>
+		<script src="../../js/plugins/blueimp/jquery.blueimp-gallery.min.js"></script>
+
+		<script>
+			var table = $("#materialsList");
+			$(document).ready(function() {
+				var pageSize; //总页数
+				var pageIndex; //当前第几页
+				table.bootstrapTable({
+					// url: USER_INFO.SITE_URL+'/tp5/public/index.php/Admin/Admin/noteListDemo', //服务端需要返回rows与total字段
+					// pagination: true,
+					// pageSize: 5, //每页多少条
+					// method:'post',
+					// sidePagination: "server", //服务端处理分页
+					search: true,
+					showRefresh: true,
+					showColumns: true,
+					icons: {
+						refresh: "glyphicon-repeat",
+						columns: "glyphicon-list"
+					},
+					columns: [{
+							align: 'center',
+							checkbox: true
+						}, {
+							field: 'id',
+							title: '编号',
+							visible: false
+						},
+						{
+							field: 'material_number',
+							title: '物料编号',
+						},
+						{
+							field: 'material_name',
+							title: '物料名称'
+						},
+						{
+							field: 'specification',
+							title: '规格'
+						},
+						{
+							field: 'weight',
+							title: '重量（g）'
+						},
+						{
+							field: 'unit',
+							title: '单位'
+						},
+						{
+							field: 'size',
+							title: '尺码'
+						},
+						{
+							field: 'color',
+							title: '颜色'
+						},
+						{
+							field: 'image',
+							title: '图片',
+							formatter: function(value, row, index) {
+								var str = '';
+								str += '<a href="../../img/' + value + '.jpg" title="ͼƬ" data-gallery="" class="gallery-img"><img src="../../img/' + value + '.jpg"></a>';
+								return str;
+							}
+						}
+					],
+					data: [{
+							id: 1,
+							material_number: '0 160M60LYXCL',
+							material_name: '表针',
+							specification: '',
+							weight: 20,
+							unit: '件',
+							size: '通码',
+							color: '通色',
+							image: 'watch1',
+							remark: ''
+						},
+						{
+							id: 2,
+							material_number: '1 02B38068M QQF-01',
+							material_name: '表盘',
+							specification: '',
+							weight: 20,
+							unit: '件',
+							size: '通码',
+							color: '通色',
+							image: 'watch1',
+							remark: ''
+						},
+						{
+							id: 3,
+							material_number: '2 02B38068M QQF-01',
+							material_name: '表带',
+							specification: '',
+							weight: 20,
+							unit: '件',
+							size: '通码',
+							color: '通色',
+							image: 'watch1',
+							remark: ''
+						},
+						{
+							id: 3,
+							material_number: '3 02B38068M QQF-01',
+							material_name: '表壳',
+							specification: '',
+							weight: 20,
+							unit: '件',
+							size: '通码',
+							color: '通色',
+							image: 'watch1',
+							remark: ''
+						}
+					]
+					/*,
+					            queryParams: function(params) {
+					                var form = liger.get("form");
+					                var data = form.getData();
+					                var temp = {
+					                    pageSize: params.limit,                         //页面大小
+					                    pageIndex: (params.offset / params.limit) + 1,   //页码
+					                    sort: params.sort,      //排序列名
+					                    sortOrder: params.order //排位命令（desc，asc）
+					                };
+					                mergeObj(temp,data); //合并对象
+					                pageSize = temp.pageSize;
+					                pageIndex = temp.pageIndex;
+					                return temp;
+					            }*/
+				});
+				$(".btn-default").addClass("btn-outline");
+			})
+
+			function add() {
+				var getSelectRows = table.bootstrapTable('getSelections');
+				if(getSelectRows.length >= 1) {
+					parent.$("#materialsInfoTable").bootstrapTable('append', getSelectRows);
+					var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+					parent.layer.close(index); //再执行关闭   
+				} else {
+					parent.layer.alert('请选择物料信息！');
+				}
+			}
+		</script>
+
+	</body>
+
+</html>

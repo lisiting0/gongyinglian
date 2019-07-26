@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>多币种管理</title>
+		<meta name="keywords" content="多币种管理">
+		<meta name="description" content="多币种管理">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="../../css/plugins/bootstrap-editable/bootstrap-editable-select2.css" />
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+
+	</head>
+
+	<body class="pd15">
+
+		<form class="form-horizontal m-t" id="signupForm">
+			<div class="form-group">
+				<label class="col-sm-2 control-label">外币类型</label>
+				<div class="col-sm-3">
+					<select id="billing_currency" class="js-example-basic-single form-control" ltype="select" ligeruiid="billing_currency">
+						<option value="">请选择</option>
+						<option value="美元">美元（USD）</option>
+						<option value="德国马克">德国马克（DEM）</option>
+						<option value="日元">日元（JPY）</option>
+						<option value="瑞士法郎">瑞士法郎（CHF）</option>
+						<option value="法国法郎">法国法郎（FRF）</option>
+						<option value="意大利里拉">意大利里拉（ITL）</option>
+						<option value="荷兰盾">荷兰盾（NLG）</option>
+						<option value="比利时法郎">比利时法郎（BEU）</option>
+						<option value="丹麦克朗">丹麦克朗（DKR）</option>
+						<option value="瑞典克朗">瑞典克朗（SKR）</option>
+						<option value="挪威克朗">挪威克朗（NKR）</option>
+						<option value="奥地利先令">奥地利先令（ATS）</option>
+						<option value="港币">港币（HKD）</option>
+						<option value="加拿大元">加拿大元（CAD）</option>
+						<option value="澳大利亚元">澳大利亚元（AUD）</option>
+						<option value="新西兰元">新西兰元（NZD）</option>
+						<option value="新加坡元">新加坡元（SGD）</option>
+						<option value="欧元">欧元（EUR）</option>
+						<option value="英镑">英镑（GBP）</option>
+					</select>
+				</div>
+				<label class="col-sm-2 control-label">外币兑人民币汇率</label>
+				<div class="col-sm-3">
+					<input name="rate" class="ui-textbox" type="text" ltype="text" validate="{required:true,minlength:1,maxlength:10}" value="0.15772">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">备注</label>
+				<div class="col-sm-10" style="padding: 1px 15px;">
+					<textarea name="remark" placeholder="备注" class="layui-textarea" style="min-width:79.5%;min-height: 100px;height: auto;line-height: 20px;padding: 6px 10px;resize: vertical;border: 1px solid #e5e6e7;"></textarea>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">操作员</label>
+				<div class="col-sm-3">
+					<input name="operator" class="ui-textbox disabled-text" type="text" ltype="text" value="季童薇">
+				</div>
+			</div>
+			<div class="form-group text-right">
+				<div class="col-sm-8 col-sm-offset-2">
+					<button class="btn btn-primary" type="submit" onclick="submitForm();">提交</button>
+					<button class="btn btn-primary" type="submit" onclick="cancelLayer();">取消</button>
+				</div>
+			</div>
+		</form>
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/bootstrap.min.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-editable-select2.full.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/js.js"></script>
+		<script src="../../js/ligerui.all.js"></script>
+		<script src="../../js/plugins/validate/jquery.validate.min.js"></script>
+		<script src="../../js/plugins/validate/messages_zh.min.js"></script>
+		<script src="../../js/plugins/validate/jquery.metadata.js"></script>
+		<script>
+			$(function() {
+				new formValidate({
+					formEle: '#signupForm'
+				});
+				$('#billing_currency').select2().on('select2:select', function(event) {});
+
+				if($.getUrlParam('id')) {
+					//setData();
+					var billing_currency = $("#billing_currency").select2().val("美元").trigger("change"); //获取selectid
+					billing_currency.change(); //告诉select2代码已经更新，需要重载  默认选择有值得第一个  		
+				} else {
+
+				}
+			});
+
+			function valid() {
+				var form = liger.get("signupForm");
+				alert(form.valid());
+			}
+
+			function getData() {
+				var form = liger.get("signupForm");
+				var data = form.getData();
+				alert(JSON.stringify(data));
+			}
+
+			function setData() {
+				$.ajax({
+					url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/getUser',
+					data: {
+						id: $.getUrlParam('id')
+					},
+					success: function(res) {
+						res = $.parseJSON(res);
+						var form = new liger.get("signupForm");
+						form.setData(res);
+					}
+				})
+			}
+
+			function submitForm() {
+
+				var form = liger.get("signupForm");
+				if(!form.valid()) {
+					return;
+				}
+				var data = {};
+				$("input,select,textarea").each(function() {
+					var name = $(this).attr("name");
+					if(name && name.indexOf('ligerui') == -1) {
+						data[name] = this.value;
+					}
+				});
+				data.id = $.getUrlParam('id');
+
+				$.ajax({
+						type: 'post',
+						url: USER_INFO.SITE_URL + '/tp5/public/index.php/Admin/Admin/setUser',
+						data: data,
+						success: function(res) {
+							if(Number(res)) {
+								parent.table.bootstrapTable('refresh');
+								var index = parent.layer.getFrameIndex(window.name);
+								parent.layer.close(index);
+							}
+						}
+					})
+					/*
+					            parent.table.bootstrapTable('refresh');
+					            var index = parent.layer.getFrameIndex(window.name);
+					            parent.layer.close(index);*/
+			}
+		</script>
+	</body>
+
+</html>

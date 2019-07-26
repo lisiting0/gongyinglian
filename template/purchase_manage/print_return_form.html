@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>打印单据</title>
+		<meta name="keywords" content="打印单据">
+		<meta name="description" content="打印单据">
+
+		<link rel="shortcut icon" href="favicon.ico">
+		<link href="../../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../../css/font-awesome.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link href="../../css/plugins/bootstrap-editable/bootstrap-editable.css" rel="stylesheet">
+		<link href="../../css/animate.min.css" rel="stylesheet">
+		<link href="../../css/style.min.css" rel="stylesheet">
+		<link href="../../css/plugins/blueimp/css/blueimp-gallery.min.css" rel="stylesheet">
+
+	</head>
+
+	<body class="pd15">
+		<div class="bootstrap-table" style="margin: 0 auto 15px;">
+			<div class="fixed-table-container">
+				<div class="fixed-table-header">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th colspan="7">
+									<div class="th-inner order_title" style="padding: 15px;line-height: 15px;text-align: center;font-size: 18px;"></div>
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="receipt">
+								<td>退厂单号</td>
+								<td>J2018000503</td>
+								<td>入库仓位</td>
+								<td>普通仓位</td>
+								<td>打印日期</td>
+								<td class="today"></td>
+							</tr>
+							<tr>
+								<td colspan="6" style="padding: 10px;">
+									<table id="productInfoTable"></table>
+								</td>
+							</tr>
+							<tr>
+								<td class="text-right">备注</td>
+								<td colspan="5"><textarea name="remark" placeholder="请输入内容" class="layui-textarea remark" style="min-width: 100%;"></textarea></td>
+							</tr>
+							<tr class="receipt">
+								<td class="text-right">收货员</td>
+								<td>张三</td>
+								<td class="text-right">质检员</td>
+								<td>李四</td>
+								<td class="text-right">入库员</td>
+								<td>赵六</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<div class="form-group text-right button-group">
+			<div class="col-sm-12">
+				<button class="btn btn-primary" type="button" onclick="printOrder();"><i class="fa fa-paste"></i>&nbsp;打印</button>
+				<button class="btn btn-primary" type="submit" onclick="cancelLayer();">取消</button>
+			</div>
+		</div>
+		<div id="blueimp-gallery" class="blueimp-gallery">
+			<div class="slides"></div>
+			<h3 class="title"></h3>
+			<a class="close">×</a>
+		</div>
+		<script src="../../js/jquery.min.js"></script>
+		<script src="../../js/bootstrap.min.js"></script>
+		<script src="../../js/js.js"></script>
+		<script src="../../js/ligerui.all.js"></script>
+		<script src="../../js/plugins/layer/laydate/laydate.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+		<script src="../../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-editable.js"></script>
+		<script src="../../js/plugins/bootstrap-editable/bootstrap-table-editable.js"></script>
+		<script src="../../js/plugins/validate/jquery.validate.min.js"></script>
+		<script src="../../js/plugins/validate/messages_zh.min.js"></script>
+		<script src="../../js/plugins/validate/jquery.metadata.js"></script>
+		<script src="../../js/plugins/blueimp/jquery.blueimp-gallery.min.js"></script>
+		<script>
+			var table = $("#productInfoTable");
+			$(function() {
+				if($.getUrlParam('id')) {
+					$(".order_title").text($.getUrlParam('title'));
+					//setData();
+					initTable();
+					sum();
+				} else {
+
+				}
+
+				$(".today").text(showCurrentDate());
+			});
+
+			function initTable() {
+				table.bootstrapTable({
+					columns: [{
+						field: "code",
+						title: "商品代码/物料型号"
+					}, {
+						field: "name",
+						title: "商品名称/物料名称"
+					}, {
+						field: 'return_price',
+						title: '退货价格'
+					}, {
+						field: 'return_quantity',
+						title: '退货数量',
+						class: 'return_quantity'
+					}, {
+						title: '备注',
+						field: 'remark',
+						formatter: function(value, row, index) {
+							if(value == undefined) {
+								value = '';
+							}
+							return '<textarea name="remark" placeholder="请输入内容" class="layui-textarea remark">' + value + '</textarea>';
+						}
+					}],
+					data: [{
+						code: '0 160M60LYXCL',
+						name: '表针',
+						return_price: 7.5,
+						return_quantity: 400,
+						remark: ''
+					}, {
+						code: '1 02B38068M QQF-01',
+						name: '表盘',
+						return_price: 4,
+						return_quantity: 300,
+						remark: ''
+					}]
+				});
+			}
+
+			function sum() {
+				var sumQuantity = 0;
+				//数量合计
+
+				$("#productInfoTable td[class='return_quantity']").each(function() {
+					sumQuantity += +$(this).text();
+				});
+				var tr = '<tr class="footer"><td class="text-right" colspan="3">合计</td><td colspan="2">' + sumQuantity + '</td></tr>';
+				table.append(tr);
+			}
+		</script>
+	</body>
+
+</html>
